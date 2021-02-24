@@ -1,0 +1,18 @@
+name: IHhub
+version: ${project.version}
+main: main.java.me.alonedev.ihhub.IHhub
+api-version: 1.13
+prefix: [ IronHavens Hub ]
+load: STARTUP
+authors: [ AloneMusk ]
+description: Skyblock hub for IronHavens
+
+commands:
+  socials:
+    description: Your description
+    usage: /<command>
+    permission: ironhavens.socials
+  config reload:
+    description: Your description
+    usage: /<command>
+    permission: ironhavens.socials
