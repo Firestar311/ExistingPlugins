@@ -18,7 +18,6 @@ import java.io.IOException;
 
 public final class IronHhub extends JavaPlugin implements Listener {
 
-    public static Plugin plugin;
     public static int PlayersJoined;
 
     //Config Variables
@@ -33,6 +32,7 @@ public final class IronHhub extends JavaPlugin implements Listener {
     public static String spawnworld;
     public static int yaw;
     public static int pitch;
+    public static String sound;
 
     public static String discordLink;
 
@@ -55,7 +55,6 @@ public final class IronHhub extends JavaPlugin implements Listener {
         //Listeners
         getServer().getPluginManager().registerEvents(new VoidTP(), this);
         getServer().getPluginManager().registerEvents(new SocialsGUI(), this);
-        getServer().getPluginManager().registerEvents(new PlayerJoin(this), this);
         getServer().getPluginManager().registerEvents(new ServerMOTD(this), this);
         getServer().getPluginManager().registerEvents(new Spawn(this), this);
 
@@ -106,6 +105,7 @@ public final class IronHhub extends JavaPlugin implements Listener {
         this.yaw = cfg.getInt("spawnworld", 90);
         this.pitch = cfg.getInt("spawnworld", 0);
         this.discordLink = cfg.getString("Discord_Social_Link", "https://discord.gg/G5q8ds9eHH");
+        this.sound = cfg.getString("Spawn_Sound", "block.anvil.fall");
 
 
 
