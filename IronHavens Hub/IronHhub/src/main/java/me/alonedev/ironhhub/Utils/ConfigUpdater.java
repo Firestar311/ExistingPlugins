@@ -1,6 +1,6 @@
-package me.alonedev.ihhub.Utils;
+package me.alonedev.ironhhub.Utils;
 
-import me.alonedev.ihhub.Util;
+import me.alonedev.ironhhub.Utils.Util;
 
 import java.io.File;
 import java.io.FileReader;

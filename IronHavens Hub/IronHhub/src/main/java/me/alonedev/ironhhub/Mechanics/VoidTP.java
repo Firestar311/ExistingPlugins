@@ -1,11 +1,12 @@
-package me.alonedev.ihhub.Mechanics;
+package me.alonedev.ironhhub.Mechanics;
 
+import me.alonedev.ironhhub.IronHhub;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.entity.Player;
 
 public class VoidTP implements Listener {
 
@@ -13,11 +14,12 @@ public class VoidTP implements Listener {
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = (Player) event.getPlayer();
-        if(player.getLocation().getY() < 0) {
-            Location spawn = new Location(Bukkit.getWorld("world"), -16.5, 67, -22.5, 0, 0);
+        if(player.getLocation().getY() < -5) {
+            Location spawn = new Location(Bukkit.getWorld(IronHhub.spawnworld), IronHhub.x, IronHhub.y, IronHhub.z, IronHhub.yaw, IronHhub.pitch);
             player.teleport(spawn);
         }
     }
 
 
 }
+

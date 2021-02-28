@@ -1,0 +1,36 @@
+Version: 1.0.2
+
+
+# Plugin made by AloneMusk for IronHavens.
+
+# Iron Havens Hub, this plugin controls the Hub of IronHavens Skyblock.
+# I added some options for configuration instead of uploading the plugin again because it is hard coded.
+
+
+# Options
+base_command: "IH"
+base_permission: "ironhavens"
+
+
+# Spawncoords
+spawnworld: "spawn"
+x: 5
+y: 64.0
+z: -1000
+yaw: 90
+pitch: 0
+
+#MOTD
+#%line% = goes onto the second line | So when you put %line% it moves the rest of the MOTD behind it to the next line of the MOTD.
+
+MOTD: "              &6[IronHavens] %line% &6Join now for stuff"
+
+
+
+
+
+#
+#Socials Menu
+#
+
+Discord_Social_Link: "https://discord.gg/G5q8ds9eHH"

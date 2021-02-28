@@ -1,0 +1,29 @@
+name: IronHhub
+version: ${project.version}
+main: me.alonedev.ironhhub.IronHhub
+api-version: 1.16
+prefix: [ IronHavens ]
+load: STARTUP
+authors: [ AloneMusk ]
+description: IronHavens Hub
+
+commands:
+  socials:
+    description: socials GUI
+    usage: /<command>
+    permission: ironhavens.use
+  ih:
+    description: Admin command
+    usage: /<command>
+    permission: ironhavens.admin
+  spawn:
+    description: Spawn command
+    usage: /<command>
+    permission: ironhavens.use
+permissions:
+  ironhavens.admin:
+    description: Gives access to all commands.
+    default: op
+  ironhavens.use:
+    description: Basic permissions for the hub plugin.
+    default: op

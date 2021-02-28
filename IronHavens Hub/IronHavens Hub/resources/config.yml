@@ -1,9 +1,0 @@
-//Plugin made by AloneMusk for IronHavens.
-
-//Iron Havens Hub, this plugin controls the Hub of IronHavens Skyblock.
-//I added some options for configuration instead of uploading the plugin again because it is hard coded.
-
-Spawncoords:
-  x: 5
-  y: 64.0
-  z: -1000
