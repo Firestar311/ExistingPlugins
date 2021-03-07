@@ -1,5 +1,5 @@
 name: ManiaCore
 version: ${project.version}
 main: net.firecraftmc.maniacore.ManiaCoreProxy
-description: HungerMania's Core
+description: OldHM's Core
 depends: [TimoCloud]

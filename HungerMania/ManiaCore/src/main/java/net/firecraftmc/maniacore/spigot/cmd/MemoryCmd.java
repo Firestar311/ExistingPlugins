@@ -1,10 +1,12 @@
 package net.firecraftmc.maniacore.spigot.cmd;
 
 import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.ranks.Rank;
 import net.firecraftmc.maniacore.api.util.ManiaUtils;
 import net.firecraftmc.maniacore.api.util.ReflectionUtils;
 import net.firecraftmc.maniacore.memory.MemoryHook;
 import net.firecraftmc.maniacore.plugin.ManiaPlugin;
+import net.firecraftmc.maniacore.spigot.util.SpigotUtils;
 import net.firecraftmc.manialib.util.Constants;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -22,7 +24,8 @@ public class MemoryCmd implements CommandExecutor {
     
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (!sender.hasPermission("hungermania.command.memory")) {
+        Rank senderRank = SpigotUtils.getRankFromSender(sender);
+        if (senderRank.ordinal() <= Rank.HELPER.ordinal()) {
             sender.sendMessage(ManiaUtils.color("&cYou are not allowed to use that command."));
             return true;
         }

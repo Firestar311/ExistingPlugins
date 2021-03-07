@@ -64,7 +64,7 @@ public class ManiaProperties {
         properties.setProperty("redis-password", "");
         properties.setProperty("networkType", NetworkType.UNKNOWN.name());
         try (FileOutputStream out = new FileOutputStream(file)) {
-            properties.store(out, "HungerMania - Network Configuration. Do not reproduce");
+            properties.store(out, "FirecraftMC - Network Configuration. Do not reproduce");
         } catch (Exception e) {}
         
     }

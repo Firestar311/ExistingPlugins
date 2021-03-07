@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>net.hungermania</groupId>
+    <groupId>net.firecraftmc</groupId>
     <artifactId>GameCore</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -90,9 +90,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net.hungermania</groupId>
+            <groupId>net.firecraftmc</groupId>
             <artifactId>ManiaCore</artifactId>
-            <version>1.22-SNAPSHOT</version>
+            <version>1.0-ALPHA</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -102,10 +102,10 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net.hungermania</groupId>
+            <groupId>net.firecraftmc</groupId>
             <artifactId>LibsDisguises</artifactId>
             <scope>provided</scope>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0-ALPHA</version>
         </dependency>
         <dependency>
             <groupId>cloud.timo.TimoCloud</groupId>

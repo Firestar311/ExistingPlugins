@@ -22,7 +22,7 @@ public class HubBoard extends PlayerBoard {
     private ManiaCore maniaCore;
     
     public HubBoard(SpigotUser spigotUser) {
-        super(ManiaUtils.color("&6&lHUNGER MANIA"));
+        super(ManiaUtils.color("&6&lCENTURIONS BG"));
         this.user = spigotUser;
         addLine("", ChatColor.GOLD + "" + ChatColor.BOLD + "RANK", "");
         maniaCore = ManiaCore.getInstance();
