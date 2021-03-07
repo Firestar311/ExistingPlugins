@@ -6,7 +6,7 @@
 
     <groupId>net.firecraftmc</groupId>
     <artifactId>ManiaLib</artifactId>
-    <version>1.0-BETA</version>
+    <version>1.0-ALPHA</version>
     <packaging>jar</packaging>
 
     <name>ManiaLib</name>
