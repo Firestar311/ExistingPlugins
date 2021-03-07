@@ -2,7 +2,6 @@ package net.firecraftmc.hungergames.records;
 
 import net.firecraftmc.hungergames.newsettings.GameSetting;
 import net.firecraftmc.manialib.sql.*;
-import net.hungermania.manialib.sql.*;
 import net.firecraftmc.manialib.util.Unit;
 
 import java.util.HashMap;

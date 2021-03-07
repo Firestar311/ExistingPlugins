@@ -5,7 +5,6 @@ import net.firecraftmc.manialib.data.annotations.ColumnInfo;
 import net.firecraftmc.manialib.data.annotations.TableInfo;
 import net.firecraftmc.manialib.data.handlers.DataTypeHandler;
 import net.firecraftmc.manialib.data.model.*;
-import net.hungermania.manialib.data.model.*;
 import net.firecraftmc.manialib.sql.DataSource;
 import net.firecraftmc.manialib.sql.Statements;
 import net.firecraftmc.manialib.util.Utils;

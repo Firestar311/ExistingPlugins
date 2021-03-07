@@ -1,6 +1,6 @@
 name: ManiaCore
 version: 1.0-SNAPSHOT
-main: net.hungermania.enforcer.spigot.EnforcerSpigot
+main: net.firecraftmc.enforcer.spigot.EnforcerSpigot
 authors: [ Firestar311 ]
 description: Punishments Plugin
 website: hungermania.net

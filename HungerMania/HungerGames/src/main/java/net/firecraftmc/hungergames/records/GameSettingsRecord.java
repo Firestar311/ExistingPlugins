@@ -4,7 +4,6 @@ import net.firecraftmc.hungergames.settings.GameSettings;
 import net.firecraftmc.hungergames.settings.Time;
 import net.firecraftmc.hungergames.settings.Weather;
 import net.firecraftmc.manialib.sql.*;
-import net.hungermania.manialib.sql.*;
 
 import java.util.HashMap;
 import java.util.Map;

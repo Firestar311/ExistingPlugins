@@ -10,7 +10,6 @@ import net.firecraftmc.hungergames.settings.Time;
 import net.firecraftmc.hungergames.settings.Weather;
 import net.firecraftmc.hungergames.game.Game;
 import net.firecraftmc.hungergames.game.GamePlayer;
-import net.hungermania.hungergames.game.death.*;
 import net.firecraftmc.maniacore.api.ranks.Rank;
 import net.firecraftmc.maniacore.api.user.User;
 import net.firecraftmc.maniacore.api.util.ManiaUtils;

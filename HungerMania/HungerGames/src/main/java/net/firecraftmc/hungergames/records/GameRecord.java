@@ -4,7 +4,6 @@ import net.firecraftmc.hungergames.HungerGames;
 import net.firecraftmc.hungergames.game.Game;
 import net.firecraftmc.hungergames.map.HGMap;
 import net.firecraftmc.manialib.sql.*;
-import net.hungermania.manialib.sql.*;
 import net.firecraftmc.manialib.util.Utils;
 
 import java.util.*;

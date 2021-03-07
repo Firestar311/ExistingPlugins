@@ -22,8 +22,6 @@ import net.firecraftmc.hungergames.records.GameRecord;
 import net.firecraftmc.hungergames.scoreboard.GameBoard;
 import net.firecraftmc.hungergames.settings.GameSettings;
 import net.firecraftmc.hungergames.util.Messager;
-import net.hungermania.hungergames.game.death.*;
-import net.hungermania.hungergames.game.team.*;
 import net.firecraftmc.hungergames.map.HGMap;
 import net.firecraftmc.maniacore.api.ManiaCore;
 import net.firecraftmc.maniacore.api.ranks.Rank;

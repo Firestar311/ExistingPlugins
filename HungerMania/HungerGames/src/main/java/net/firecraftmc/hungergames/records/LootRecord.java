@@ -3,7 +3,6 @@ package net.firecraftmc.hungergames.records;
 import net.firecraftmc.hungergames.loot.DiamondLoot;
 import net.firecraftmc.hungergames.loot.Loot;
 import net.firecraftmc.manialib.sql.*;
-import net.hungermania.manialib.sql.*;
 import org.bukkit.Material;
 
 import java.util.HashMap;

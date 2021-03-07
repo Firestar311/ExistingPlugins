@@ -6,7 +6,6 @@ import net.firecraftmc.hungergames.scoreboard.LobbyBoard;
 import net.firecraftmc.hungergames.settings.GameSettings;
 import net.firecraftmc.hungergames.game.Game;
 import net.firecraftmc.hungergames.game.GamePlayer;
-import net.hungermania.hungergames.game.death.*;
 import net.firecraftmc.hungergames.game.gui.MutateGui;
 import net.firecraftmc.hungergames.game.gui.PlayersGui;
 import net.firecraftmc.hungergames.game.team.GameTeam;
