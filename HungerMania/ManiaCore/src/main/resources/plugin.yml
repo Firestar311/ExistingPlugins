@@ -1,9 +1,9 @@
 name: ManiaCore
 version: ${project.version}
-main: net.hungermania.maniacore.ManiaCorePlugin
+main: net.firecraftmc.maniacore.ManiaCorePlugin
 authors: [Firestar311]
-description: Library Plugin for HungerMania
-website: hungermania.net
+description: Library Plugin for OldHM
+website: firecraftmc.net
 depend: [TimoCloud,LuckPerms,Vault]
 commands:
     incognito:

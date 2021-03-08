@@ -4,14 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>net.hungermania</groupId>
+    <groupId>net.firecraftmc</groupId>
     <artifactId>ManiaHub</artifactId>
     <version>1.0-BETA</version>
     <packaging>jar</packaging>
 
     <name>ManiaHub</name>
 
-    <description>HungerMania's Hub</description>
+    <description>FirecraftMC's OldHM Hub</description>
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -86,9 +86,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net.hungermania</groupId>
+            <groupId>net.firecraftmc</groupId>
             <artifactId>ManiaCore</artifactId>
-            <version>1.0-BETA</version>
+            <version>1.0-ALPHA</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
