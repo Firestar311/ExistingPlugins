@@ -1,0 +1,20 @@
+name: HungerGames
+version: ${project.version}
+main: net.firecraftmc.hungergames.HungerGames
+depend: [ManiaCore, Vault]
+authors: [Firestar311, LibsDisguises]
+description: HungerGames Plugin
+website: hungermania.net
+commands:
+    mapsadmin:
+        aliases: [ma]
+    map: 
+    hungergames:
+        aliases: [hg]
+    lobby:
+    votestart:
+    npc:
+    settings:
+    perks:
+    nextgame:
+    probability:

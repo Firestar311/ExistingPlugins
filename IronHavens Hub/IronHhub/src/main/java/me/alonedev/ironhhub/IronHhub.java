@@ -2,7 +2,10 @@ package me.alonedev.ironhhub;
 
 import me.alonedev.ironhhub.Commands.Commands;
 import me.alonedev.ironhhub.GUI.SocialsGUI;
-import me.alonedev.ironhhub.Mechanics.*;
+import me.alonedev.ironhhub.Mechanics.CommandsTab;
+import me.alonedev.ironhhub.Mechanics.ServerMOTD;
+import me.alonedev.ironhhub.Mechanics.Spawn;
+import me.alonedev.ironhhub.Mechanics.VoidTP;
 import me.alonedev.ironhhub.Utils.ConfigUpdater;
 import me.alonedev.ironhhub.Utils.Util;
 import net.md_5.bungee.api.ChatColor;
@@ -10,7 +13,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -70,7 +72,7 @@ public final class IronHhub extends JavaPlugin implements Listener {
             saveResource("data.yml", false);
         }
 
-        getServer().getPluginManager().registerEvents((Listener)this, (Plugin)this);
+        getServer().getPluginManager().registerEvents(this, this);
     }
 
     @Override
@@ -96,16 +98,16 @@ public final class IronHhub extends JavaPlugin implements Listener {
 
         //Load settings from config.yml here:
         //General format is: cfg.get<Java type>(<key>, <default value>);
-        this.x = cfg.getInt("x", 5);
-        this.y = cfg.getInt("y", 64);
-        this.z = cfg.getInt("z", -1000);
-        this.BASE_PERMISSION = cfg.getString("base_permission", "ironhavens");
-        this.MOTD = cfg.getString("MOTD", "&6[IronHavens]");
-        this.spawnworld = cfg.getString("spawnworld", "spawn");
-        this.yaw = cfg.getInt("spawnworld", 90);
-        this.pitch = cfg.getInt("spawnworld", 0);
-        this.discordLink = cfg.getString("Discord_Social_Link", "https://discord.gg/G5q8ds9eHH");
-        this.sound = cfg.getString("Spawn_Sound", "block.anvil.fall");
+        x = cfg.getInt("x", 5);
+        y = cfg.getInt("y", 64);
+        z = cfg.getInt("z", -1000);
+        BASE_PERMISSION = cfg.getString("base_permission", "ironhavens");
+        MOTD = cfg.getString("MOTD", "&6[IronHavens]");
+        spawnworld = cfg.getString("spawnworld", "spawn");
+        yaw = cfg.getInt("spawnworld", 90);
+        pitch = cfg.getInt("spawnworld", 0);
+        discordLink = cfg.getString("Discord_Social_Link", "https://discord.gg/G5q8ds9eHH");
+        sound = cfg.getString("Spawn_Sound", "block.anvil.fall");
 
 
 

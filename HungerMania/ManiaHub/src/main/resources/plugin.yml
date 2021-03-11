@@ -1,0 +1,11 @@
+name: ManiaHub
+version: ${project.version}
+main: net.firecraftmc.hub.ManiaHub
+description: HungerMania's Hub
+depend: [ManiaCore]
+commands:
+    testadmin:
+    fly:
+    hologram:
+    leaderboard:
+    npc:
