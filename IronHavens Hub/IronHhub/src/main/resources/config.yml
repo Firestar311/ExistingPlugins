@@ -34,3 +34,9 @@ MOTD: "              &6[IronHavens] %line% &6Join now for stuff"
 #
 
 Discord_Social_Link: "https://discord.gg/G5q8ds9eHH"
+
+#
+#Spawn Settings
+#
+
+Spawn_Sound: "block.anvil.fall"

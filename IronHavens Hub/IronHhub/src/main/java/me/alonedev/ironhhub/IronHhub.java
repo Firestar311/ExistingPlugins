@@ -53,7 +53,7 @@ public final class IronHhub extends JavaPlugin implements Listener {
 
 
         //Listeners
-        getServer().getPluginManager().registerEvents(new VoidTP(), this);
+        getServer().getPluginManager().registerEvents(new VoidTP(this), this);
         getServer().getPluginManager().registerEvents(new SocialsGUI(), this);
         getServer().getPluginManager().registerEvents(new ServerMOTD(this), this);
         getServer().getPluginManager().registerEvents(new Spawn(this), this);
