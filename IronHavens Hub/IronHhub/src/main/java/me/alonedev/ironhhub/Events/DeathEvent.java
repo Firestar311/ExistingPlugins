@@ -2,7 +2,6 @@ package me.alonedev.ironhhub.Events;
 
 import me.alonedev.ironhhub.IronHhub;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

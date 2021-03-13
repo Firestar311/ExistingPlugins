@@ -7,23 +7,25 @@ Version: 1.0.2
 # I added some options for configuration instead of uploading the plugin again because it is hard coded.
 
 
+
 # Options
 base_command: "IH"
 base_permission: "ironhavens"
 
 
+
 # Spawncoords
 spawnworld: "spawn"
-x: 5
-y: 64.0
-z: -1000
+x: 0.500
+y: 163
+z: 0.500
 yaw: 90
 pitch: 0
 
 #MOTD
 #%line% = goes onto the second line | So when you put %line% it moves the rest of the MOTD behind it to the next line of the MOTD. (Max 2 lines)
 
-MOTD: "              &5&l[IronHavens] %line% &6The ultimate skyblock experience"
+MOTD: "                &b&kaft &7&lIron&f&lHavens &b&kaft%line%       &eThe &6&lUltimate &eSkyblock Experience"
 
 
 
@@ -36,11 +38,22 @@ MessageMOTD: "--------------------------------------- %line%                    
 FirstMessageMOTD: "Welcome to the server, %player%, hope you enjoy your stay!"
 
 
+
+#Message when a player leaves the server
+Quit_Message: "%player% left the server!"
+
+
+First_Join_Message: "&e&l Hello!  &8>> &e%player% &fjoined for the first time!"
+
+
+Join_Message: "&e&l Hello!  &8>> &e%player% &fjoined"
+
 #
 #Socials Menu
 #
 
 Discord_Social_Link: "https://discord.gg/G5q8ds9eHH"
+
 
 #
 #Spawn Settings

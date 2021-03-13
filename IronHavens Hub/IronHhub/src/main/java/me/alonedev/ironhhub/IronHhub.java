@@ -4,6 +4,7 @@ import me.alonedev.ironhhub.Commands.Commands;
 import me.alonedev.ironhhub.Events.DeathEvent;
 import me.alonedev.ironhhub.Events.JoinEvent;
 import me.alonedev.ironhhub.Events.OnRespawn;
+import me.alonedev.ironhhub.Events.QuitEvent;
 import me.alonedev.ironhhub.GUI.SocialsGUI;
 import me.alonedev.ironhhub.Mechanics.CommandsTab;
 import me.alonedev.ironhhub.Mechanics.ServerMOTD;
@@ -40,6 +41,9 @@ public final class IronHhub extends JavaPlugin implements Listener {
     public static String sound;
     public static String MessageMOTD;
     public static String FirstMessageMOTD;
+    public static String QuitMessage;
+    public static String JoinMessage;
+    public static String FirstJoinMessage;
 
     public static String discordLink;
 
@@ -66,6 +70,7 @@ public final class IronHhub extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new JoinEvent(this),this);
         getServer().getPluginManager().registerEvents(new DeathEvent(this),this);
         getServer().getPluginManager().registerEvents(new OnRespawn(),this);
+        getServer().getPluginManager().registerEvents(new QuitEvent(),this);
 
 
 
@@ -118,7 +123,9 @@ public final class IronHhub extends JavaPlugin implements Listener {
         this.sound = cfg.getString("Spawn_Sound", "block.anvil.fall");
         this.MessageMOTD = cfg.getString("MessagePlayerMOTD", "Welcome back to Iron Havens %player%!");
         this.FirstMessageMOTD = cfg.getString("FirstMessagePlayerMOTD","Welcome to the server, %player%, hope you enjoy your stay!");
-
+        this.QuitMessage = cfg.getString("Quit_Message","%player% left the server!");
+        this.JoinMessage = cfg.getString("Join_Message","&e&l Hello!  &8>> &e%player% &fjoined");
+        this.FirstJoinMessage = cfg.getString("First_Join_Message","&e&l Hello!  &8>> &e%player% &fjoined for the first time!");
 
 
     }

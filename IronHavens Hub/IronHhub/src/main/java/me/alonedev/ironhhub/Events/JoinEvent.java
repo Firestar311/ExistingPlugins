@@ -32,10 +32,15 @@ public class JoinEvent implements Listener {
         Location spawn = new Location(Bukkit.getWorld(IronHhub.spawnworld), IronHhub.x, IronHhub.y, IronHhub.z, IronHhub.yaw, IronHhub.pitch);
         player.teleport(spawn);
 
+
         if(!player.hasPlayedBefore()) {
             int PlayersJoined = main.getDataConfig().getInt("PlayersJoined");
             PlayersJoined++;
-            e.setJoinMessage(Util.replaceColors("&e&l Welcome!  &8>>&e "+e.getPlayer().getDisplayName()+" &fjoined for the first time!"+" &f(&a#"+(PlayersJoined)+"&f)"));
+            String joinPlacement = "#" + PlayersJoined;
+            e.setJoinMessage(ChatColor.translateAlternateColorCodes('&', IronHhub.FirstJoinMessage)
+                    .replace("%player%", username).
+                            replace("%joinplacement%", joinPlacement).
+                            replace("%line%", "\n"));
             main.getDataConfig().set("PlayersJoined", PlayersJoined);
             try {
                 main.getDataConfig().save(main.getDataFile());
@@ -49,7 +54,9 @@ public class JoinEvent implements Listener {
 
         }
         else {
-            e.setJoinMessage(Util.replaceColors("&e&l Hello!  &8>> &e"+e.getPlayer().getDisplayName()+" &fjoined"));
+            e.setJoinMessage(ChatColor.translateAlternateColorCodes('&', IronHhub.JoinMessage)
+                    .replace("%player%", username).
+                            replace("%line%", "\n"));;
 
             Util.sendMsg(ChatColor.translateAlternateColorCodes('&', IronHhub.MessageMOTD)
                     .replace("%player%", username).
