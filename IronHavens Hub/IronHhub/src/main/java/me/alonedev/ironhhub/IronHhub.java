@@ -1,6 +1,9 @@
 package me.alonedev.ironhhub;
 
 import me.alonedev.ironhhub.Commands.Commands;
+import me.alonedev.ironhhub.Events.DeathEvent;
+import me.alonedev.ironhhub.Events.JoinEvent;
+import me.alonedev.ironhhub.Events.OnRespawn;
 import me.alonedev.ironhhub.GUI.SocialsGUI;
 import me.alonedev.ironhhub.Mechanics.CommandsTab;
 import me.alonedev.ironhhub.Mechanics.ServerMOTD;
@@ -35,6 +38,8 @@ public final class IronHhub extends JavaPlugin implements Listener {
     public static int yaw;
     public static int pitch;
     public static String sound;
+    public static String MessageMOTD;
+    public static String FirstMessageMOTD;
 
     public static String discordLink;
 
@@ -51,14 +56,17 @@ public final class IronHhub extends JavaPlugin implements Listener {
         this.getCommand("ih").setExecutor(new Commands(this));
         this.getCommand("ih").setTabCompleter(new CommandsTab());
         this.getCommand("socials").setExecutor(new SocialsGUI());
-        this.getCommand("spawn").setExecutor(new Spawn(this));
+        this.getCommand("spawn").setExecutor(new Spawn());
 
 
         //Listeners
         getServer().getPluginManager().registerEvents(new VoidTP(this), this);
         getServer().getPluginManager().registerEvents(new SocialsGUI(), this);
         getServer().getPluginManager().registerEvents(new ServerMOTD(this), this);
-        getServer().getPluginManager().registerEvents(new Spawn(this), this);
+        getServer().getPluginManager().registerEvents(new JoinEvent(this),this);
+        getServer().getPluginManager().registerEvents(new DeathEvent(this),this);
+        getServer().getPluginManager().registerEvents(new OnRespawn(),this);
+
 
 
         //Config
@@ -98,16 +106,18 @@ public final class IronHhub extends JavaPlugin implements Listener {
 
         //Load settings from config.yml here:
         //General format is: cfg.get<Java type>(<key>, <default value>);
-        x = cfg.getInt("x", 5);
-        y = cfg.getInt("y", 64);
-        z = cfg.getInt("z", -1000);
-        BASE_PERMISSION = cfg.getString("base_permission", "ironhavens");
-        MOTD = cfg.getString("MOTD", "&6[IronHavens]");
-        spawnworld = cfg.getString("spawnworld", "spawn");
-        yaw = cfg.getInt("spawnworld", 90);
-        pitch = cfg.getInt("spawnworld", 0);
-        discordLink = cfg.getString("Discord_Social_Link", "https://discord.gg/G5q8ds9eHH");
-        sound = cfg.getString("Spawn_Sound", "block.anvil.fall");
+        this.x = cfg.getInt("x", 5);
+        this.y = cfg.getInt("y", 64);
+        this.z = cfg.getInt("z", -1000);
+        this.BASE_PERMISSION = cfg.getString("base_permission", "ironhavens");
+        this.MOTD = cfg.getString("MOTD", "&6[IronHavens]");
+        this.spawnworld = cfg.getString("spawnworld", "spawn");
+        this.yaw = cfg.getInt("spawnworld", 90);
+        this.pitch = cfg.getInt("spawnworld", 0);
+        this.discordLink = cfg.getString("Discord_Social_Link", "https://discord.gg/G5q8ds9eHH");
+        this.sound = cfg.getString("Spawn_Sound", "block.anvil.fall");
+        this.MessageMOTD = cfg.getString("MessagePlayerMOTD", "Welcome back to Iron Havens %player%!");
+        this.FirstMessageMOTD = cfg.getString("FirstMessagePlayerMOTD","Welcome to the server, %player%, hope you enjoy your stay!");
 
 
 
@@ -163,6 +173,9 @@ public final class IronHhub extends JavaPlugin implements Listener {
     }
 
 }
+
+
+
 
 
 

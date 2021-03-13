@@ -88,7 +88,6 @@ public class SocialsGUI implements CommandExecutor, Listener {
         final Player player = (Player) e.getWhoClicked();
 
         if (e.getSlot() == 13) {
-            Util.sendMsg("You clicked discord", player);
             ItemStack SocialBook = new ItemStack(Material.WRITTEN_BOOK);
             BookMeta bookMeta = (BookMeta) SocialBook.getItemMeta();
 

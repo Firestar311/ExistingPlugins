@@ -18,7 +18,7 @@ public class VoidTP implements Listener {
     }
 
     @EventHandler
-    public void onPlayerMove(EntityDamageEvent event) {
+    public void onVoidFall(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
             if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {

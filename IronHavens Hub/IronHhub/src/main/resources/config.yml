@@ -21,12 +21,19 @@ yaw: 90
 pitch: 0
 
 #MOTD
-#%line% = goes onto the second line | So when you put %line% it moves the rest of the MOTD behind it to the next line of the MOTD.
+#%line% = goes onto the second line | So when you put %line% it moves the rest of the MOTD behind it to the next line of the MOTD. (Max 2 lines)
 
-MOTD: "              &6[IronHavens] %line% &6Join now for stuff"
+MOTD: "              &5&l[IronHavens] %line% &6The ultimate skyblock experience"
 
 
 
+
+#Message that the player gets every time they join
+MessageMOTD: "--------------------------------------- %line%                         Welcome back to Iron Havens %player%! %line%---------------------------------------"
+
+
+#Message that the player gets when they first join
+FirstMessageMOTD: "Welcome to the server, %player%, hope you enjoy your stay!"
 
 
 #
