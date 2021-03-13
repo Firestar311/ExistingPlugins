@@ -58,7 +58,6 @@ public final class IronHhub extends JavaPlugin implements Listener {
         this.getCommand("ih").setTabCompleter(new CommandsTab());
         this.getCommand("socials").setExecutor(new SocialsGUI());
         this.getCommand("spawn").setExecutor(new Spawn());
-        this.getCommand("playtime").setExecutor(new Playtime());
 
 
         //Listeners
@@ -69,6 +68,10 @@ public final class IronHhub extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new DeathEvent(this),this);
         getServer().getPluginManager().registerEvents(new OnRespawn(),this);
         getServer().getPluginManager().registerEvents(new QuitEvent(),this);
+
+
+        //Playtime
+
 
 
 
@@ -131,6 +134,8 @@ public final class IronHhub extends JavaPlugin implements Listener {
     //
     //Data.yml
     //
+
+
 
 
     //
