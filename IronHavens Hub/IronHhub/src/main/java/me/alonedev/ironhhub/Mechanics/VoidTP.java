@@ -17,23 +17,24 @@ public class VoidTP implements Listener {
         this.main = main;
     }
 
+
     @EventHandler
     public void onVoidFall(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
-            if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
-                event.setCancelled(true);
-                Bukkit.getScheduler().runTaskLater(main, new Runnable() {
-                    @Override
-                    public void run() {
-                        Location spawn = new Location(Bukkit.getWorld(IronHhub.spawnworld), IronHhub.x, IronHhub.y, IronHhub.z, IronHhub.yaw, IronHhub.pitch);
-                        player.teleport(spawn);
-                        player.setFallDistance(0);
-                        player.setHealth(20.0);
-                    }
+                if (event.getCause() == EntityDamageEvent.DamageCause.VOID) {
+                    event.setCancelled(true);
+                    Bukkit.getScheduler().runTaskLater(main, new Runnable() {
+                        @Override
+                        public void run() {
+                            Location spawn = new Location(Bukkit.getWorld(IronHhub.spawnworld), IronHhub.x, IronHhub.y, IronHhub.z, IronHhub.yaw, IronHhub.pitch);
+                            player.teleport(spawn);
+                            player.setFallDistance(0);
+                            player.setHealth(20.0);
+                        }
 
-                }, 10L);
-            }
+                    }, 10L);
+                }
         }
 
 
