@@ -6,10 +6,7 @@ import me.alonedev.ironhhub.Events.JoinEvent;
 import me.alonedev.ironhhub.Events.OnRespawn;
 import me.alonedev.ironhhub.Events.QuitEvent;
 import me.alonedev.ironhhub.GUI.SocialsGUI;
-import me.alonedev.ironhhub.Mechanics.CommandsTab;
-import me.alonedev.ironhhub.Mechanics.ServerMOTD;
-import me.alonedev.ironhhub.Mechanics.Spawn;
-import me.alonedev.ironhhub.Mechanics.VoidTP;
+import me.alonedev.ironhhub.Mechanics.*;
 import me.alonedev.ironhhub.Utils.ConfigUpdater;
 import me.alonedev.ironhhub.Utils.Util;
 import net.md_5.bungee.api.ChatColor;
@@ -61,6 +58,7 @@ public final class IronHhub extends JavaPlugin implements Listener {
         this.getCommand("ih").setTabCompleter(new CommandsTab());
         this.getCommand("socials").setExecutor(new SocialsGUI());
         this.getCommand("spawn").setExecutor(new Spawn());
+        this.getCommand("playtime").setExecutor(new Playtime());
 
 
         //Listeners

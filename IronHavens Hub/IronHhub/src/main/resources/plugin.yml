@@ -20,6 +20,10 @@ commands:
     description: Spawn command
     usage: /<command>
     permission: ironhavens.use
+  playtime:
+    description: Playtime command
+    usage: /<command>
+    permission: ironhavens.use
 permissions:
   ironhavens.admin:
     description: Gives access to all commands.
