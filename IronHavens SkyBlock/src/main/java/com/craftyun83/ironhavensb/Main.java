@@ -34,32 +34,21 @@ public class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
-
         if (!setupEconomy()) {
             getLogger().severe("Disabled due to no Vault dependency found!");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
-
-        // Registering all the classes
-
         new PlayerJoinListener(this);
         new InventoryClickListener(this);
         new SpawnCommand(this);
         new IslandCommands(this);
         new PlayerDamageListener(this);
         new BlockBreakListener(this);
-
-        // Registering configuration file
-
         saveDefaultConfig();
-
         for (String world : getUnloadedWorlds()) {
-
             getServer().createWorld(new WorldCreator(world));
-
         }
-
     }
 
     public List<String> getUnloadedWorlds() {
@@ -101,31 +90,18 @@ public class Main extends JavaPlugin {
     }
 
     public void saveDiamondMinedYML(FileConfiguration config, File file) {
-
         try {
-
             config.save(file);
-
         } catch (IOException e) {
-
             e.printStackTrace();
-
         }
-
     }
 
     public void saveIslandYML(FileConfiguration config, File file) {
-
         try {
-
             config.save(file);
-
         } catch (IOException e) {
-
             e.printStackTrace();
-
         }
-
     }
-
 }
