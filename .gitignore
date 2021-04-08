@@ -1,2 +1,25 @@
 
 HungerMania/LibsDisguises/LibsDisguises.iml
+HungerMania/Enforcer/Enforcer.iml
+HungerMania/Enforcer/target/classes/net/firecraftmc/enforcer/api/punishment/Punishment$PunishmentBuilder.class
+HungerMania/Enforcer/target/classes/net/firecraftmc/enforcer/api/punishment/Punishment$Type.class
+HungerMania/Enforcer/target/classes/net/firecraftmc/enforcer/api/punishment/Punishment$Visibility.class
+HungerMania/Enforcer/target/classes/net/firecraftmc/enforcer/api/punishment/Punishment.class
+HungerMania/Enforcer/target/classes/net/firecraftmc/enforcer/api/PunishmentHandler.class
+HungerMania/Enforcer/target/classes/net/firecraftmc/enforcer/api/PunishmentManager.class
+HungerMania/Enforcer/target/classes/net/firecraftmc/enforcer/api/records/PunishmentRecord$1.class
+HungerMania/Enforcer/target/classes/net/firecraftmc/enforcer/api/records/PunishmentRecord.class
+HungerMania/Enforcer/target/classes/net/firecraftmc/enforcer/bungee/EnforcerBungee.class
+HungerMania/Enforcer/target/classes/net/firecraftmc/enforcer/Enforcer.class
+HungerMania/Enforcer/target/classes/net/firecraftmc/enforcer/spigot/EnforcerSpigot.class
+HungerMania/GameCore/target/classes/net/firecraftmc/gamecore/GameCore.class
+HungerMania/GameCore/target/classes/net/firecraftmc/gamecore/timer/Timer$1.class
+HungerMania/GameCore/target/classes/net/firecraftmc/gamecore/timer/Timer$2.class
+HungerMania/GameCore/target/classes/net/firecraftmc/gamecore/timer/Timer.class
+HungerMania/GameCore/target/classes/net/firecraftmc/gamecore/timer/TimerSnapshot.class
+HungerMania/LibsDisguises/target/LibsDisguises-1.0-ALPHA-shaded.jar
+HungerMania/LibsDisguises/target/original-LibsDisguises-1.0-ALPHA.jar
+HungerMania/Output/HungerGames-1.0-BETA.jar
+HungerMania/Output/LibsDisguises-1.0-ALPHA.jar
+HungerMania/Output/ManiaCore-1.0-ALPHA.jar
+HungerMania/Output/ManiaHub-1.0-BETA.jar
