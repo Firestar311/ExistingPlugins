@@ -3,11 +3,7 @@ package me.alonedev.ihhub.Managers;
 import java.util.HashMap;
 
 public class BookManager {
-    String title;
-    String author;
-    String link;
-    String clickText;
-    String hoverText;
+    String title, author, link, clickText, hoverText;
 
     public BookManager(String title, String author, String link, String clickText, String hoverText) {
         this.title = title;
