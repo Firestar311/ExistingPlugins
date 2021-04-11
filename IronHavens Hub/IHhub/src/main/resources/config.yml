@@ -22,14 +22,14 @@ Messages:
     FirstJoinMessage: "%player% &bHas joined the server! ( #%joinplace%)"
     JoinMessage: "%player% &bHas joined the server!"
     FirstJoinMOTD:
-    - "&bHello"
-    - "&cHello"
-    - "&bHello"
+      - "&bHello"
+      - "&cHello"
+      - "&bHello"
     JoinMOTD:
-    - "&9-------------------------------------------"
-    - "&bWelcome %player%!"
-    - "&cContact our staff via discord! (/socials)"
-    - "&9-------------------------------------------"
+      - "&9-------------------------------------------"
+      - "&bWelcome %player%!"
+      - "&cContact our staff via discord! (/socials)"
+      - "&9-------------------------------------------"
   Quit:
     QuitMessage: "%player% &cHas Left the server!"
 
@@ -44,6 +44,8 @@ MOTD:
 #Guis
 
 GUIS:
+  # Format:
+  #  'Name;Material;Slot;lore,lor2,lore3,etc'
   SocialsGUI:
     - '&8Our Discord;DIAMOND_SWORD;13;&aJoin our discord to get support,&aand hang out with our community!'
     - ' ;RED_STAINED_GLASS_PANE;0; '
@@ -63,7 +65,7 @@ Books:
     Discord:
       Title: "Discord"
       Author: "IronHavens"
-      Link: "https://spigotmc.org"
+      Link: "https://discord.gg/G5q8ds9eHH"
       SlotToOpen: 13
       HoverText: "&bJoin Our Discord!"
       ClickText: "&cClick here"
