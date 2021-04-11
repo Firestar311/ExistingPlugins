@@ -26,31 +26,20 @@ import com.sk89q.worldedit.session.ClipboardHolder;
 public class ReloadIsland {
 	
 	@SuppressWarnings("deprecation")
-	public ReloadIsland(Player p, File file) throws FileNotFoundException, IOException, WorldEditException {
-		
+	public ReloadIsland(Player p, File file) throws IOException, WorldEditException {
 		World world = Bukkit.getWorld(p.getUniqueId().toString());
-		
 		ClipboardFormat format = ClipboardFormats.findByFile(file);
-		
 		try (ClipboardReader reader = format.getReader(new FileInputStream(file))) {
-			
 		    Clipboard clipboard = reader.read();
-			   
 			try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(new BukkitWorld(world), -1)) {
-				    
 				Operation operation = new ClipboardHolder(clipboard)
 				            .createPaste(editSession)
 				            .to(BlockVector3.at(0, 80, 0))
 				            .ignoreAirBlocks(false)
 				            .build();
 				Operations.complete(operation);
-				    
 			}
-			   
 		}
-		
 		p.teleport(new Location(Bukkit.getWorld(p.getUniqueId().toString()), 0, 81, 0));
-		
 	}
-
 }

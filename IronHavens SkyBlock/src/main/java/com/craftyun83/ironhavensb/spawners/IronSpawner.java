@@ -14,22 +14,12 @@ public class IronSpawner {
 	private int task;
 	
 	public IronSpawner(Zombie zombie) {
-		
-		task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
-		    @Override
-		    public void run() {
-		        if (zombie.isValid()) {
-		        	
-		        	zombie.getWorld().dropItemNaturally(zombie.getLocation(), new ItemStack(Material.IRON_INGOT));
-		        	
-		        } else {
-		        	
-		        	Bukkit.getScheduler().cancelTask(task);
-		        	
-		        }
-		    }
+		task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
+			if (zombie.isValid()) {
+				zombie.getWorld().dropItemNaturally(zombie.getLocation(), new ItemStack(Material.IRON_INGOT));
+			} else {
+				Bukkit.getScheduler().cancelTask(task);
+			}
 		}, 0L, 100L);
-		
 	}
-
 }
