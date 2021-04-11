@@ -1,0 +1,69 @@
+
+
+
+
+Spawn:
+  x: 0.500
+  y: 0
+  z: 0.500
+  yaw: 90
+  pitch: 0
+  spawnWorld: "world"
+
+disabledWorlds:
+  - "world"
+
+
+
+#Messages
+
+Messages:
+  Join:
+    FirstJoinMessage: "%player% &bHas joined the server! ( #%joinplace%)"
+    JoinMessage: "%player% &bHas joined the server!"
+    FirstJoinMOTD:
+    - "&bHello"
+    - "&cHello"
+    - "&bHello"
+    JoinMOTD:
+    - "&9-------------------------------------------"
+    - "&bWelcome %player%!"
+    - "&cContact our staff via discord! (/socials)"
+    - "&9-------------------------------------------"
+  Quit:
+    QuitMessage: "%player% &cHas Left the server!"
+
+
+#Server list MOTD (ONLY SUPPORTS 2 LINES!!!)
+
+MOTD:
+  - "                &b&kaft &7&lIron&f&lHavens &b&kaft"
+  - "      &eThe &6&lUltimate &eSkyblock Experience"
+
+
+#Guis
+
+GUIS:
+  SocialsGUI:
+    - '&8Our Discord;DIAMOND_SWORD;13;&aJoin our discord to get support,&aand hang out with our community!'
+    - ' ;RED_STAINED_GLASS_PANE;0; '
+    - ' ;RED_STAINED_GLASS_PANE;1; '
+    - ' ;RED_STAINED_GLASS_PANE;2; '
+    - ' ;RED_STAINED_GLASS_PANE;3; '
+    - ' ;RED_STAINED_GLASS_PANE;4; '
+    - ' ;RED_STAINED_GLASS_PANE;5; '
+    - ' ;RED_STAINED_GLASS_PANE;6; '
+    - ' ;RED_STAINED_GLASS_PANE;7; '
+    - ' ;RED_STAINED_GLASS_PANE;8; '
+
+
+
+Books:
+  SocialsGUI:
+    Discord:
+      Title: "Discord"
+      Author: "IronHavens"
+      Link: "https://spigotmc.org"
+      SlotToOpen: 13
+      HoverText: "&bJoin Our Discord!"
+      ClickText: "&cClick here"
