@@ -1,11 +1,9 @@
 package com.craftyun83.ironhavensb;
 
 import com.craftyun83.ironhavensb.commands.IslandCommands;
-import com.craftyun83.ironhavensb.commands.SpawnCommand;
 import com.craftyun83.ironhavensb.listeners.BlockBreakListener;
 import com.craftyun83.ironhavensb.listeners.InventoryClickListener;
 import com.craftyun83.ironhavensb.listeners.PlayerDamageListener;
-import com.craftyun83.ironhavensb.listeners.PlayerJoinListener;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -39,9 +37,7 @@ public class Main extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
-        new PlayerJoinListener(this);
         new InventoryClickListener(this);
-        new SpawnCommand(this);
         new IslandCommands(this);
         new PlayerDamageListener(this);
         new BlockBreakListener(this);
