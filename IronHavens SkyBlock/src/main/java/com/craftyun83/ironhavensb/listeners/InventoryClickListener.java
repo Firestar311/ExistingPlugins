@@ -61,7 +61,7 @@ public class InventoryClickListener implements Listener {
                 return;
             }
             if (e.getSlot() == 4 && (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§6§lCreate your island"))) {
-                new BiomeGUI(p);
+                new BiomeGUI(p, plugin);
             }
 
         } else if (e.getView().getTitle().equalsIgnoreCase("Island Upgrades")) {
@@ -81,7 +81,7 @@ public class InventoryClickListener implements Listener {
                 return;
             }
             if (e.getSlot() == 3 && (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§a§lConfirm"))) {
-                new BiomeGUI(p);
+                new BiomeGUI(p, plugin);
             } else if (e.getSlot() == 5 && (e.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("§c§lCancel"))) {
                 new CreatedGUI(p);
             }

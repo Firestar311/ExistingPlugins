@@ -3,3 +3,12 @@ emerald: "20"
 diamond: "10"
 gold: "5"
 iron: "3"
+
+GUIS:
+  BiomeGUI:
+    - '&8Jungle Biome;JUNGLE_WOOD;1;&aGenerate a jungle biome skyblock island!'
+    - '&8Spruce Biome;SPRUCE_WOOD;3;&aGenerate a spruce biome skyblock island!'
+    - '&8Forest Biome;OAK_WOOD;5;&aGenerate a forest biome skyblock island!'
+    - '&8Savannah Biome;ACACIA_WOOD;7;&aGenerate a savannah biome skyblock island!'
+    - '&8Classic;GRASS_BLOCK;11;&aGenerate a classic skyblock island!'
+    - '&8Hardcore;BARRIER;15;&aGenerate a hardcore skyblock island!'
