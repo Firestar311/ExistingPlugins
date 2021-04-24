@@ -17,7 +17,7 @@ public class BiomeGUI {
         BiomeGUI = Bukkit.createInventory(null, 18, ChatColor.translateAlternateColorCodes('&', "&bBiome Chooser"));
         this.main = main;
         this.gui = new GuiUtil(main);
-        gui.generateItems(BiomeGUI, "SocialsGUI");
+        gui.generateItems(BiomeGUI, "BiomeGUI");
 
         p.openInventory(BiomeGUI);
     }

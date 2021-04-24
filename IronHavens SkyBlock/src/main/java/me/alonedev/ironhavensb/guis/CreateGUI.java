@@ -14,7 +14,7 @@ public class CreateGUI {
     private static GuiUtil gui;
 
     public CreateGUI(Player p, Main main) {
-        createGUI = Bukkit.createInventory(null, 9, ChatColor.translateAlternateColorCodes('&', "&bBiome Chooser"));
+        createGUI = Bukkit.createInventory(null, 9, ChatColor.translateAlternateColorCodes('&', "Create Island"));
         this.main = main;
         this.gui = new GuiUtil(main);
         gui.generateItems(createGUI, "CreateGUI");

@@ -10,8 +10,5 @@
         <module name="IronHavens SkyBlock" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="IronHavens SkyBlock" target="8" />
-    </bytecodeTargetLevel>
   </component>
 </project>
