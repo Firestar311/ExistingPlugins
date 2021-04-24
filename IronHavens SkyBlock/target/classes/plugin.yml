@@ -1,12 +1,10 @@
 name: IronHavenSB
-author: CraftYun38(Iron Haven Developer)
+author: CraftYun38, AloneMusk
 version: 1.0
-main: com.craftyun83.ironhavensb.Main
+main: me.alonedev.ironhavensb.Main
 api-version: 1.16
 depend: [WorldEdit, Vault]
 
 commands:
-  spawn:
-    description: Teleport to spawn!
   is:
     description: Skyblock main command!
