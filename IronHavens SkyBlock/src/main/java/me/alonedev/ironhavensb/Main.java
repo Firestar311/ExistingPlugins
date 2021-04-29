@@ -23,8 +23,7 @@ public class Main extends JavaPlugin {
 
     public static Economy econ;
 
-    public File DiamondMinedYML = new File(getDataFolder()+"/DiamondMined.yml");
-    public FileConfiguration DiamondMinedConfig = YamlConfiguration.loadConfiguration(DiamondMinedYML);
+    public File islandsFolder = new File(getDataFolder()+"/islands/");
 
     public File islandsYML = new File(getDataFolder()+"/islands.yml");
     public FileConfiguration islandsConfig = YamlConfiguration.loadConfiguration(islandsYML);
@@ -83,19 +82,12 @@ public class Main extends JavaPlugin {
         return econ;
     }
 
-    public void saveDiamondMinedYML(FileConfiguration config, File file) {
+    public void saveYml(FileConfiguration ymlConfig, File ymlFile) {
         try {
-            config.save(file);
+            ymlConfig.save(ymlFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void saveIslandYML(FileConfiguration config, File file) {
-        try {
-            config.save(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

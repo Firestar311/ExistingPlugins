@@ -14,7 +14,7 @@ public class ReloadGUI {
     private static GuiUtil gui;
 
     public ReloadGUI(Player p, Main main) {
-        ReloadGUI = Bukkit.createInventory(null, 27, ChatColor.translateAlternateColorCodes('&', "&bBiome Chooser"));
+        ReloadGUI = Bukkit.createInventory(null, 27, ChatColor.translateAlternateColorCodes('&', "&bReset Island"));
         this.main = main;
         this.gui = new GuiUtil(main);
         gui.generateItems(ReloadGUI, "ReloadGUI");

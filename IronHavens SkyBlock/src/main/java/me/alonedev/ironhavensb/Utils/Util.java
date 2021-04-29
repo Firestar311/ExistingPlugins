@@ -150,12 +150,4 @@ public class Util {
         return stacks;
     }
 
-    public static void saveDataYml(FileConfiguration ymlConfig, File ymlFile) {
-        try {
-            ymlConfig.save(ymlFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 }

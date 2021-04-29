@@ -1,6 +1,7 @@
 package me.alonedev.ironhavensb.island;
 
 import me.alonedev.ironhavensb.Main;
+import me.alonedev.ironhavensb.Utils.Util;
 import me.alonedev.ironhavensb.generators.EmptyChunkGenerator;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
@@ -44,7 +45,7 @@ public class CreateIsland {
                 p.teleport(new Location(Bukkit.getWorld(p.getUniqueId().toString()), 0, 81, 0));
                 plugin.islandsConfig.createSection(p.getName());
                 plugin.islandsConfig.set(p.getName(), p.getUniqueId().toString());
-                plugin.saveIslandYML(plugin.islandsConfig, plugin.islandsYML);
+                plugin.saveYml(plugin.islandsConfig, plugin.islandsYML);
             } catch (FileNotFoundException exc) {
                 Bukkit.getLogger().severe("SEVERE ERROR DETECTED: Could not find island schematic!");
                 new DeleteIsland(Bukkit.getWorld(p.getUniqueId().toString()).getWorldFolder(), Bukkit.getWorld(p.getUniqueId().toString()), plugin, p);
