@@ -1,13 +1,13 @@
 package net.firecraftmc.maniacore.spigot.plugin;
 
-import net.firecraftmc.maniacore.plugin.ManiaTask;
+import net.firecraftmc.maniacore.plugin.CenturionsTask;
 import org.bukkit.scheduler.BukkitTask;
 
-public class SpigotManiaTask implements ManiaTask {
+public class SpigotCenturionsTask implements CenturionsTask {
     
     private BukkitTask task;
     
-    public SpigotManiaTask(BukkitTask task) {
+    public SpigotCenturionsTask(BukkitTask task) {
         this.task = task;
     }
     

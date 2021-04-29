@@ -1,14 +1,18 @@
 package net.firecraftmc.maniacore.api.records;
 
 import net.firecraftmc.maniacore.api.friends.FriendRequest;
+import net.firecraftmc.manialib.sql.DataType;
+import net.firecraftmc.manialib.sql.Database;
+import net.firecraftmc.manialib.sql.IRecord;
+import net.firecraftmc.manialib.sql.Row;
 import net.firecraftmc.manialib.sql.Table;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class FriendRequestRecord implements net.firecraftmc.manialib.sql.IRecord<FriendRequest> {
+public class FriendRequestRecord implements IRecord<FriendRequest> {
     
-    public FriendRequestRecord(net.firecraftmc.manialib.sql.Row row) {
+    public FriendRequestRecord(Row row) {
         this.object = FriendRequest.builder().id(row.getInt("id")).sender(row.getUUID("from")).to(row.getUUID("to")).timestamp(row.getLong("timestamp")).build();
     }
     
@@ -18,12 +22,12 @@ public class FriendRequestRecord implements net.firecraftmc.manialib.sql.IRecord
         this.object = object;
     }
     
-    public static net.firecraftmc.manialib.sql.Table generateTable(net.firecraftmc.manialib.sql.Database database) {
-        net.firecraftmc.manialib.sql.Table table = new Table(database, "friendrequests");
-        table.addColumn("id", net.firecraftmc.manialib.sql.DataType.INT, true, true);
-        table.addColumn("sender", net.firecraftmc.manialib.sql.DataType.VARCHAR, 36);
-        table.addColumn("to", net.firecraftmc.manialib.sql.DataType.VARCHAR, 36);
-        table.addColumn("timestamp", net.firecraftmc.manialib.sql.DataType.BIGINT);
+    public static Table generateTable(Database database) {
+        Table table = new Table(database, "friendrequests");
+        table.addColumn("id", DataType.INT, true, true);
+        table.addColumn("sender", DataType.VARCHAR, 36);
+        table.addColumn("to", DataType.VARCHAR, 36);
+        table.addColumn("timestamp", DataType.BIGINT);
         return table;
     }
     

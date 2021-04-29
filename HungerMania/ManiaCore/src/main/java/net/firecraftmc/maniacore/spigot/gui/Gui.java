@@ -2,7 +2,7 @@ package net.firecraftmc.maniacore.spigot.gui;
 
 import lombok.Getter;
 import net.firecraftmc.maniacore.spigot.util.ItemBuilder;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -19,10 +19,10 @@ import java.util.*;
 @Getter
 public class Gui implements InventoryHolder {
     
-    private static net.firecraftmc.maniacore.spigot.gui.InventoryListenerGUI inventoryListenerGUI;
-    protected List<net.firecraftmc.maniacore.spigot.gui.CustomGUIListener> extraListeners;
-    protected Map<Integer, net.firecraftmc.maniacore.spigot.gui.GUIButton> items;
-    protected Map<Integer, net.firecraftmc.maniacore.spigot.gui.GUIButton> toolbarItems;
+    private static InventoryListenerGUI inventoryListenerGUI;
+    protected List<CustomGUIListener> extraListeners;
+    protected Map<Integer, GUIButton> items;
+    protected Map<Integer, GUIButton> toolbarItems;
     protected int currentPage, maxSlots;
     protected String name;
     protected Plugin plugin;
@@ -66,7 +66,7 @@ public class Gui implements InventoryHolder {
         return name;
     }
     
-    public int addButton(net.firecraftmc.maniacore.spigot.gui.GUIButton button) {
+    public int addButton(GUIButton button) {
         int slot = 0;
         
         if (!items.isEmpty()) {
@@ -87,7 +87,7 @@ public class Gui implements InventoryHolder {
         return slot;
     }
     
-    public void setButton(int slot, net.firecraftmc.maniacore.spigot.gui.GUIButton button) {
+    public void setButton(int slot, GUIButton button) {
         items.put(slot, button);
     }
     
@@ -95,7 +95,7 @@ public class Gui implements InventoryHolder {
         items.remove(slot);
     }
     
-    public net.firecraftmc.maniacore.spigot.gui.GUIButton getButton(int slot) {
+    public GUIButton getButton(int slot) {
         if (slot < 45) {
             int page = currentPage;
             int index = slot;
@@ -108,7 +108,7 @@ public class Gui implements InventoryHolder {
         return toolbarItems.get(slot - 45);
     }
     
-    public void setToolbarItem(int slot, net.firecraftmc.maniacore.spigot.gui.GUIButton button) {
+    public void setToolbarItem(int slot, GUIButton button) {
         if (slot < 0 || slot > 8) {
             throw new IllegalArgumentException("The desired slot is outside the bounds of the toolbar slot range. [0-8]");
         }
@@ -176,16 +176,16 @@ public class Gui implements InventoryHolder {
         
         if (paginated) {
             inventory = Bukkit.createInventory(this, 54, name);
-            net.firecraftmc.maniacore.spigot.gui.GUIButton backButton = new net.firecraftmc.maniacore.spigot.gui.GUIButton(new net.firecraftmc.maniacore.spigot.util.ItemBuilder(Material.ARROW).setDisplayName("&aPrevious Page").build());
-            net.firecraftmc.maniacore.spigot.gui.GUIButton pageIndicator = new net.firecraftmc.maniacore.spigot.gui.GUIButton(new net.firecraftmc.maniacore.spigot.util.ItemBuilder(Material.NAME_TAG).setDisplayName("&aPage " + (currentPage + 1) + " of " + (this.getFinalPage() + 1)).build());
-            net.firecraftmc.maniacore.spigot.gui.GUIButton nextButton = new GUIButton(new ItemBuilder(Material.ARROW).setDisplayName("&aNext Page").build());
+            GUIButton backButton = new GUIButton(new ItemBuilder(Material.ARROW).setDisplayName("&aPrevious Page").build());
+            GUIButton pageIndicator = new GUIButton(new ItemBuilder(Material.NAME_TAG).setDisplayName("&aPage " + (currentPage + 1) + " of " + (this.getFinalPage() + 1)).build());
+            GUIButton nextButton = new GUIButton(new ItemBuilder(Material.ARROW).setDisplayName("&aNext Page").build());
             
             backButton.setListener(event -> {
                 event.setCancelled(true);
                 Gui menu = (Gui) event.getInventory().getHolder();
                 
                 if (!menu.previousPage()) {
-                    event.getWhoClicked().sendMessage(ManiaUtils.color("&cThere are no previous pages"));
+                    event.getWhoClicked().sendMessage(CenturionsUtils.color("&cThere are no previous pages"));
                     return;
                 }
                 
@@ -199,7 +199,7 @@ public class Gui implements InventoryHolder {
                 Gui menu = (Gui) event.getInventory().getHolder();
                 
                 if (!menu.nextPage()) {
-                    event.getWhoClicked().sendMessage(ManiaUtils.color("&cThere are no additional pages"));
+                    event.getWhoClicked().sendMessage(CenturionsUtils.color("&cThere are no additional pages"));
                     return;
                 }
                 

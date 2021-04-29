@@ -1,7 +1,7 @@
 package net.firecraftmc.maniacore.spigot.util;
 
 import net.firecraftmc.maniacore.spigot.util.sb.SBLine;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.scoreboard.*;
 
@@ -57,9 +57,9 @@ public class ScoreboardBuilder {
         Scoreboard scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
         Objective objective;
         if (title != null) {
-            objective = scoreboard.registerNewObjective(ManiaUtils.color(title), "dummy");
+            objective = scoreboard.registerNewObjective(CenturionsUtils.color(title), "dummy");
         } else {
-            objective = scoreboard.registerNewObjective(ManiaUtils.color(name), "dummy");
+            objective = scoreboard.registerNewObjective(CenturionsUtils.color(name), "dummy");
         }
         objective.setDisplaySlot(slot);
         
@@ -71,10 +71,10 @@ public class ScoreboardBuilder {
             SBLine text = this.lines.get(i);
             if (text != null) {
                 Team line = scoreboard.registerNewTeam(text.getName());
-                line.setPrefix(ManiaUtils.color(text.getPrefix()));
-                line.setSuffix(ManiaUtils.color(line.getSuffix()));
-                line.addEntry(ManiaUtils.color(text.getName()));
-                objective.getScore(ManiaUtils.color(text.getName())).setScore(15 - i);
+                line.setPrefix(CenturionsUtils.color(text.getPrefix()));
+                line.setSuffix(CenturionsUtils.color(line.getSuffix()));
+                line.addEntry(CenturionsUtils.color(text.getName()));
+                objective.getScore(CenturionsUtils.color(text.getName())).setScore(15 - i);
             }
         }
         

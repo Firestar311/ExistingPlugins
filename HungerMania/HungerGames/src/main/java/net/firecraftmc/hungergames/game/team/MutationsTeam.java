@@ -22,7 +22,7 @@ public class MutationsTeam extends GameTeam {
     
     public void join(UUID uuid) {
         game.addPlayer(uuid);
-        User user = HungerGames.getInstance().getManiaCore().getUserManager().getUser(uuid);
+        User user = HungerGames.getInstance().getCenturionsCore().getUserManager().getUser(uuid);
         Player player = Bukkit.getPlayer(uuid);
         setPlayerStats(player, true, false, false);
         this.members.add(uuid);

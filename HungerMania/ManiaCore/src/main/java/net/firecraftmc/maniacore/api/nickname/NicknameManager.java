@@ -1,6 +1,6 @@
 package net.firecraftmc.maniacore.api.nickname;
 
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.ranks.Rank;
 import net.firecraftmc.maniacore.api.user.User;
 
@@ -18,7 +18,7 @@ public class NicknameManager {
     
     public boolean isBlacklisted(String name) {
         try {
-            User user = ManiaCore.getInstance().getUserManager().getUser(name);
+            User user = CenturionsCore.getInstance().getUserManager().getUser(name);
             if (user != null) {
                 if (user.getRank().ordinal() <= Rank.MEDIA.ordinal()) {
                     return true;

@@ -2,11 +2,11 @@ package net.firecraftmc.maniacore.spigot.util;
 
 import com.mojang.authlib.GameProfile;
 import lombok.Getter;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.records.SkinRecord;
 import net.firecraftmc.maniacore.api.skin.Skin;
 import net.firecraftmc.maniacore.api.user.User;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import net.firecraftmc.manialib.sql.IRecord;
 import org.bukkit.*;
 import org.bukkit.block.BlockState;
@@ -50,12 +50,12 @@ public class ItemBuilder {
         ItemStack itemStack = new ItemStack(material, amount, damage);
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (displayName != null) {
-            itemMeta.setDisplayName(ManiaUtils.color(displayName));
+            itemMeta.setDisplayName(CenturionsUtils.color(displayName));
         }
         
         if (!lore.isEmpty()) {
             List<String> coloredLore = new LinkedList<>();
-            lore.forEach(line -> coloredLore.add(ManiaUtils.color(line)));
+            lore.forEach(line -> coloredLore.add(CenturionsUtils.color(line)));
             itemMeta.setLore(coloredLore);
         }
         
@@ -92,10 +92,10 @@ public class ItemBuilder {
         if (itemMeta instanceof BookMeta) {
             BookMeta bookMeta = (BookMeta) itemMeta;
             if (bookTitle != null) {
-                bookMeta.setTitle(ManiaUtils.color(bookTitle));
+                bookMeta.setTitle(CenturionsUtils.color(bookTitle));
             }
             if (bookAuthor != null) {
-                bookMeta.setTitle(ManiaUtils.color(bookAuthor));
+                bookMeta.setTitle(CenturionsUtils.color(bookAuthor));
             }
             
             if (!bookPages.isEmpty()) {
@@ -131,11 +131,11 @@ public class ItemBuilder {
             if (this.skullOwner != null) {
                 SkullMeta skullMeta = (SkullMeta) itemMeta;
                 String skullOwner;
-                User user = ManiaCore.getInstance().getUserManager().getUser(this.skullOwner);
+                User user = CenturionsCore.getInstance().getUserManager().getUser(this.skullOwner);
                 if (user != null) {
                     skullOwner = user.getName();
                 } else {
-                    skullOwner = ManiaUtils.getNameFromUUID(this.skullOwner);
+                    skullOwner = CenturionsUtils.getNameFromUUID(this.skullOwner);
                 }
     
                 if (skullOwner != null) {
@@ -157,7 +157,7 @@ public class ItemBuilder {
                         if (offlinePlayer != null) {
                             mcProfile = ((CraftOfflinePlayer) offlinePlayer).getProfile();
                             if (mcProfile == null) {
-                                List<IRecord> records = ManiaCore.getInstance().getDatabase().getRecords(SkinRecord.class, "uuid", this.skullOwner.toString());
+                                List<IRecord> records = CenturionsCore.getInstance().getDatabase().getRecords(SkinRecord.class, "uuid", this.skullOwner.toString());
                                 for (IRecord record : records) {
                                     if (record instanceof SkinRecord) {
                                         mcProfile = SpigotUtils.skinToProfile(((SkinRecord) record).toObject());

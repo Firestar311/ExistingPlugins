@@ -4,11 +4,11 @@ import lombok.Getter;
 import net.firecraftmc.hungergames.HungerGames;
 import net.firecraftmc.hungergames.game.Game;
 import net.firecraftmc.hungergames.game.GamePlayer;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.leveling.Level;
 import net.firecraftmc.maniacore.api.stats.Stats;
 import net.firecraftmc.maniacore.api.user.User;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import net.firecraftmc.maniacore.spigot.gui.GUIButton;
 import net.firecraftmc.maniacore.spigot.gui.Gui;
 import net.firecraftmc.maniacore.spigot.util.ItemBuilder;
@@ -38,14 +38,14 @@ public class SpectatorInventoryGui extends Gui {
     private static BukkitRunnable task;
     
     public SpectatorInventoryGui(Game game, GamePlayer player, GamePlayer target) {
-        super(HungerGames.getInstance(), ManiaUtils.color(target.getUser().getName() + "'s Inventory &c&lWIP"), false, 54);
+        super(HungerGames.getInstance(), CenturionsUtils.color(target.getUser().getName() + "'s Inventory &c&lWIP"), false, 54);
 
         this.player = player;
         this.target = target;
         
         ItemStack skull = target.getSkull().clone();
         ItemMeta skullMeta = skull.getItemMeta();
-        skullMeta.setDisplayName(ManiaUtils.color("&e" + target.getUser().getName()));
+        skullMeta.setDisplayName(CenturionsUtils.color("&e" + target.getUser().getName()));
         String line = "&7This player is " + target.getTeam().getColor() + "&l";
         if (game.getTributesTeam().isMember(target.getUniqueId())) {
             line += "ALIVE";
@@ -54,7 +54,7 @@ public class SpectatorInventoryGui extends Gui {
         } else if (game.getMutationsTeam().isMember(target.getUniqueId())) {
             line += "MUTATED";
         }
-        skullMeta.setLore(Collections.singletonList(ManiaUtils.color(line)));
+        skullMeta.setLore(Collections.singletonList(CenturionsUtils.color(line)));
         skull.setItemMeta(skullMeta);
         setButton(0, new GUIButton(skull));
         List<String> statsLore = new LinkedList<>();
@@ -107,22 +107,22 @@ public class SpectatorInventoryGui extends Gui {
             wlr = wins / (losses * 1.0);
         }
 
-        Level level = ManiaCore.getInstance().getLevelManager().getLevel(exp);
-        Level nextLevel = ManiaCore.getInstance().getLevelManager().getLevels().getOrDefault(level.getNumber() + 1, ManiaCore.getInstance().getLevelManager().getLevel(0));
+        Level level = CenturionsCore.getInstance().getLevelManager().getLevel(exp);
+        Level nextLevel = CenturionsCore.getInstance().getLevelManager().getLevels().getOrDefault(level.getNumber() + 1, CenturionsCore.getInstance().getLevelManager().getLevel(0));
 
-        statsLore.add(ManiaUtils.color("&6&l> &7Coins: &b" + coins));
-        statsLore.add(ManiaUtils.color("&6&l> &7Level: &b" + level.getNumber()));
-        statsLore.add(ManiaUtils.color("&6&l> &7Experience: &b" + exp + "     &e&lNext Level: &b" + (nextLevel.getTotalXp() - exp)));
-        statsLore.add(ManiaUtils.color("&6&l> &7Kills: &b" + kills));
-        statsLore.add(ManiaUtils.color("&6&l> &7Deaths: &b" + deaths));
-        statsLore.add(ManiaUtils.color("&6&l> &7K/D: &b" + Constants.NUMBER_FORMAT.format(kdr)));
-        statsLore.add(ManiaUtils.color("&6&l> &7Wins: &b" + wins));
-        statsLore.add(ManiaUtils.color("&6&l> &7Losses: &b" + losses));
-        statsLore.add(ManiaUtils.color("&6&l> &7W/L: &b" + Constants.NUMBER_FORMAT.format(wlr)));
-        statsLore.add(ManiaUtils.color("&6&l> &7Win Streak: &b" + winStreak));
-        statsLore.add(ManiaUtils.color("&6&l> &7Deathmatches Reached: &b" + deathmatches));
-        statsLore.add(ManiaUtils.color("&6&l> &7Chests Found: &b" + chestsFound));
-        statsLore.add(ManiaUtils.color("&6&l> &7Score: &b" + score));
+        statsLore.add(CenturionsUtils.color("&6&l> &7Coins: &b" + coins));
+        statsLore.add(CenturionsUtils.color("&6&l> &7Level: &b" + level.getNumber()));
+        statsLore.add(CenturionsUtils.color("&6&l> &7Experience: &b" + exp + "     &e&lNext Level: &b" + (nextLevel.getTotalXp() - exp)));
+        statsLore.add(CenturionsUtils.color("&6&l> &7Kills: &b" + kills));
+        statsLore.add(CenturionsUtils.color("&6&l> &7Deaths: &b" + deaths));
+        statsLore.add(CenturionsUtils.color("&6&l> &7K/D: &b" + Constants.NUMBER_FORMAT.format(kdr)));
+        statsLore.add(CenturionsUtils.color("&6&l> &7Wins: &b" + wins));
+        statsLore.add(CenturionsUtils.color("&6&l> &7Losses: &b" + losses));
+        statsLore.add(CenturionsUtils.color("&6&l> &7W/L: &b" + Constants.NUMBER_FORMAT.format(wlr)));
+        statsLore.add(CenturionsUtils.color("&6&l> &7Win Streak: &b" + winStreak));
+        statsLore.add(CenturionsUtils.color("&6&l> &7Deathmatches Reached: &b" + deathmatches));
+        statsLore.add(CenturionsUtils.color("&6&l> &7Chests Found: &b" + chestsFound));
+        statsLore.add(CenturionsUtils.color("&6&l> &7Score: &b" + score));
         setButton(1, new GUIButton(ItemBuilder.start(Material.DIAMOND_SWORD).setDisplayName("&eStats").setLore(statsLore).build()));
         Player targetPlayer = target.getUser().getBukkitPlayer();
         setButton(2, new GUIButton(ItemBuilder.start(Material.GOLDEN_APPLE).setDisplayName("&eHealth: &c&l" + Constants.NUMBER_FORMAT.format(targetPlayer.getHealth()) + "/" + Constants.NUMBER_FORMAT.format(targetPlayer.getMaxHealth())).build()));

@@ -1,7 +1,7 @@
 package net.firecraftmc.hungergames.game.sponsoring;
 
 import lombok.Getter;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -79,14 +79,14 @@ public class SponsorManager {
         List<SponsorItem> items = this.sponsorItems.get(type);
         ItemStack itemStack = new ItemStack(type.getDisplay());
         ItemMeta meta = itemStack.getItemMeta();
-        meta.setDisplayName(ManiaUtils.color("&e&l" + type.getName()));
+        meta.setDisplayName(CenturionsUtils.color("&e&l" + type.getName()));
         List<String> lore = new LinkedList<>();
-        lore.add(ManiaUtils.color("&7" + type.getDescription()));
-        lore.addAll(Arrays.asList("", ManiaUtils.color("&e&lPossible Items (" + items.size() + ")")));
+        lore.add(CenturionsUtils.color("&7" + type.getDescription()));
+        lore.addAll(Arrays.asList("", CenturionsUtils.color("&e&lPossible Items (" + items.size() + ")")));
         for (SponsorItem item : items) {
-            lore.add(ManiaUtils.color("&8> &f" + item.getLoreLine()));
+            lore.add(CenturionsUtils.color("&8> &f" + item.getLoreLine()));
         }
-        lore.addAll(Arrays.asList("", ManiaUtils.color("&6&lLeft Click &fto sponsor with Score!"), ManiaUtils.color("&6&lRight Click &fto sponsor with Coins!")));
+        lore.addAll(Arrays.asList("", CenturionsUtils.color("&6&lLeft Click &fto sponsor with Score!"), CenturionsUtils.color("&6&lRight Click &fto sponsor with Coins!")));
         meta.setLore(lore);
         itemStack.setItemMeta(meta);
         return itemStack;

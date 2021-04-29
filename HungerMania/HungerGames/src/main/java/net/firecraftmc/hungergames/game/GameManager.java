@@ -26,7 +26,7 @@ public class GameManager {
             return this.games.get(id);
         }
         
-        List<IRecord> records = plugin.getManiaCore().getDatabase().getRecords(GameRecord.class, "id", id);
+        List<IRecord> records = plugin.getCenturionsCore().getDatabase().getRecords(GameRecord.class, "id", id);
         if (records.size() > 0) {
             for (IRecord record : records) {
                 if (record instanceof GameRecord) {

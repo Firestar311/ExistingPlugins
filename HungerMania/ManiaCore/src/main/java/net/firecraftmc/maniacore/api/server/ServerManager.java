@@ -1,23 +1,23 @@
 package net.firecraftmc.maniacore.api.server;
 
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.redis.Redis;
 import net.firecraftmc.maniacore.api.redis.RedisListener;
-import net.firecraftmc.maniacore.api.util.ManiaProperties;
+import net.firecraftmc.maniacore.api.util.CenturionsProperties;
 
 @SuppressWarnings("DuplicatedCode")
 public abstract class ServerManager implements RedisListener {
-    protected ManiaServer currentServer;
-    protected ManiaCore maniaCore;
-    protected NetworkType networkType = ManiaProperties.NETWORK_TYPE;
+    protected CenturionsServer currentServer;
+    protected CenturionsCore centurionsCore;
+    protected NetworkType networkType = CenturionsProperties.NETWORK_TYPE;
     
-    public ServerManager(ManiaCore maniaCore) {
-        this.maniaCore = maniaCore;
+    public ServerManager(CenturionsCore centurionsCore) {
+        this.centurionsCore = centurionsCore;
     }
     
     public abstract void init();
     
-    public ManiaServer getCurrentServer() {
+    public CenturionsServer getCurrentServer() {
         return currentServer;
     }
     

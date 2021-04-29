@@ -2,9 +2,9 @@ package net.firecraftmc.maniacore.spigot.cmd;
 
 import net.firecraftmc.maniacore.spigot.util.Spawnpoint;
 import net.firecraftmc.maniacore.spigot.util.SpigotUtils;
-import net.firecraftmc.maniacore.ManiaCorePlugin;
+import net.firecraftmc.maniacore.CenturionsCorePlugin;
 import net.firecraftmc.maniacore.api.ranks.Rank;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -12,15 +12,15 @@ import org.bukkit.entity.Player;
 
 public class SpawnCmd implements CommandExecutor {
     
-    private ManiaCorePlugin plugin;
+    private CenturionsCorePlugin plugin;
 
-    public SpawnCmd(ManiaCorePlugin plugin) {
+    public SpawnCmd(CenturionsCorePlugin plugin) {
         this.plugin = plugin;
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ManiaUtils.color("&cOnly players may use that command."));
+            sender.sendMessage(CenturionsUtils.color("&cOnly players may use that command."));
             return true;
         }
 
@@ -29,10 +29,10 @@ public class SpawnCmd implements CommandExecutor {
         
         if (cmd.getName().equalsIgnoreCase("spawn")) {
             player.teleport(plugin.getSpawnpoint().getLocation());
-            player.sendMessage(ManiaUtils.color("&aTeleported you to the spawnpoint."));
+            player.sendMessage(CenturionsUtils.color("&aTeleported you to the spawnpoint."));
         } else if (cmd.getName().equalsIgnoreCase("setspawn")) {
             if (!(senderRank.ordinal() <= Rank.ADMIN.ordinal())) {
-                player.sendMessage(ManiaUtils.color("&cYou do not have permission to use that command."));
+                player.sendMessage(CenturionsUtils.color("&cYou do not have permission to use that command."));
                 return true;
             }
             Spawnpoint spawnpoint = new Spawnpoint(player.getLocation());
@@ -47,7 +47,7 @@ public class SpawnCmd implements CommandExecutor {
             plugin.setSpawnpoint(spawnpoint);
             plugin.getConfig().set("spawnpoint", spawnpoint);
             plugin.saveConfig();
-            player.sendMessage(ManiaUtils.color("&aYou set the spawnpoint to your current location."));
+            player.sendMessage(CenturionsUtils.color("&aYou set the spawnpoint to your current location."));
         }
         
         return true;

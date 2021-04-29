@@ -1,7 +1,7 @@
 package net.firecraftmc.maniacore.api.events;
 
 import net.firecraftmc.maniacore.api.records.EventInfoRecord;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.manialib.sql.IRecord;
 
 import java.util.*;
@@ -9,20 +9,20 @@ import java.util.Map.Entry;
 
 public class EventManager {
     
-    private net.firecraftmc.maniacore.api.events.EventInfo activeEvent;
-    private ManiaCore maniaCore;
-    private Map<Integer, net.firecraftmc.maniacore.api.events.EventInfo> events = new HashMap<>();
+    private EventInfo activeEvent;
+    private CenturionsCore centurionsCore;
+    private Map<Integer, EventInfo> events = new HashMap<>();
     
-    public EventManager(ManiaCore maniaCore) {
-        this.maniaCore = maniaCore;
+    public EventManager(CenturionsCore centurionsCore) {
+        this.centurionsCore = centurionsCore;
     }
     
     public void loadData() {
-        List<IRecord> records = maniaCore.getDatabase().getRecords(net.firecraftmc.maniacore.api.records.EventInfoRecord.class, null, null);
+        List<IRecord> records = centurionsCore.getDatabase().getRecords(EventInfoRecord.class, null, null);
         for (IRecord record : records) {
-            if (record instanceof net.firecraftmc.maniacore.api.records.EventInfoRecord) {
-                net.firecraftmc.maniacore.api.records.EventInfoRecord eventRecord = (net.firecraftmc.maniacore.api.records.EventInfoRecord) record;
-                net.firecraftmc.maniacore.api.events.EventInfo eventInfo = eventRecord.toObject();
+            if (record instanceof EventInfoRecord) {
+                EventInfoRecord eventRecord = (EventInfoRecord) record;
+                EventInfo eventInfo = eventRecord.toObject();
                 if (eventInfo.isActive()) {
                     this.activeEvent = eventInfo;
                 }
@@ -31,19 +31,19 @@ public class EventManager {
         }
     }
     
-    public Map<Integer, net.firecraftmc.maniacore.api.events.EventInfo> getEvents() {
+    public Map<Integer, EventInfo> getEvents() {
         return events;
     }
     
-    public net.firecraftmc.maniacore.api.events.EventInfo getActiveEvent() {
+    public EventInfo getActiveEvent() {
         return activeEvent;
     }
     
     public void saveData() {
-        for (Entry<Integer, net.firecraftmc.maniacore.api.events.EventInfo> entry : this.events.entrySet()) {
-            maniaCore.getDatabase().addRecordToQueue(new EventInfoRecord(entry.getValue()));
+        for (Entry<Integer, EventInfo> entry : this.events.entrySet()) {
+            centurionsCore.getDatabase().addRecordToQueue(new EventInfoRecord(entry.getValue()));
         }
-        maniaCore.getDatabase().pushQueue();
+        centurionsCore.getDatabase().pushQueue();
     }
     
     public void setActiveEvent(EventInfo eventInfo) {

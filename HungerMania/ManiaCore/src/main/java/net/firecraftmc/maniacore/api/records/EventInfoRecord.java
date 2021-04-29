@@ -1,24 +1,29 @@
 package net.firecraftmc.maniacore.api.records;
 
 import net.firecraftmc.maniacore.api.events.EventInfo;
+import net.firecraftmc.manialib.sql.Column;
+import net.firecraftmc.manialib.sql.DataType;
+import net.firecraftmc.manialib.sql.Database;
+import net.firecraftmc.manialib.sql.IRecord;
+import net.firecraftmc.manialib.sql.Row;
 import net.firecraftmc.manialib.sql.Table;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
-public class EventInfoRecord implements net.firecraftmc.manialib.sql.IRecord<EventInfo> {
+public class EventInfoRecord implements IRecord<EventInfo> {
     
     private EventInfo eventInfo;
     
-    public static net.firecraftmc.manialib.sql.Table generateTable(net.firecraftmc.manialib.sql.Database database) {
-        net.firecraftmc.manialib.sql.Table table = new Table(database, "events");
-        table.addColumn(new net.firecraftmc.manialib.sql.Column("id", net.firecraftmc.manialib.sql.DataType.INT, true, true));
-        table.addColumn(new net.firecraftmc.manialib.sql.Column("name", net.firecraftmc.manialib.sql.DataType.VARCHAR, 100));
-        table.addColumn(new net.firecraftmc.manialib.sql.Column("active", net.firecraftmc.manialib.sql.DataType.VARCHAR, 5));
-        table.addColumn(new net.firecraftmc.manialib.sql.Column("startTime", net.firecraftmc.manialib.sql.DataType.BIGINT));
-        table.addColumn(new net.firecraftmc.manialib.sql.Column("settingsId", net.firecraftmc.manialib.sql.DataType.INT));
-        table.addColumn(new net.firecraftmc.manialib.sql.Column("players", net.firecraftmc.manialib.sql.DataType.VARCHAR, 1000));
-        table.addColumn(new net.firecraftmc.manialib.sql.Column("servers", net.firecraftmc.manialib.sql.DataType.VARCHAR, 1000));
+    public static Table generateTable(Database database) {
+        Table table = new Table(database, "events");
+        table.addColumn(new Column("id", DataType.INT, true, true));
+        table.addColumn(new Column("name", DataType.VARCHAR, 100));
+        table.addColumn(new Column("active", DataType.VARCHAR, 5));
+        table.addColumn(new Column("startTime", DataType.BIGINT));
+        table.addColumn(new Column("settingsId", DataType.INT));
+        table.addColumn(new Column("players", DataType.VARCHAR, 1000));
+        table.addColumn(new Column("servers", DataType.VARCHAR, 1000));
         return table;
     }
     
@@ -26,7 +31,7 @@ public class EventInfoRecord implements net.firecraftmc.manialib.sql.IRecord<Eve
         this.eventInfo = eventInfo;
     }
     
-    public EventInfoRecord(net.firecraftmc.manialib.sql.Row row) {
+    public EventInfoRecord(Row row) {
         int id = row.getInt("id");
         String name = row.getString("name");
         boolean active = row.getBoolean("active");

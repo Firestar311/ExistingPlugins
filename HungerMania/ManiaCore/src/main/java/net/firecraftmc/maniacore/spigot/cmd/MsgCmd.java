@@ -1,10 +1,10 @@
 package net.firecraftmc.maniacore.spigot.cmd;
 
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.ranks.Rank;
 import net.firecraftmc.maniacore.api.user.UserManager;
 import net.firecraftmc.maniacore.api.user.toggle.Toggles;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -17,7 +17,7 @@ public class MsgCmd implements CommandExecutor {
     
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ManiaUtils.color("&cOnly players may use that command."));
+            sender.sendMessage(CenturionsUtils.color("&cOnly players may use that command."));
             return true;
         }
         
@@ -26,7 +26,7 @@ public class MsgCmd implements CommandExecutor {
         
         if (cmd.getName().equalsIgnoreCase("message")) {
             if (!(args.length > 1)) {
-                sender.sendMessage(ManiaUtils.color("&cUsage: /message <player> <message>"));
+                sender.sendMessage(CenturionsUtils.color("&cUsage: /message <player> <message>"));
                 return true;
             }
             
@@ -34,7 +34,7 @@ public class MsgCmd implements CommandExecutor {
             target = Bukkit.getPlayer(args[0]);
         } else if (cmd.getName().equalsIgnoreCase("reply")) {
             if (!(args.length > 0)) {
-                sender.sendMessage(ManiaUtils.color("&cUsage: /reply <message>"));
+                sender.sendMessage(CenturionsUtils.color("&cUsage: /reply <message>"));
                 return true;
             }
             
@@ -46,7 +46,7 @@ public class MsgCmd implements CommandExecutor {
         }
         
         if (target == null) {
-            player.sendMessage(ManiaUtils.color("&cCould not find the message target. Are they offline?"));
+            player.sendMessage(CenturionsUtils.color("&cCould not find the message target. Are they offline?"));
             return true;
         }
         
@@ -57,7 +57,7 @@ public class MsgCmd implements CommandExecutor {
         String format = "&b&l>> {player1} &7&l-> {player2}&8: &f{message}";
         format = format.replace("{message}", message.toString());
         
-        UserManager userManager = ManiaCore.getInstance().getUserManager();
+        UserManager userManager = CenturionsCore.getInstance().getUserManager();
         net.firecraftmc.maniacore.api.user.User senderUser = userManager.getUser(player.getUniqueId()), targetUser = userManager.getUser(target.getUniqueId());
         if (!targetUser.getToggle(Toggles.PRIVATE_MESSAGES).getAsBoolean()) {
             Rank senderRank = senderUser.getRank(), targetRank = targetUser.getRank();

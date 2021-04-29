@@ -6,10 +6,10 @@ import java.lang.reflect.*;
 
 public final class NBTWrapper {
     
-    private static Class<?> NMSItemStack = net.firecraftmc.maniacore.spigot.util.ReflectionUtils.getNMSClass("ItemStack");
-    private static Class<?> craftItemStack = net.firecraftmc.maniacore.spigot.util.ReflectionUtils.getCraftClass("inventory.CraftItemStack");
-    private static Class<?> nbtTagCompound = net.firecraftmc.maniacore.spigot.util.ReflectionUtils.getNMSClass("NBTTagCompound");
-    private static Class<?> nbtBase = net.firecraftmc.maniacore.spigot.util.ReflectionUtils.getNMSClass("NBTBase");
+    private static Class<?> NMSItemStack = ReflectionUtils.getNMSClass("ItemStack");
+    private static Class<?> craftItemStack = ReflectionUtils.getCraftClass("inventory.CraftItemStack");
+    private static Class<?> nbtTagCompound = ReflectionUtils.getNMSClass("NBTTagCompound");
+    private static Class<?> nbtBase = ReflectionUtils.getNMSClass("NBTBase");
     private static Class<?> nbtTagString = ReflectionUtils.getNMSClass("NBTTagString");
     
     private static Constructor<?> tagStringConstructor;

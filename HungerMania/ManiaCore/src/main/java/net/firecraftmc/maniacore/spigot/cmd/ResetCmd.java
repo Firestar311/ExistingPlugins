@@ -1,10 +1,10 @@
 package net.firecraftmc.maniacore.spigot.cmd;
 
 import net.firecraftmc.maniacore.spigot.reset.ResetAction;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.ranks.Rank;
 import net.firecraftmc.maniacore.api.user.User;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -21,7 +21,7 @@ public class ResetCmd implements CommandExecutor {
             senderRank = Rank.CONSOLE;
         } else if (sender instanceof Player) {
             Player player = (Player) sender;
-            User user = ManiaCore.getInstance().getUserManager().getUser(player.getUniqueId());
+            User user = CenturionsCore.getInstance().getUserManager().getUser(player.getUniqueId());
             senderRank = user.getRank();
         } else {
             senderRank = Rank.DEFAULT;
@@ -32,14 +32,14 @@ public class ResetCmd implements CommandExecutor {
     
         if (cmd.getName().equals("reset")) {
             if (senderRank.ordinal() > Rank.ADMIN.ordinal()) {
-                sender.sendMessage(ManiaUtils.color("&cYou do not have permission to use that command."));
+                sender.sendMessage(CenturionsUtils.color("&cYou do not have permission to use that command."));
                 return true;
             }
         
         
         } else if (cmd.getName().equals("resetall")) {
             if (senderRank.ordinal() > Rank.OWNER.ordinal()) {
-                sender.sendMessage(ManiaUtils.color("&cYou do not have permission to use that command."));
+                sender.sendMessage(CenturionsUtils.color("&cYou do not have permission to use that command."));
                 return true;
             }
         } else if (cmd.getName().equals("resetconfirm")) {

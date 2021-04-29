@@ -10,7 +10,7 @@ import java.net.URL;
 import java.util.UUID;
 
 @UtilityClass
-public class ManiaUtils {
+public class CenturionsUtils {
     public static String color(String uncolored) {
         return ChatColor.translateAlternateColorCodes('&', uncolored);
     }

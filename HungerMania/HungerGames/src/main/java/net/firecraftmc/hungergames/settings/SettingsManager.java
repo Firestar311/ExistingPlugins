@@ -2,9 +2,9 @@ package net.firecraftmc.hungergames.settings;
 
 import net.firecraftmc.hungergames.HungerGames;
 import net.firecraftmc.hungergames.records.GameSettingsRecord;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.events.EventInfo;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import net.firecraftmc.manialib.sql.IRecord;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.command.Command;
@@ -27,7 +27,7 @@ public class SettingsManager implements CommandExecutor {
     
     public void load() {
         this.otherSettings.clear();
-        List<IRecord> records = plugin.getManiaCore().getDatabase().getRecords(GameSettingsRecord.class, null, null);
+        List<IRecord> records = plugin.getCenturionsCore().getDatabase().getRecords(GameSettingsRecord.class, null, null);
         for (IRecord record : records) {
             if (record instanceof GameSettingsRecord) {
                 GameSettings settings = ((GameSettingsRecord) record).toObject();
@@ -43,14 +43,14 @@ public class SettingsManager implements CommandExecutor {
         
         if (defaultSettings == null) {
             this.defaultSettings = new GameSettings();
-            plugin.getManiaCore().getDatabase().pushRecord(new GameSettingsRecord(defaultSettings));
+            plugin.getCenturionsCore().getDatabase().pushRecord(new GameSettingsRecord(defaultSettings));
         }
     }
     
     public GameSettings getCurrentSettings() {
-        EventInfo eventInfo = ManiaCore.getInstance().getEventManager().getActiveEvent();
+        EventInfo eventInfo = CenturionsCore.getInstance().getEventManager().getActiveEvent();
         if (eventInfo != null) {
-            if (eventInfo.getServers().contains(ManiaCore.getInstance().getServerManager().getCurrentServer().getName())) {
+            if (eventInfo.getServers().contains(CenturionsCore.getInstance().getServerManager().getCurrentServer().getName())) {
                 return this.otherSettings.get(eventInfo.getSettingsId());
             }
         }
@@ -62,9 +62,9 @@ public class SettingsManager implements CommandExecutor {
     }
     
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (ManiaUtils.checkCmdAliases(args, 0, "create")) {
+        if (CenturionsUtils.checkCmdAliases(args, 0, "create")) {
             if (!(args.length > 1)) {
-                sender.sendMessage(ManiaUtils.color("&cYou must provide a name"));
+                sender.sendMessage(CenturionsUtils.color("&cYou must provide a name"));
                 return true;
             }
         
@@ -72,21 +72,21 @@ public class SettingsManager implements CommandExecutor {
         
             for (GameSettings value : this.otherSettings.values()) {
                 if (value.getName().equalsIgnoreCase(name)) {
-                    sender.sendMessage(ManiaUtils.color("&cThere is already a settings value with that name."));
+                    sender.sendMessage(CenturionsUtils.color("&cThere is already a settings value with that name."));
                     return true;
                 }
             }
             
             GameSettings gameSettings = new GameSettings();
             gameSettings.setName(name);
-            plugin.getManiaCore().getDatabase().pushRecord(new GameSettingsRecord(gameSettings));
+            plugin.getCenturionsCore().getDatabase().pushRecord(new GameSettingsRecord(gameSettings));
             if (gameSettings.getId() == 0) {
-                sender.sendMessage(ManiaUtils.color("&cThere was an error saving the new settings to the database."));
+                sender.sendMessage(CenturionsUtils.color("&cThere was an error saving the new settings to the database."));
                 return true;
             }
             
             this.otherSettings.put(gameSettings.getId(), gameSettings);
-            sender.sendMessage(ManiaUtils.color("&aCreated a new set of settings with the name &b" + gameSettings.getName() + " &aand the id &b" + gameSettings.getId()));
+            sender.sendMessage(CenturionsUtils.color("&aCreated a new set of settings with the name &b" + gameSettings.getName() + " &aand the id &b" + gameSettings.getId()));
         }
         
         return true;

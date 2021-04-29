@@ -6,8 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import net.firecraftmc.hungergames.game.death.DeathInfo;
 import net.firecraftmc.hungergames.game.team.GameTeam;
-import net.firecraftmc.maniacore.api.ManiaCore;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.CenturionsCore;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import net.firecraftmc.maniacore.spigot.mutations.MutationType;
 import net.firecraftmc.maniacore.spigot.user.SpigotUser;
 import org.bukkit.Bukkit;
@@ -44,7 +44,7 @@ public class GamePlayer {
     
     public GamePlayer(Game game, UUID uuid) {
         this.game = game;
-        this.user = (SpigotUser) ManiaCore.getInstance().getUserManager().getUser(uuid); 
+        this.user = (SpigotUser) CenturionsCore.getInstance().getUserManager().getUser(uuid); 
         this.skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
         SkullMeta skullMeta = ((SkullMeta) skull.getItemMeta());
         String playerName = Bukkit.getPlayer(uuid).getName();
@@ -55,7 +55,7 @@ public class GamePlayer {
             field.setAccessible(true);
             field.set(skullMeta, mcProfile);
         } catch (Exception e) {}
-        skullMeta.setDisplayName(ManiaUtils.color("&f" + playerName));
+        skullMeta.setDisplayName(CenturionsUtils.color("&f" + playerName));
         skull.setItemMeta(skullMeta);
     }
     

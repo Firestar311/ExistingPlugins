@@ -9,7 +9,7 @@ public interface Stat {
     String getName();
     String getDefaultValue();
     boolean isNumber();
-    default net.firecraftmc.maniacore.api.stats.Statistic create(UUID player) {
+    default Statistic create(UUID player) {
         return new Statistic(player, getName(), getDefaultValue(), System.currentTimeMillis(), System.currentTimeMillis());
     }
     

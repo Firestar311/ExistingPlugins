@@ -40,6 +40,6 @@ public enum Channel {
     }
     
     public String getPermission() {
-        return "mania.channels." + name().toLowerCase();
+        return "centurions.channels." + name().toLowerCase();
     }
 }

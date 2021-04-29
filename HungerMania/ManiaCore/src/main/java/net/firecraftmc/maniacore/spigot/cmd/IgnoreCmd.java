@@ -1,8 +1,8 @@
 package net.firecraftmc.maniacore.spigot.cmd;
 
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.user.User;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import net.firecraftmc.manialib.util.Constants;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -13,28 +13,28 @@ import java.util.Date;
 public class IgnoreCmd implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ManiaUtils.color("&cOnly players may use that command."));
+            sender.sendMessage(CenturionsUtils.color("&cOnly players may use that command."));
             return true;
         }
         
         Player player = (Player) sender;
         
         if (!(args.length > 0)) {
-            sender.sendMessage(ManiaUtils.color("&cUsage: /ignore <add|remove|list> [player]"));
+            sender.sendMessage(CenturionsUtils.color("&cUsage: /ignore <add|remove|list> [player]"));
             return true;
         }
         
-        net.firecraftmc.maniacore.api.user.User user = ManiaCore.getInstance().getUserManager().getUser(player.getUniqueId());
+        net.firecraftmc.maniacore.api.user.User user = CenturionsCore.getInstance().getUserManager().getUser(player.getUniqueId());
         
-        if (ManiaUtils.checkCmdAliases(args, 0, "add", "a")) {
+        if (CenturionsUtils.checkCmdAliases(args, 0, "add", "a")) {
             if (!(args.length > 1)) {
-                sender.sendMessage(ManiaUtils.color("&cYou must provide a player name."));
+                sender.sendMessage(CenturionsUtils.color("&cYou must provide a player name."));
                 return true;
             }
             
-            net.firecraftmc.maniacore.api.user.User target = ManiaCore.getInstance().getUserManager().getUser(args[1]);
+            net.firecraftmc.maniacore.api.user.User target = CenturionsCore.getInstance().getUserManager().getUser(args[1]);
             if (target == null) {
-                sender.sendMessage(ManiaUtils.color("&cYou provided an invalid name."));
+                sender.sendMessage(CenturionsUtils.color("&cYou provided an invalid name."));
                 return true;
             }
             
@@ -56,16 +56,16 @@ public class IgnoreCmd implements CommandExecutor {
                     break;
             }
     
-            player.sendMessage(ManiaUtils.color(message));
-        } else if (ManiaUtils.checkCmdAliases(args, 0, "remove", "r")) {
+            player.sendMessage(CenturionsUtils.color(message));
+        } else if (CenturionsUtils.checkCmdAliases(args, 0, "remove", "r")) {
             if (!(args.length > 1)) {
-                sender.sendMessage(ManiaUtils.color("&cYou must provide a player name."));
+                sender.sendMessage(CenturionsUtils.color("&cYou must provide a player name."));
                 return true;
             }
             
-            User target = ManiaCore.getInstance().getUserManager().getUser(args[1]);
+            User target = CenturionsCore.getInstance().getUserManager().getUser(args[1]);
             if (target == null) {
-                sender.sendMessage(ManiaUtils.color("&cYou provided an invalid name."));
+                sender.sendMessage(CenturionsUtils.color("&cYou provided an invalid name."));
                 return true;
             }
             
@@ -86,11 +86,11 @@ public class IgnoreCmd implements CommandExecutor {
                     break;
             }
     
-            player.sendMessage(ManiaUtils.color(message));
-        } else if (ManiaUtils.checkCmdAliases(args, 0, "list", "l")) {
-            player.sendMessage(ManiaUtils.color("&6&l>> &bAll ignored players."));
+            player.sendMessage(CenturionsUtils.color(message));
+        } else if (CenturionsUtils.checkCmdAliases(args, 0, "list", "l")) {
+            player.sendMessage(CenturionsUtils.color("&6&l>> &bAll ignored players."));
             for (net.firecraftmc.maniacore.api.user.IgnoreInfo ignoredPlayer : user.getIgnoredPlayers()) {
-                player.sendMessage(ManiaUtils.color("&6&l> &b" + ignoredPlayer.getIgnoredName() + " &fwas ignored on &a" + Constants.DATE_FORMAT.format(new Date(ignoredPlayer.getTimestamp()))));
+                player.sendMessage(CenturionsUtils.color("&6&l> &b" + ignoredPlayer.getIgnoredName() + " &fwas ignored on &a" + Constants.DATE_FORMAT.format(new Date(ignoredPlayer.getTimestamp()))));
             }
         }
         

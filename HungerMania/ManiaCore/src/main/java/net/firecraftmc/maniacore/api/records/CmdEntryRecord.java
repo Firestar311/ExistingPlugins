@@ -1,17 +1,21 @@
 package net.firecraftmc.maniacore.api.records;
 
 import net.firecraftmc.maniacore.api.logging.entry.CmdEntry;
+import net.firecraftmc.manialib.sql.Column;
+import net.firecraftmc.manialib.sql.DataType;
+import net.firecraftmc.manialib.sql.Database;
+import net.firecraftmc.manialib.sql.Row;
 import net.firecraftmc.manialib.sql.Table;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class CmdEntryRecord extends net.firecraftmc.maniacore.api.records.EntryRecord {
+public class CmdEntryRecord extends EntryRecord {
     
-    public static net.firecraftmc.manialib.sql.Table generateTable(net.firecraftmc.manialib.sql.Database database) {
+    public static Table generateTable(Database database) {
         Table table = EntryRecord.generateTable(database, "command");
-        net.firecraftmc.manialib.sql.Column sender = new net.firecraftmc.manialib.sql.Column("sender", net.firecraftmc.manialib.sql.DataType.INT, false, false);
-        net.firecraftmc.manialib.sql.Column text = new net.firecraftmc.manialib.sql.Column("text", net.firecraftmc.manialib.sql.DataType.VARCHAR, 1000, false, false);
+        Column sender = new Column("sender", DataType.INT, false, false);
+        Column text = new Column("text", DataType.VARCHAR, 1000, false, false);
         table.addColumns(sender, text);
         return table;
     }
@@ -20,7 +24,7 @@ public class CmdEntryRecord extends net.firecraftmc.maniacore.api.records.EntryR
         super(entry);
     }
     
-    public CmdEntryRecord(net.firecraftmc.manialib.sql.Row row) {
+    public CmdEntryRecord(Row row) {
         super(row);
         int id = row.getInt("id");
         long date = row.getLong("date");

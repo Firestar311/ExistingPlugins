@@ -1,6 +1,6 @@
 package net.firecraftmc.maniacore.spigot.user;
 
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import net.firecraftmc.maniacore.spigot.util.ScoreboardBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -21,7 +21,7 @@ public class PlayerBoard {
     public PlayerBoard(String name) {
         this.name = name;
         this.scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
-        objective = this.scoreboard.registerNewObjective(ManiaUtils.color(name), "dummy");
+        objective = this.scoreboard.registerNewObjective(CenturionsUtils.color(name), "dummy");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
     }
     

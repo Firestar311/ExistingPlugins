@@ -1,31 +1,36 @@
 package net.firecraftmc.maniacore.api.records;
 
 import net.firecraftmc.maniacore.api.leveling.Level;
+import net.firecraftmc.manialib.sql.Column;
+import net.firecraftmc.manialib.sql.DataType;
+import net.firecraftmc.manialib.sql.Database;
+import net.firecraftmc.manialib.sql.IRecord;
+import net.firecraftmc.manialib.sql.Row;
 import net.firecraftmc.manialib.sql.Table;
 import net.md_5.bungee.api.ChatColor;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class LevelRecord implements net.firecraftmc.manialib.sql.IRecord<Level> {
+public class LevelRecord implements IRecord<Level> {
     
-    private net.firecraftmc.maniacore.api.leveling.Level level;
+    private Level level;
     
-    public static net.firecraftmc.manialib.sql.Table generateTable(net.firecraftmc.manialib.sql.Database database) {
-        net.firecraftmc.manialib.sql.Table table = new Table(database, "levels");
-        table.addColumn(new net.firecraftmc.manialib.sql.Column("number", net.firecraftmc.manialib.sql.DataType.INT, true, true));
-        table.addColumn(new net.firecraftmc.manialib.sql.Column("totalXp", net.firecraftmc.manialib.sql.DataType.INT));
-        table.addColumn(new net.firecraftmc.manialib.sql.Column("coinReward", net.firecraftmc.manialib.sql.DataType.INT));
-        table.addColumn(new net.firecraftmc.manialib.sql.Column("numberColor", net.firecraftmc.manialib.sql.DataType.VARCHAR, 20));
+    public static Table generateTable(Database database) {
+        Table table = new Table(database, "levels");
+        table.addColumn(new Column("number", DataType.INT, true, true));
+        table.addColumn(new Column("totalXp", DataType.INT));
+        table.addColumn(new Column("coinReward", DataType.INT));
+        table.addColumn(new Column("numberColor", DataType.VARCHAR, 20));
         return table;
     }
     
-    public LevelRecord(net.firecraftmc.maniacore.api.leveling.Level level) {
+    public LevelRecord(Level level) {
         this.level = level;
     }
     
-    public LevelRecord(net.firecraftmc.manialib.sql.Row row) {
-        this.level = net.firecraftmc.maniacore.api.leveling.Level.builder().number(row.getInt("number")).totalXp(row.getInt("totalXp")).coinReward(row.getInt("coinReward")).numberColor(ChatColor.valueOf(row.getString("numberColor"))).build();
+    public LevelRecord(Row row) {
+        this.level = Level.builder().number(row.getInt("number")).totalXp(row.getInt("totalXp")).coinReward(row.getInt("coinReward")).numberColor(ChatColor.valueOf(row.getString("numberColor"))).build();
     }
     
     @Override

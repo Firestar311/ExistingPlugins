@@ -25,21 +25,21 @@ import net.firecraftmc.hungergames.records.GameSettingsRecord;
 import net.firecraftmc.hungergames.records.LootRecord;
 import net.firecraftmc.hungergames.settings.GameSettings;
 import net.firecraftmc.hungergames.settings.SettingsManager;
-import net.firecraftmc.maniacore.ManiaCorePlugin;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.CenturionsCorePlugin;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.channel.Channel;
 import net.firecraftmc.maniacore.api.chat.ChatManager;
 import net.firecraftmc.maniacore.api.server.ServerType;
 import net.firecraftmc.maniacore.memory.MemoryHook;
-import net.firecraftmc.maniacore.plugin.ManiaPlugin;
-import net.firecraftmc.maniacore.plugin.ManiaTask;
+import net.firecraftmc.maniacore.plugin.CenturionsPlugin;
+import net.firecraftmc.maniacore.plugin.CenturionsTask;
 import net.firecraftmc.maniacore.spigot.gui.Gui;
 import net.firecraftmc.maniacore.spigot.perks.Perks;
-import net.firecraftmc.maniacore.spigot.plugin.SpigotManiaTask;
+import net.firecraftmc.maniacore.spigot.plugin.SpigotCenturionsTask;
 import net.firecraftmc.maniacore.spigot.user.PlayerBoard;
 import net.firecraftmc.maniacore.spigot.user.SpigotUser;
 import net.firecraftmc.maniacore.spigot.util.Spawnpoint;
-import net.firecraftmc.manialib.ManiaLib;
+import net.firecraftmc.manialib.CenturionsLib;
 import net.firecraftmc.manialib.data.DatabaseManager;
 import net.firecraftmc.manialib.data.MysqlDatabase;
 import net.firecraftmc.manialib.util.Priority;
@@ -53,10 +53,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.io.File;
 
 @Getter
-public final class HungerGames extends JavaPlugin implements ManiaPlugin {
+public final class HungerGames extends JavaPlugin implements CenturionsPlugin {
     
     private GameManager gameManager;
-    private ManiaCore maniaCore;
+    private CenturionsCore centurionsCore;
     @Setter
     private MapManager mapManager;
     private Lobby lobby;
@@ -68,23 +68,23 @@ public final class HungerGames extends JavaPlugin implements ManiaPlugin {
     private SettingsManager settingsManager;
 
     public Spawnpoint getSpawnpoint() {
-        return ((ManiaCorePlugin) Bukkit.getPluginManager().getPlugin("ManiaCore")).getSpawnpoint();
+        return ((CenturionsCorePlugin) Bukkit.getPluginManager().getPlugin("CenturionsCore")).getSpawnpoint();
     }
 
     @Override
     public void onEnable() {
         instance = this;
-        maniaCore = ManiaCore.getInstance();
+        centurionsCore = CenturionsCore.getInstance();
         this.saveDefaultConfig();
         Gui.prepare(this);
         
-        maniaCore.getDatabase().registerRecordType(GameSettingsRecord.class);
-        maniaCore.getDatabase().registerRecordType(GameRecord.class);
-        maniaCore.getDatabase().registerRecordType(LootRecord.class);
-        maniaCore.getDatabase().registerRecordType(GameSettingRecord.class);
-        maniaCore.getDatabase().generateTables();
+        centurionsCore.getDatabase().registerRecordType(GameSettingsRecord.class);
+        centurionsCore.getDatabase().registerRecordType(GameRecord.class);
+        centurionsCore.getDatabase().registerRecordType(LootRecord.class);
+        centurionsCore.getDatabase().registerRecordType(GameSettingRecord.class);
+        centurionsCore.getDatabase().generateTables();
         
-        maniaCore.getServerManager().getCurrentServer().setType(ServerType.HUNGER_GAMES);
+        centurionsCore.getServerManager().getCurrentServer().setType(ServerType.HUNGER_GAMES);
         
         this.settingsManager = new SettingsManager(this);
         this.settingsManager.load();
@@ -119,13 +119,13 @@ public final class HungerGames extends JavaPlugin implements ManiaPlugin {
         
         Bukkit.getWorld("world").setDifficulty(Difficulty.PEACEFUL);
         
-        ManiaCore.getInstance().getMemoryManager().addMemoryHook(gameTaskHook);
-        ManiaCore.getInstance().getMemoryManager().addManiaPlugin(this);
+        CenturionsCore.getInstance().getMemoryManager().addMemoryHook(gameTaskHook);
+        CenturionsCore.getInstance().getMemoryManager().addManiaPlugin(this);
         
         new BukkitRunnable() {
             public void run() {
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    SpigotUser user = (SpigotUser) ManiaCore.getInstance().getUserManager().getUser(player.getUniqueId());
+                    SpigotUser user = (SpigotUser) CenturionsCore.getInstance().getUserManager().getUser(player.getUniqueId());
                     PlayerBoard scoreboard = user.getScoreboard();
                     if (scoreboard != null) {
                         scoreboard.update();
@@ -138,15 +138,15 @@ public final class HungerGames extends JavaPlugin implements ManiaPlugin {
 
         Timer.startTimerUpdater(this);
 
-        ChatManager chatManager = ManiaCore.getInstance().getChatManager();
+        ChatManager chatManager = CenturionsCore.getInstance().getChatManager();
         chatManager.setFormatter(Channel.GLOBAL, new HGChatFormatter());
         chatManager.registerHandler(this, new HGChatHandler(), Priority.HIGHEST);
         SpectatorInventoryGui.prepareTask();
     }
 
     public void registerRecordTypes() {
-        DatabaseManager databaseManager = ManiaLib.getInstance().getDatabaseManager();
-        MysqlDatabase database = ManiaLib.getInstance().getMysqlDatabase();
+        DatabaseManager databaseManager = CenturionsLib.getInstance().getDatabaseManager();
+        MysqlDatabase database = CenturionsLib.getInstance().getMysqlDatabase();
         databaseManager.registerRecordClasses(database, Game.class, GameSettings.class, Loot.class);
     }
 
@@ -174,7 +174,7 @@ public final class HungerGames extends JavaPlugin implements ManiaPlugin {
         
         lobby.getLobbySigns().save();
         
-        this.maniaCore.getDatabase().pushQueue();
+        this.centurionsCore.getDatabase().pushQueue();
         saveConfig();
     }
     
@@ -191,27 +191,27 @@ public final class HungerGames extends JavaPlugin implements ManiaPlugin {
         return getDescription().getVersion();
     }
     
-    public ManiaTask runTask(Runnable runnable) {
-        return new SpigotManiaTask(Bukkit.getScheduler().runTask(this, runnable));
+    public CenturionsTask runTask(Runnable runnable) {
+        return new SpigotCenturionsTask(Bukkit.getScheduler().runTask(this, runnable));
     }
     
-    public ManiaTask runTaskAsynchronously(Runnable runnable) {
-        return new SpigotManiaTask(Bukkit.getScheduler().runTaskAsynchronously(this, runnable));
+    public CenturionsTask runTaskAsynchronously(Runnable runnable) {
+        return new SpigotCenturionsTask(Bukkit.getScheduler().runTaskAsynchronously(this, runnable));
     }
     
-    public ManiaTask runTaskLater(Runnable runnable, long delay) {
-        return new SpigotManiaTask(Bukkit.getScheduler().runTaskLater(this, runnable, delay));
+    public CenturionsTask runTaskLater(Runnable runnable, long delay) {
+        return new SpigotCenturionsTask(Bukkit.getScheduler().runTaskLater(this, runnable, delay));
     }
     
-    public ManiaTask runTaskLaterAsynchronously(Runnable runnable, long delay) {
-        return new SpigotManiaTask(Bukkit.getScheduler().runTaskLaterAsynchronously(this, runnable, delay));
+    public CenturionsTask runTaskLaterAsynchronously(Runnable runnable, long delay) {
+        return new SpigotCenturionsTask(Bukkit.getScheduler().runTaskLaterAsynchronously(this, runnable, delay));
     }
     
-    public ManiaTask runTaskTimer(Runnable runnable, long delay, long period) {
-        return new SpigotManiaTask(Bukkit.getScheduler().runTaskTimer(this, runnable, delay, period));
+    public CenturionsTask runTaskTimer(Runnable runnable, long delay, long period) {
+        return new SpigotCenturionsTask(Bukkit.getScheduler().runTaskTimer(this, runnable, delay, period));
     }
     
-    public ManiaTask runTaskTimerAsynchronously(Runnable runnable, long delay, long period) {
-        return new SpigotManiaTask(Bukkit.getScheduler().runTaskTimerAsynchronously(this, runnable, delay, period));
+    public CenturionsTask runTaskTimerAsynchronously(Runnable runnable, long delay, long period) {
+        return new SpigotCenturionsTask(Bukkit.getScheduler().runTaskTimerAsynchronously(this, runnable, delay, period));
     }
 }

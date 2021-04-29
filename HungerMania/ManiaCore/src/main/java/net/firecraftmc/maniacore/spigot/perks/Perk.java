@@ -1,10 +1,10 @@
 package net.firecraftmc.maniacore.spigot.perks;
 
 import lombok.Getter;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.redis.Redis;
 import net.firecraftmc.maniacore.api.stats.Stats;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import net.firecraftmc.maniacore.spigot.user.SpigotUser;
 import net.firecraftmc.maniacore.spigot.util.ItemBuilder;
 import net.firecraftmc.manialib.util.Utils;
@@ -69,14 +69,14 @@ public abstract class Perk implements Comparable<Perk> {
 
         user.getStat(Stats.COINS).setValue(user.getStat(Stats.COINS).getAsInt() - this.baseCost);
         perkInfo.setValue(true);
-        ManiaCore.getInstance().getDatabase().pushRecord(new PerkInfoRecord(perkInfo));
+        CenturionsCore.getInstance().getDatabase().pushRecord(new PerkInfoRecord(perkInfo));
         user.sendMessage("&aYou purchased the perk " + getDisplayName());
         Redis.pushUser(user);
     }
     
     public ItemStack getIcon(SpigotUser user) {
         if (iconMaterial == null) {
-            ManiaCore.getInstance().getLogger().severe("Perk " + getName() + " does not have an icon setup.");
+            CenturionsCore.getInstance().getLogger().severe("Perk " + getName() + " does not have an icon setup.");
             return ItemBuilder.start(Material.REDSTONE_BLOCK).withLore("&cNo Icon Setup.").build();
         }
         ItemBuilder itemBuilder = ItemBuilder.start(iconMaterial).setDisplayName("&b" + Utils.capitalizeEveryWord(displayName));
@@ -90,7 +90,7 @@ public abstract class Perk implements Comparable<Perk> {
             lore.add("&7&o" + getDescription());
         }
         if (user.getPerkInfo(this).getValue()) {
-            lore.add(ManiaUtils.color("&a&oPurchased"));
+            lore.add(CenturionsUtils.color("&a&oPurchased"));
             if (user.getPerkInfo(this).isActive()) {
                 lore.add("");
                 lore.add("&a&lSELECTED");
@@ -100,11 +100,11 @@ public abstract class Perk implements Comparable<Perk> {
             }
         } else {
             if (user.getStat(Stats.COINS).getAsInt() >= baseCost) {
-                lore.add(ManiaUtils.color("&e&oAvailable"));
+                lore.add(CenturionsUtils.color("&e&oAvailable"));
                 lore.add("");
                 lore.add("&6&lLeft Click &fto purchase for " + getBaseCost() + ".");
             } else {
-                lore.add(ManiaUtils.color("&c&oLocked"));
+                lore.add(CenturionsUtils.color("&c&oLocked"));
                 lore.add("&dYou do not have enough coins to purchase this perk.");
                 lore.add("&bThis perk costs " + baseCost);
             }

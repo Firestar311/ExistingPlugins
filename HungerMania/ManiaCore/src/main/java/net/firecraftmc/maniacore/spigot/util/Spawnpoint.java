@@ -1,7 +1,7 @@
 package net.firecraftmc.maniacore.spigot.util;
 
 import lombok.Setter;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -50,13 +50,13 @@ public class Spawnpoint implements ConfigurationSerializable {
     }
 
     public Location getLocation() {
-        double x = (this.x + ManiaCore.RANDOM.nextInt(radius)) + .5;
-        if (ManiaCore.RANDOM.nextInt(2) < 1) {
+        double x = (this.x + CenturionsCore.RANDOM.nextInt(radius)) + .5;
+        if (CenturionsCore.RANDOM.nextInt(2) < 1) {
             x = x * -1;
         }
-        double y = (this.y + ManiaCore.RANDOM.nextInt(radius)) + .5;
-        double z = (this.z + ManiaCore.RANDOM.nextInt(radius)) + .5;
-        if (ManiaCore.RANDOM.nextInt(2) < 1) {
+        double y = (this.y + CenturionsCore.RANDOM.nextInt(radius)) + .5;
+        double z = (this.z + CenturionsCore.RANDOM.nextInt(radius)) + .5;
+        if (CenturionsCore.RANDOM.nextInt(2) < 1) {
             z = z * -1;
         }
         return new Location(getWorld(), x, y, z, yaw, pitch);

@@ -1,12 +1,12 @@
 package net.firecraftmc.maniacore.bungee.cmd;
 
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.bungee.util.BungeeUtils;
-import net.firecraftmc.maniacore.ManiaCoreProxy;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.CenturionsCoreProxy;
 import net.firecraftmc.maniacore.api.events.EventInfo;
 import net.firecraftmc.maniacore.api.records.EventInfoRecord;
 import net.firecraftmc.maniacore.api.user.User;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import net.firecraftmc.manialib.util.Constants;
 import net.firecraftmc.manialib.util.Utils;
 import net.md_5.bungee.api.ChatColor;
@@ -21,9 +21,9 @@ import java.util.*;
 @SuppressWarnings("DuplicatedCode")
 public class EventsCommand extends Command {
     
-    private ManiaCoreProxy plugin;
+    private CenturionsCoreProxy plugin;
     
-    public EventsCommand(ManiaCoreProxy plugin) {
+    public EventsCommand(CenturionsCoreProxy plugin) {
         super("events", "maniacore.bungee.command.events");
         this.plugin = plugin;
     }
@@ -37,7 +37,7 @@ public class EventsCommand extends Command {
             return;
         }
         
-        if (ManiaUtils.checkCmdAliases(args, 0, "create")) {
+        if (CenturionsUtils.checkCmdAliases(args, 0, "create")) {
             if (!(args.length > 2)) {
                 sender.sendMessage(notEnoughArguments);
                 return;
@@ -54,15 +54,15 @@ public class EventsCommand extends Command {
             }
             
             EventInfo eventInfo = new EventInfo(name, startDate);
-            ManiaCore.getInstance().getDatabase().pushRecord(new EventInfoRecord(eventInfo));
+            CenturionsCore.getInstance().getDatabase().pushRecord(new EventInfoRecord(eventInfo));
             if (eventInfo.getId() == 0) {
                 sender.sendMessage(new ComponentBuilder("An error occured while saving the information").color(ChatColor.RED).create());
                 return;
             }
             
-            ManiaCore.getInstance().getEventManager().getEvents().put(eventInfo.getId(), eventInfo);
+            CenturionsCore.getInstance().getEventManager().getEvents().put(eventInfo.getId(), eventInfo);
             sender.sendMessage(new ComponentBuilder("Created an event with the name " + name).color(ChatColor.GREEN).create());
-        } else if (ManiaUtils.checkCmdAliases(args, 0, "edit")) {
+        } else if (CenturionsUtils.checkCmdAliases(args, 0, "edit")) {
             if (!(args.length > 3)) {
                 sender.sendMessage(notEnoughArguments);
                 return;
@@ -76,16 +76,16 @@ public class EventsCommand extends Command {
                 return;
             }
             
-            EventInfo eventInfo = ManiaCore.getInstance().getEventManager().getEvents().get(id);
+            EventInfo eventInfo = CenturionsCore.getInstance().getEventManager().getEvents().get(id);
             if (eventInfo == null) {
                 sender.sendMessage(new ComponentBuilder("The event id you provided is invalid").color(ChatColor.RED).create());
                 return;
             }
             
-            if (ManiaUtils.checkCmdAliases(args, 2, "setname")) {
+            if (CenturionsUtils.checkCmdAliases(args, 2, "setname")) {
                 eventInfo.setName(StringUtils.join(args, 3, args.length));
                 sender.sendMessage(new ComponentBuilder("You have set the name of the event to " + eventInfo.getName()).color(ChatColor.GREEN).create());
-            } else if (ManiaUtils.checkCmdAliases(args, 2, "setactive")) {
+            } else if (CenturionsUtils.checkCmdAliases(args, 2, "setactive")) {
                 boolean value;
                 try {
                     value = Boolean.parseBoolean(args[3]);
@@ -94,7 +94,7 @@ public class EventsCommand extends Command {
                     return;
                 }
     
-                EventInfo activeEvent = ManiaCore.getInstance().getEventManager().getActiveEvent();
+                EventInfo activeEvent = CenturionsCore.getInstance().getEventManager().getActiveEvent();
                 if (value) {
                     if (activeEvent != null) {
                         if (activeEvent.isActive()) {
@@ -105,10 +105,10 @@ public class EventsCommand extends Command {
                 }
     
                 eventInfo.setActive(value);
-                ManiaCore.getInstance().getEventManager().setActiveEvent(eventInfo);
+                CenturionsCore.getInstance().getEventManager().setActiveEvent(eventInfo);
                 plugin.getManiaCore().getMessageHandler().sendMessage("maniacore:mania", "EventStatus", null, eventInfo.getId() + "", eventInfo.isActive() + "");
                 sender.sendMessage(new ComponentBuilder("You have set status of the event to " + eventInfo.isActive()).color(ChatColor.GREEN).create());
-            } else if (ManiaUtils.checkCmdAliases(args, 2, "setstarttime")) {
+            } else if (CenturionsUtils.checkCmdAliases(args, 2, "setstarttime")) {
                 long startDate;
                 try {
                     startDate = Utils.parseCalendarDate(StringUtils.join(args, " ", 2, args.length)).getTimeInMillis();
@@ -119,7 +119,7 @@ public class EventsCommand extends Command {
                 
                 eventInfo.setStartTime(startDate);
                 sender.sendMessage(new ComponentBuilder("You have set the start date of the event to " + Constants.DATE_FORMAT.format(new Date(startDate))).color(ChatColor.GREEN).create());
-            } else if (ManiaUtils.checkCmdAliases(args, 2, "addplayer", "addserver")) {
+            } else if (CenturionsUtils.checkCmdAliases(args, 2, "addplayer", "addserver")) {
                 List<String> outputMessages = new ArrayList<>();
                 String successOutputFormat = "Added {value} as a {type}";
                 String alreadyExistsFormat = "Could not add {value} as a {type} because it already exists.";
@@ -127,7 +127,7 @@ public class EventsCommand extends Command {
                 for (int i = 3; i < args.length; i++) {
                     String value = args[i];
                     if (args[2].equalsIgnoreCase("addplayer")) {
-                        User user = ManiaCore.getInstance().getUserManager().getUser(value);
+                        User user = CenturionsCore.getInstance().getUserManager().getUser(value);
                         if (user == null) {
                             outputMessages.add(couldNotFindFormat.replace("{value}", value));
                             continue;
@@ -142,7 +142,7 @@ public class EventsCommand extends Command {
                         outputMessages.add(successOutputFormat.replace("{value}", value).replace("{type}", "player"));
                     } else if (args[2].equalsIgnoreCase("addserver")) {
                         //TODO
-//                        ManiaServer server = ManiaCore.getInstance().getServerManager().getServer(value);
+//                        CenturionsServer server = CenturionsCore.getInstance().getServerManager().getServer(value);
 //                        if (server == null) {
 //                            outputMessages.add(couldNotFindFormat.replace("{value}", value));
 //                            continue;
@@ -161,7 +161,7 @@ public class EventsCommand extends Command {
                 for (String outputMessage : outputMessages) {
                     sender.sendMessage(new ComponentBuilder(outputMessage).color(ChatColor.GREEN).create());
                 }
-            } else if (ManiaUtils.checkCmdAliases(args, 2, "setsettings")) {
+            } else if (CenturionsUtils.checkCmdAliases(args, 2, "setsettings")) {
                 int settingsId;
                 try {
                     settingsId = Integer.parseInt(args[3]);
@@ -173,8 +173,8 @@ public class EventsCommand extends Command {
                 eventInfo.setSettingsId(settingsId);
                 BungeeUtils.sendMessage(sender, "Set the game settings id for the event to " + settingsId, ChatColor.GREEN);
             }
-            ManiaCore.getInstance().getDatabase().pushRecord(new EventInfoRecord(eventInfo));
-        } else if (ManiaUtils.checkCmdAliases(args, 0, "delete")) {
+            CenturionsCore.getInstance().getDatabase().pushRecord(new EventInfoRecord(eventInfo));
+        } else if (CenturionsUtils.checkCmdAliases(args, 0, "delete")) {
             if (!(args.length > 1)) {
                 sender.sendMessage(notEnoughArguments);
                 return;
@@ -188,13 +188,13 @@ public class EventsCommand extends Command {
                 return;
             }
     
-            EventInfo eventInfo = ManiaCore.getInstance().getEventManager().getEvents().get(id);
+            EventInfo eventInfo = CenturionsCore.getInstance().getEventManager().getEvents().get(id);
             if (eventInfo == null) {
                 sender.sendMessage(new ComponentBuilder("The event id you provided is invalid").color(ChatColor.RED).create());
                 return;
             }
             
-            ManiaCore.getInstance().getEventManager().getEvents().remove(id);
+            CenturionsCore.getInstance().getEventManager().getEvents().remove(id);
             sender.sendMessage(new ComponentBuilder("Deleted event " + id).color(ChatColor.GREEN).create());
         }
     }

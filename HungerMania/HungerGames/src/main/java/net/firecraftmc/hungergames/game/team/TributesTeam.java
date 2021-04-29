@@ -3,7 +3,7 @@ package net.firecraftmc.hungergames.game.team;
 import net.firecraftmc.hungergames.game.enums.PlayerType;
 import net.firecraftmc.hungergames.game.Game;
 import net.firecraftmc.hungergames.game.GamePlayer;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.user.User;
 import net.firecraftmc.maniacore.api.util.State;
 import net.firecraftmc.maniacore.spigot.util.SpigotUtils;
@@ -33,7 +33,7 @@ public class TributesTeam extends GameTeam {
     public void join(UUID uuid) {
         game.addPlayer(uuid);
         Player player = Bukkit.getPlayer(uuid);
-        User user = ManiaCore.getInstance().getUserManager().getUser(uuid);
+        User user = CenturionsCore.getInstance().getUserManager().getUser(uuid);
         for (PotionEffect activePotionEffect : new ArrayList<>(player.getActivePotionEffects())) {
             player.removePotionEffect(activePotionEffect.getType());
         }

@@ -4,10 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 import net.firecraftmc.hungergames.HungerGames;
 import net.firecraftmc.hungergames.map.HGMap;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.ranks.Rank;
 import net.firecraftmc.maniacore.api.user.User;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import net.firecraftmc.maniacore.api.util.Position;
 import net.firecraftmc.maniacore.spigot.util.SpigotUtils;
 import org.bukkit.*;
@@ -96,17 +96,17 @@ public class LobbySigns {
     public void updateSigns() {
         World world = Bukkit.getWorld("world");
         HungerGames plugin = HungerGames.getInstance();
-        ManiaCore maniaCore = plugin.getManiaCore();
+        CenturionsCore centurionsCore = plugin.getCenturionsCore();
         Lobby lobby = plugin.getLobby();
         if (plugin.getGameManager().getCurrentGame() == null) {
             if (voteTitleSign != null) {
                 Location location = SpigotUtils.positionToLocation(world, voteTitleSign);
                 if (world.getBlockAt(location).getState() instanceof Sign) {
                     Sign sign = (Sign) world.getBlockAt(location).getState();
-                    sign.setLine(0, ManiaUtils.color("&m--------------"));
-                    sign.setLine(1, ManiaUtils.color("&lVote for a"));
-                    sign.setLine(2, ManiaUtils.color("&lMap!"));
-                    sign.setLine(3, ManiaUtils.color("&m--------------"));
+                    sign.setLine(0, CenturionsUtils.color("&m--------------"));
+                    sign.setLine(1, CenturionsUtils.color("&lVote for a"));
+                    sign.setLine(2, CenturionsUtils.color("&lMap!"));
+                    sign.setLine(3, CenturionsUtils.color("&m--------------"));
                     sign.update();
                 }
             }
@@ -115,15 +115,15 @@ public class LobbySigns {
                 Location location = SpigotUtils.positionToLocation(world, votingInfo);
                 if (world.getBlockAt(location).getState() instanceof Sign) {
                     Sign sign = (Sign) world.getBlockAt(location).getState();
-                    sign.setLine(0, ManiaUtils.color("&nVoting Power"));
-                    sign.setLine(2, ManiaUtils.color("&nTime Left"));
+                    sign.setLine(0, CenturionsUtils.color("&nVoting Power"));
+                    sign.setLine(2, CenturionsUtils.color("&nTime Left"));
                     if (lobby.getVoteTimer() != null) {
                         sign.setLine(3, lobby.getVoteTimer().getRemainingSeconds() + "");
                     } else {
                         sign.setLine(3, lobby.getGameSettings().getStartTimer() + "");
                     }
                     for (Player player : Bukkit.getOnlinePlayers()) {
-                        User user = maniaCore.getUserManager().getUser(player.getUniqueId());
+                        User user = centurionsCore.getUserManager().getUser(player.getUniqueId());
                         Rank rank = user.getRank();
                         sign.setLine(1, rank.getVoteWeight() + "");
                         player.sendSignChange(sign.getLocation(), sign.getLines());
@@ -146,18 +146,18 @@ public class LobbySigns {
                         }
                         sign.setLine(1, mapName);
                         int votes = lobby.getMapOptions().getVotes(map);
-                        sign.setLine(3, ManiaUtils.color("&n" + votes + " Vote(s)"));
+                        sign.setLine(3, CenturionsUtils.color("&n" + votes + " Vote(s)"));
     
                         for (Player player : Bukkit.getOnlinePlayers()) {
                             if (lobby.getMapOptions().hasVoted(player.getUniqueId())) {
-                                sign.setLine(0, ManiaUtils.color("&n#" + entry.getKey()));
+                                sign.setLine(0, CenturionsUtils.color("&n#" + entry.getKey()));
                                 if (map.equals(lobby.getMapOptions().getVotedMap(player.getUniqueId()))) {
-                                    sign.setLine(2, ManiaUtils.color("&2&lVOTED!"));
+                                    sign.setLine(2, CenturionsUtils.color("&2&lVOTED!"));
                                 } else {
                                     sign.setLine(2, "");
                                 }
                             } else {
-                                sign.setLine(0, ManiaUtils.color("&nClick to Vote"));
+                                sign.setLine(0, CenturionsUtils.color("&nClick to Vote"));
                                 sign.setLine(2, "");
                             }
                             player.sendSignChange(location, sign.getLines());

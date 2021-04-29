@@ -1,20 +1,25 @@
 package net.firecraftmc.maniacore.api.records;
 
 import net.firecraftmc.maniacore.api.stats.Statistic;
+import net.firecraftmc.manialib.sql.Column;
+import net.firecraftmc.manialib.sql.DataType;
+import net.firecraftmc.manialib.sql.Database;
+import net.firecraftmc.manialib.sql.IRecord;
+import net.firecraftmc.manialib.sql.Row;
 import net.firecraftmc.manialib.sql.Table;
 
 import java.util.*;
 
-public class StatRecord implements net.firecraftmc.manialib.sql.IRecord<Statistic> {
+public class StatRecord implements IRecord<Statistic> {
     
-    public static net.firecraftmc.manialib.sql.Table generateTable(net.firecraftmc.manialib.sql.Database database) {
-        net.firecraftmc.manialib.sql.Table table = new Table(database, "stats");
-        table.addColumn(new net.firecraftmc.manialib.sql.Column("id", net.firecraftmc.manialib.sql.DataType.INT, true, true));
-        table.addColumn(new net.firecraftmc.manialib.sql.Column("uuid", net.firecraftmc.manialib.sql.DataType.VARCHAR, 36));
-        table.addColumn(new net.firecraftmc.manialib.sql.Column("name", net.firecraftmc.manialib.sql.DataType.VARCHAR, 100));
-        table.addColumn(new net.firecraftmc.manialib.sql.Column("value", net.firecraftmc.manialib.sql.DataType.VARCHAR, 1000));
-        table.addColumn(new net.firecraftmc.manialib.sql.Column("created", net.firecraftmc.manialib.sql.DataType.BIGINT));
-        table.addColumn(new net.firecraftmc.manialib.sql.Column("modified", net.firecraftmc.manialib.sql.DataType.BIGINT));
+    public static Table generateTable(Database database) {
+        Table table = new Table(database, "stats");
+        table.addColumn(new Column("id", DataType.INT, true, true));
+        table.addColumn(new Column("uuid", DataType.VARCHAR, 36));
+        table.addColumn(new Column("name", DataType.VARCHAR, 100));
+        table.addColumn(new Column("value", DataType.VARCHAR, 1000));
+        table.addColumn(new Column("created", DataType.BIGINT));
+        table.addColumn(new Column("modified", DataType.BIGINT));
         return table;
     }
     
@@ -24,7 +29,7 @@ public class StatRecord implements net.firecraftmc.manialib.sql.IRecord<Statisti
         this.statistic = statistic;
     }
     
-    public StatRecord(net.firecraftmc.manialib.sql.Row row) {
+    public StatRecord(Row row) {
         int id = row.getInt("id");
         UUID uuid = UUID.fromString(row.getString("uuid"));
         String name = row.getString("name");

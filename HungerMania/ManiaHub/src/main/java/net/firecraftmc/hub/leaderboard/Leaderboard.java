@@ -6,10 +6,10 @@ import com.gmail.filoghost.holographicdisplays.api.line.HologramLine;
 import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
 import lombok.Getter;
 import lombok.Setter;
-import net.firecraftmc.hub.ManiaHub;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.hub.CenturionsHub;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.events.EventInfo;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import org.bukkit.Location;
 
 import java.util.*;
@@ -28,17 +28,17 @@ public class Leaderboard {
     }
     
     public void spawn() {
-        this.hologram = HologramsAPI.createHologram(ManiaHub.getInstance(), location);
+        this.hologram = HologramsAPI.createHologram(CenturionsHub.getInstance(), location);
         update();
     }
     
     public void update() {
-        EventInfo activeEvent = ManiaCore.getInstance().getEventManager().getActiveEvent();
+        EventInfo activeEvent = CenturionsCore.getInstance().getEventManager().getActiveEvent();
         if (activeEvent == null) {
             return;
         }
 //        Map<UUID, HungerGamesProfile> profiles = new HashMap<>();
-//        List<IRecord> records = ManiaCore.getInstance().getDatabase().getRecords(ProfileRecord.class, null, null);
+//        List<IRecord> records = CenturionsCore.getInstance().getDatabase().getRecords(ProfileRecord.class, null, null);
 //        for (IRecord record : records) {
 //            if (record instanceof ProfileRecord) {
 //                HungerGamesProfile profile = ((ProfileRecord) record).toObject();
@@ -101,11 +101,11 @@ public class Leaderboard {
             if (mainLine instanceof TextLine) {
                 TextLine textLine = (TextLine) mainLine;
                 if (!textLine.getText().contains("LEADERBOARD")) {
-                    textLine.setText(ManiaUtils.color("&6&lLEADERBOARD (" + min + " - " + max + ")"));
+                    textLine.setText(CenturionsUtils.color("&6&lLEADERBOARD (" + min + " - " + max + ")"));
                 }
             }
         } catch (Exception e) {
-            this.hologram.insertTextLine(0, ManiaUtils.color("&6&lLEADERBOARD (" + min + " - " + max + ")"));
+            this.hologram.insertTextLine(0, CenturionsUtils.color("&6&lLEADERBOARD (" + min + " - " + max + ")"));
         }
     
 //        for (Entry<Integer, UUID> entry : leaderboardPositions.entrySet()) {

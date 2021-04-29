@@ -3,7 +3,7 @@ package net.firecraftmc.hungergames.map;
 import net.firecraftmc.hungergames.HungerGames;
 import net.firecraftmc.maniacore.api.ranks.Rank;
 import net.firecraftmc.maniacore.api.user.User;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import net.firecraftmc.maniacore.api.util.Position;
 import net.firecraftmc.manialib.util.Utils;
 import org.apache.commons.lang.StringUtils;
@@ -97,7 +97,7 @@ public class MapManager implements CommandExecutor {
     
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (sender instanceof Player) {
-            User user = plugin.getManiaCore().getUserManager().getUser(((Player) sender).getUniqueId());
+            User user = plugin.getCenturionsCore().getUserManager().getUser(((Player) sender).getUniqueId());
             if (!user.hasPermission(Rank.ADMIN)) {
                 user.sendMessage("&cYou do not have permission to use that command.");
                 return true;
@@ -105,28 +105,28 @@ public class MapManager implements CommandExecutor {
         }
         
         if (!(args.length > 0)) {
-            sender.sendMessage(ManiaUtils.color("&cYou must provide a subcommand"));
+            sender.sendMessage(CenturionsUtils.color("&cYou must provide a subcommand"));
             return true;
         }
     
-        if (ManiaUtils.checkCmdAliases(args, 0, "listnotsetup", "lns")) {
+        if (CenturionsUtils.checkCmdAliases(args, 0, "listnotsetup", "lns")) {
             if (this.unsetupMaps.isEmpty()) {
-                sender.sendMessage(ManiaUtils.color("&cThere are no maps that are not setup."));
+                sender.sendMessage(CenturionsUtils.color("&cThere are no maps that are not setup."));
                 return true;
             }
         
-            sender.sendMessage(ManiaUtils.color("&6Map Directories that do not have a map.yml file."));
+            sender.sendMessage(CenturionsUtils.color("&6Map Directories that do not have a map.yml file."));
             for (String string : this.unsetupMaps) {
-                sender.sendMessage(ManiaUtils.color("    &8- &e" + string));
+                sender.sendMessage(CenturionsUtils.color("    &8- &e" + string));
             }
-        } else if (ManiaUtils.checkCmdAliases(args, 0, "create")) {
+        } else if (CenturionsUtils.checkCmdAliases(args, 0, "create")) {
             if (this.unsetupMaps.isEmpty()) {
-                sender.sendMessage(ManiaUtils.color("&cThere are no maps that are not setup."));
+                sender.sendMessage(CenturionsUtils.color("&cThere are no maps that are not setup."));
                 return true;
             }
         
             if (!(args.length > 0)) {
-                sender.sendMessage(ManiaUtils.color("&cYou must provide a map name. This can be the full path, or just the name of the folder."));
+                sender.sendMessage(CenturionsUtils.color("&cYou must provide a map name. This can be the full path, or just the name of the folder."));
                 return true;
             }
             
@@ -139,23 +139,23 @@ public class MapManager implements CommandExecutor {
             }
             
             if (baseFolder == null) {
-                sender.sendMessage(ManiaUtils.color("&cThere was a problem getting the base folder of that map name."));
+                sender.sendMessage(CenturionsUtils.color("&cThere was a problem getting the base folder of that map name."));
                 return true;
             }
             
             if (!baseFolder.exists()) {
-                sender.sendMessage(ManiaUtils.color("&cThe base folder for that map name does not exist."));
+                sender.sendMessage(CenturionsUtils.color("&cThe base folder for that map name does not exist."));
                 return true;
             }
             
             if (!(args.length > 2)) {
-                sender.sendMessage(ManiaUtils.color("&cYou must provide a name for the map."));
+                sender.sendMessage(CenturionsUtils.color("&cYou must provide a name for the map."));
                 return true;
             }
             
             String name = StringUtils.join(args, " ", 2, args.length);
             if (this.maps.containsKey(name.toLowerCase().replace(" ", "_"))) {
-                sender.sendMessage(ManiaUtils.color("&cThere is already a map with that name."));
+                sender.sendMessage(CenturionsUtils.color("&cThere is already a map with that name."));
                 return true;
             }
             
@@ -163,7 +163,7 @@ public class MapManager implements CommandExecutor {
             try {
                 mapYaml.createNewFile();
             } catch (IOException e) {
-                sender.sendMessage(ManiaUtils.color("&cThere was an error creating the map.yml file: " + e.getMessage()));
+                sender.sendMessage(CenturionsUtils.color("&cThere was an error creating the map.yml file: " + e.getMessage()));
                 return true;
             }
     
@@ -178,41 +178,41 @@ public class MapManager implements CommandExecutor {
             
             HGMap hgMap = new HGMap(baseFolder.getAbsolutePath());
             this.maps.put(hgMap.getName().toLowerCase().replace(" ", "_"), hgMap);
-            sender.sendMessage(ManiaUtils.color("&aSuccessfully created a map called &b" + name));
-            sender.sendMessage(ManiaUtils.color("&aNow you must use other commands to set the spawn locations and the center."));
+            sender.sendMessage(CenturionsUtils.color("&aSuccessfully created a map called &b" + name));
+            sender.sendMessage(CenturionsUtils.color("&aNow you must use other commands to set the spawn locations and the center."));
         } else {
             HGMap hgMap = this.maps.get(args[0].toLowerCase());
             if (hgMap == null) {
-                sender.sendMessage(ManiaUtils.color("&cA map by that name does not exist."));
+                sender.sendMessage(CenturionsUtils.color("&cA map by that name does not exist."));
                 return true;
             }
             
             if (!(args.length > 1)) {
-                sender.sendMessage(ManiaUtils.color("&cYou must provide a modification command"));
+                sender.sendMessage(CenturionsUtils.color("&cYou must provide a modification command"));
                 return true;
             }
         
-            if (ManiaUtils.checkCmdAliases(args, 1, "editmode")) {
+            if (CenturionsUtils.checkCmdAliases(args, 1, "editmode")) {
                 hgMap.setEditmode(!hgMap.isEditmode());
                 if (hgMap.isEditmode()) {
                     if (copyMap(hgMap.getName()) != null) {
-                        sender.sendMessage(ManiaUtils.color("&aYou enabled editmode for the map &b" + hgMap.getName()));
+                        sender.sendMessage(CenturionsUtils.color("&aYou enabled editmode for the map &b" + hgMap.getName()));
                     } else {
-                        sender.sendMessage(ManiaUtils.color("&cThere was an error enabling edit mode"));
+                        sender.sendMessage(CenturionsUtils.color("&cThere was an error enabling edit mode"));
                     }
                 } else {
                     if (hgMap.getCenter() == null) {
-                        sender.sendMessage(ManiaUtils.color("&cThere is no map center set."));
+                        sender.sendMessage(CenturionsUtils.color("&cThere is no map center set."));
                         return true;
                     }
                     
                     if (hgMap.getSpawns().isEmpty()) {
-                        sender.sendMessage(ManiaUtils.color("&cThere are no spawnpoints set."));
+                        sender.sendMessage(CenturionsUtils.color("&cThere are no spawnpoints set."));
                         return true;
                     }
                     
                     if (hgMap.getCreators().isEmpty()) {
-                        sender.sendMessage(ManiaUtils.color("&cThere are no creators configured."));
+                        sender.sendMessage(CenturionsUtils.color("&cThere are no creators configured."));
                         return true;
                     }
                     
@@ -222,19 +222,19 @@ public class MapManager implements CommandExecutor {
                     hgMap.saveData();
                     this.unsetupMaps.remove(hgMap.getFolder());
                     Bukkit.unloadWorld(hgMap.getWorld(), false);
-                    sender.sendMessage(ManiaUtils.color("&aYou disabled editmode for the map &b" + hgMap.getName()));
+                    sender.sendMessage(CenturionsUtils.color("&aYou disabled editmode for the map &b" + hgMap.getName()));
                 }
                 return true;
             }
             
             if (!hgMap.isEditmode()) {
-                sender.sendMessage(ManiaUtils.color("&cThat map is not in edit mode."));
+                sender.sendMessage(CenturionsUtils.color("&cThat map is not in edit mode."));
                 return true;
             }
         
-            if (ManiaUtils.checkCmdAliases(args, 1, "setspawn", "removespawn", "ss", "rs")) {
+            if (CenturionsUtils.checkCmdAliases(args, 1, "setspawn", "removespawn", "ss", "rs")) {
                 if (!(args.length > 2)) {
-                    sender.sendMessage(ManiaUtils.color("&cYou must provide a spawn position"));
+                    sender.sendMessage(CenturionsUtils.color("&cYou must provide a spawn position"));
                     return true;
                 }
             
@@ -242,32 +242,32 @@ public class MapManager implements CommandExecutor {
                 try {
                     position = Integer.parseInt(args[2]);
                 } catch (NumberFormatException e) {
-                    sender.sendMessage(ManiaUtils.color("&cThe value you provided for the position is not a valid number."));
+                    sender.sendMessage(CenturionsUtils.color("&cThe value you provided for the position is not a valid number."));
                     return true;
                 }
             
-                if (ManiaUtils.checkCmdAliases(args, 1, "removespawn", "rs")) {
+                if (CenturionsUtils.checkCmdAliases(args, 1, "removespawn", "rs")) {
                     if (!hgMap.getSpawns().containsKey(position)) {
-                        sender.sendMessage(ManiaUtils.color("&cThat map does not have a spawn point at that index number."));
+                        sender.sendMessage(CenturionsUtils.color("&cThat map does not have a spawn point at that index number."));
                         return true;
                     }
                 
                     hgMap.getSpawns().remove(position);
-                    sender.sendMessage(ManiaUtils.color("&aYou removed the spawnpoint &b" + position));
+                    sender.sendMessage(CenturionsUtils.color("&aYou removed the spawnpoint &b" + position));
                 } else {
                     if (!(sender instanceof Player)) {
-                        sender.sendMessage(ManiaUtils.color("&cOnly players can use that command."));
+                        sender.sendMessage(CenturionsUtils.color("&cOnly players can use that command."));
                         return true;
                     }
                 
                     Player player = (Player) sender;
                     Position pos = getPosition(player);
                     hgMap.getSpawns().put(position, pos);
-                    player.sendMessage(ManiaUtils.color("&aYou set your location to the spawn point &b" + position));
+                    player.sendMessage(CenturionsUtils.color("&aYou set your location to the spawn point &b" + position));
                 }
-            } else if (ManiaUtils.checkCmdAliases(args, 1, "addspawn", "as")) {
+            } else if (CenturionsUtils.checkCmdAliases(args, 1, "addspawn", "as")) {
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage(ManiaUtils.color("&cOnly players can use that command."));
+                    sender.sendMessage(CenturionsUtils.color("&cOnly players can use that command."));
                     return true;
                 }
             
@@ -278,16 +278,16 @@ public class MapManager implements CommandExecutor {
                     pos = hgMap.getSpawns().lastKey() + 1;
                 } catch (NoSuchElementException e) {}
                 hgMap.getSpawns().put(pos, position);
-                player.sendMessage(ManiaUtils.color("&aYou added your current location as spawnpoint &b" + pos));
-            } else if (ManiaUtils.checkCmdAliases(args, 1, "setname", "sn")) {
+                player.sendMessage(CenturionsUtils.color("&aYou added your current location as spawnpoint &b" + pos));
+            } else if (CenturionsUtils.checkCmdAliases(args, 1, "setname", "sn")) {
                 if (!(args.length > 2)) {
-                    sender.sendMessage(ManiaUtils.color("&cYou must provide a name."));
+                    sender.sendMessage(CenturionsUtils.color("&cYou must provide a name."));
                     return true;
                 }
             
                 String name = StringUtils.join(args, " ", 2, args.length);
                 if (this.maps.containsKey(name.toLowerCase().replace(" ", "_"))) {
-                    sender.sendMessage(ManiaUtils.color("&cThere is already a map with that name."));
+                    sender.sendMessage(CenturionsUtils.color("&cThere is already a map with that name."));
                     return true;
                 }
             
@@ -295,25 +295,25 @@ public class MapManager implements CommandExecutor {
                 hgMap.setName(name);
                 this.maps.remove(oldName.toLowerCase());
                 this.maps.put(name.toLowerCase().replace(" ", "_"), hgMap);
-                sender.sendMessage(ManiaUtils.color("&aYou renamed the map &b" + oldName + " &ato " + name));
-            } else if (ManiaUtils.checkCmdAliases(args, 1, "teleport", "tp")) {
+                sender.sendMessage(CenturionsUtils.color("&aYou renamed the map &b" + oldName + " &ato " + name));
+            } else if (CenturionsUtils.checkCmdAliases(args, 1, "teleport", "tp")) {
                 if (hgMap.getWorld() == null) {
-                    sender.sendMessage(ManiaUtils.color("&cThat map is not loaded."));
+                    sender.sendMessage(CenturionsUtils.color("&cThat map is not loaded."));
                     return true;
                 }
             
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage(ManiaUtils.color("&cOnly players can use that command."));
+                    sender.sendMessage(CenturionsUtils.color("&cOnly players can use that command."));
                     return true;
                 }
             
                 Player player = (Player) sender;
                 player.teleport(hgMap.getWorld().getSpawnLocation());
-                player.sendMessage(ManiaUtils.color("&aYou were teleported to the map &b" + hgMap.getName()));
+                player.sendMessage(CenturionsUtils.color("&aYou were teleported to the map &b" + hgMap.getName()));
                 player.setGameMode(GameMode.CREATIVE);
-            } else if (ManiaUtils.checkCmdAliases(args, 1, "setcenter", "sc")) {
+            } else if (CenturionsUtils.checkCmdAliases(args, 1, "setcenter", "sc")) {
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage(ManiaUtils.color("&cOnly players can use that command."));
+                    sender.sendMessage(CenturionsUtils.color("&cOnly players can use that command."));
                     return true;
                 }
             
@@ -321,10 +321,10 @@ public class MapManager implements CommandExecutor {
                 Position position = getPosition(player);
                 hgMap.setCenter(position);
                 hgMap.getWorld().setSpawnLocation(player.getLocation().getBlockX(), player.getLocation().getBlockY(), player.getLocation().getBlockZ());
-                player.sendMessage(ManiaUtils.color("&aYou have set your location as the center of the map."));
-            } else if (ManiaUtils.checkCmdAliases(args, 1, "addcreator", "ac")) {
+                player.sendMessage(CenturionsUtils.color("&aYou have set your location as the center of the map."));
+            } else if (CenturionsUtils.checkCmdAliases(args, 1, "addcreator", "ac")) {
                 if (!(args.length > 2)) {
-                    sender.sendMessage(ManiaUtils.color("&cYou must provide at least one name"));
+                    sender.sendMessage(CenturionsUtils.color("&cYou must provide at least one name"));
                     return true;
                 }
             
@@ -342,10 +342,10 @@ public class MapManager implements CommandExecutor {
                     creators = StringUtils.join(names, ", ");
                 }
             
-                sender.sendMessage(ManiaUtils.color("&aYou added &b" + creators + " &aas a(the) creator(s)."));
-            } else if (ManiaUtils.checkCmdAliases(args, 1, "setdistance", "sd")) {
+                sender.sendMessage(CenturionsUtils.color("&aYou added &b" + creators + " &aas a(the) creator(s)."));
+            } else if (CenturionsUtils.checkCmdAliases(args, 1, "setdistance", "sd")) {
                 if (!(args.length > 2)) {
-                    sender.sendMessage(ManiaUtils.color("&cYou must provide a distance"));
+                    sender.sendMessage(CenturionsUtils.color("&cYou must provide a distance"));
                     return true;
                 }
             
@@ -353,12 +353,12 @@ public class MapManager implements CommandExecutor {
                 try {
                     distance = Integer.parseInt(args[2]);
                 } catch (NumberFormatException e) {
-                    sender.sendMessage(ManiaUtils.color("&cThe value you provided for the distance is not a valid number."));
+                    sender.sendMessage(CenturionsUtils.color("&cThe value you provided for the distance is not a valid number."));
                     return true;
                 }
                 
                 hgMap.setBorderDistance(distance);
-                sender.sendMessage(ManiaUtils.color("&aYou have set the border distance to &b" + distance));
+                sender.sendMessage(CenturionsUtils.color("&aYou have set the border distance to &b" + distance));
             }
         }
         

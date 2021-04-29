@@ -2,15 +2,15 @@ package net.firecraftmc.maniacore.spigot.cmd;
 
 import cloud.timo.TimoCloud.api.TimoCloudAPI;
 import cloud.timo.TimoCloud.api.objects.PlayerObject;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.spigot.user.SpigotUserManager;
 import net.firecraftmc.maniacore.spigot.util.SpigotUtils;
-import net.firecraftmc.maniacore.api.ManiaCore;
 import net.firecraftmc.maniacore.api.nickname.Nickname;
 import net.firecraftmc.maniacore.api.ranks.Rank;
 import net.firecraftmc.maniacore.api.records.NicknameRecord;
 import net.firecraftmc.maniacore.api.skin.Skin;
 import net.firecraftmc.maniacore.api.user.User;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import net.firecraftmc.manialib.sql.IRecord;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -38,20 +38,20 @@ public class NicknameCmd implements CommandExecutor {
         
         if (cmd.getName().equalsIgnoreCase("nick")) {
             if (!PERMITTED_RANKS.contains(senderRank)) {
-                sender.sendMessage(ManiaUtils.color("&cYou are not allowed to use that command."));
+                sender.sendMessage(CenturionsUtils.color("&cYou are not allowed to use that command."));
                 return true;
             }
 
             if (!(sender instanceof Player)) {
-                sender.sendMessage(ManiaUtils.color("&cOnly players may use that command."));
+                sender.sendMessage(CenturionsUtils.color("&cOnly players may use that command."));
                 return true;
             }
 
-            final Plugin maniaCore = Bukkit.getPluginManager().getPlugin("ManiaCore");
+            final Plugin maniaCore = Bukkit.getPluginManager().getPlugin("CenturionsCore");
             new BukkitRunnable() {
                 public void run() {
                     try {
-                        User user = ManiaCore.getInstance().getUserManager().getUser(((Player) sender).getUniqueId());
+                        User user = CenturionsCore.getInstance().getUserManager().getUser(((Player) sender).getUniqueId());
                         if (!(args.length > 0)) {
                             user.sendMessage("&cUsage: /nick <displayName>");
                             user.sendMessage("&c&o  -s can be used for the skin name and -r can be used for the rank");
@@ -64,7 +64,7 @@ public class NicknameCmd implements CommandExecutor {
                                     user.resetNickname();
                                     user.sendMessage("&aReset your nickname.");
                                     user.getNickname().setActive(false);
-                                    ManiaCore.getInstance().getPlugin().runTaskAsynchronously(() -> new NicknameRecord(user.getNickname()).push(ManiaCore.getInstance().getDatabase()));
+                                    CenturionsCore.getInstance().getPlugin().runTaskAsynchronously(() -> new NicknameRecord(user.getNickname()).push(CenturionsCore.getInstance().getDatabase()));
                                 }
                             }.runTask(maniaCore);
                             return;
@@ -87,7 +87,7 @@ public class NicknameCmd implements CommandExecutor {
                                     }
 
                                     String skinName = args[i + 1];
-                                    User skinUser = ManiaCore.getInstance().getUserManager().getUser(skinName);
+                                    User skinUser = CenturionsCore.getInstance().getUserManager().getUser(skinName);
                                     if (skinUser == null) {
                                         user.sendMessage("&cInvalid name for skin player.");
                                         return;
@@ -99,7 +99,7 @@ public class NicknameCmd implements CommandExecutor {
                                             user.sendMessage("&cCould not fetch the skin data.");
                                             return;
                                         } else {
-                                            ManiaCore.getInstance().getSkinManager().addSkin(skin);
+                                            CenturionsCore.getInstance().getSkinManager().addSkin(skin);
                                         }
                                     }
                                 } else if (args[i].startsWith("-r")) {
@@ -127,7 +127,7 @@ public class NicknameCmd implements CommandExecutor {
 
                         User target;
                         try {
-                            target = ManiaCore.getInstance().getUserManager().getUser(name);
+                            target = CenturionsCore.getInstance().getUserManager().getUser(name);
                         } catch (Exception e) {
                             target = null;
                         }
@@ -155,14 +155,14 @@ public class NicknameCmd implements CommandExecutor {
                                     if (skin == null) {
                                         skin = user.getSkin();
                                     } else {
-                                        ManiaCore.getInstance().getSkinManager().addSkin(skin);
+                                        CenturionsCore.getInstance().getSkinManager().addSkin(skin);
                                     }
                                 }
                             }
                         }
 
-                        if (ManiaCore.getInstance().getNicknameManager().isBlacklisted(name)) {
-                            sender.sendMessage(ManiaUtils.color("&cThat name is blacklisted from being used."));
+                        if (CenturionsCore.getInstance().getNicknameManager().isBlacklisted(name)) {
+                            sender.sendMessage(CenturionsUtils.color("&cThat name is blacklisted from being used."));
                             return;
                         }
 
@@ -176,34 +176,34 @@ public class NicknameCmd implements CommandExecutor {
                                 nickname.setRank(finalRank);
                                 nickname.setActive(true);
                                 user.applyNickname();
-                                ManiaCore.getInstance().getPlugin().runTaskAsynchronously(() -> new NicknameRecord(nickname).push(ManiaCore.getInstance().getDatabase()));
+                                CenturionsCore.getInstance().getPlugin().runTaskAsynchronously(() -> new NicknameRecord(nickname).push(CenturionsCore.getInstance().getDatabase()));
                                 user.sendMessage("&aSet your nickname to " + user.getDisplayName());
                             }
                         }.runTask(maniaCore);
                     } catch (Exception e) {
-                        sender.sendMessage(ManiaUtils.color("&cThere was an error setting your nickname."));
+                        sender.sendMessage(CenturionsUtils.color("&cThere was an error setting your nickname."));
                     }
                 }
             }.runTaskAsynchronously(maniaCore);
         } else if (cmd.getName().equalsIgnoreCase("unnick")) {
             if (!PERMITTED_RANKS.contains(senderRank)) {
-                sender.sendMessage(ManiaUtils.color("&cYou are not allowed to use that command."));
+                sender.sendMessage(CenturionsUtils.color("&cYou are not allowed to use that command."));
                 return true;
             }
 
             if (!(sender instanceof Player)) {
-                sender.sendMessage(ManiaUtils.color("&cOnly players may use that command."));
+                sender.sendMessage(CenturionsUtils.color("&cOnly players may use that command."));
                 return true;
             }
 
-            User user = ManiaCore.getInstance().getUserManager().getUser(((Player) sender).getUniqueId());
+            User user = CenturionsCore.getInstance().getUserManager().getUser(((Player) sender).getUniqueId());
             user.resetNickname();
             user.getNickname().setActive(false);
-            ManiaCore.getInstance().getPlugin().runTaskAsynchronously(() -> new NicknameRecord(user.getNickname()).push(ManiaCore.getInstance().getDatabase()));
+            CenturionsCore.getInstance().getPlugin().runTaskAsynchronously(() -> new NicknameRecord(user.getNickname()).push(CenturionsCore.getInstance().getDatabase()));
             user.sendMessage("&aReset your nickname.");
         } else if (cmd.getName().equalsIgnoreCase("realname")) {
             if (senderRank.ordinal() > HELPER.ordinal()) {
-                sender.sendMessage(ManiaUtils.color("&fUnknown command. Type \"help\" for help."));
+                sender.sendMessage(CenturionsUtils.color("&fUnknown command. Type \"help\" for help."));
                 return true;
             }
 
@@ -211,9 +211,9 @@ public class NicknameCmd implements CommandExecutor {
             if (args.length > 0) {
                 Player t = Bukkit.getPlayer(args[0]);
                 if (t != null) {
-                    target = ManiaCore.getInstance().getUserManager().getUser(t.getUniqueId());
+                    target = CenturionsCore.getInstance().getUserManager().getUser(t.getUniqueId());
                 } else {
-                    for (User value : ((SpigotUserManager) ManiaCore.getInstance().getUserManager()).getUsers().values()) {
+                    for (User value : ((SpigotUserManager) CenturionsCore.getInstance().getUserManager()).getUsers().values()) {
                         if (value.getNickname().isActive()) {
                             if (value.getNickname().getName().equalsIgnoreCase(args[0])) {
                                 target = value;
@@ -227,36 +227,36 @@ public class NicknameCmd implements CommandExecutor {
                 }
 
                 if (target == null) {
-                    List<IRecord> nicknameRecords = ManiaCore.getInstance().getDatabase().getRecords(NicknameRecord.class, "active", "true");
+                    List<IRecord> nicknameRecords = CenturionsCore.getInstance().getDatabase().getRecords(NicknameRecord.class, "active", "true");
                     for (IRecord record : nicknameRecords) {
                         NicknameRecord nickRecord = (NicknameRecord) record;
                         if (nickRecord.toObject().getName().equalsIgnoreCase(args[0])) {
-                            target = ManiaCore.getInstance().getUserManager().getUser(nickRecord.toObject().getPlayer());
+                            target = CenturionsCore.getInstance().getUserManager().getUser(nickRecord.toObject().getPlayer());
                         }
                     }
                 }
 
                 if (target == null) {
-                    ManiaCore.getInstance().getUserManager().getUser(args[0]);
+                    CenturionsCore.getInstance().getUserManager().getUser(args[0]);
                 }
             }
             
             if (target == null) {
-                sender.sendMessage(ManiaUtils.color("&cCould not find a player with that name."));
+                sender.sendMessage(CenturionsUtils.color("&cCould not find a player with that name."));
                 return true;
             }
             
             if (target.getRank().ordinal() < senderRank.ordinal()) {
-                sender.sendMessage(ManiaUtils.color("&cThat player does not have a nickname set."));
+                sender.sendMessage(CenturionsUtils.color("&cThat player does not have a nickname set."));
                 return true;
             }
             
             if (!target.getNickname().isActive()) {
-                sender.sendMessage(ManiaUtils.color("&cThat player does not have a nickname set."));
+                sender.sendMessage(CenturionsUtils.color("&cThat player does not have a nickname set."));
                 return true;
             }
             
-            sender.sendMessage(ManiaUtils.color("&aThe nicked player " + target.getNickname().getName() + " has the real name " + target.getName()));
+            sender.sendMessage(CenturionsUtils.color("&aThe nicked player " + target.getNickname().getName() + " has the real name " + target.getName()));
         }
         return true;
     }

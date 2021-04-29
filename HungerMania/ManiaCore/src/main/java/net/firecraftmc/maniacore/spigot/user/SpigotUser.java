@@ -5,17 +5,17 @@ import com.mojang.authlib.properties.Property;
 import com.mojang.authlib.properties.PropertyMap;
 import lombok.Getter;
 import lombok.Setter;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.spigot.perks.Perk;
 import net.firecraftmc.maniacore.spigot.perks.PerkInfo;
 import net.firecraftmc.maniacore.spigot.perks.PerkInfoRecord;
 import net.firecraftmc.maniacore.spigot.perks.Perks;
-import net.firecraftmc.maniacore.api.ManiaCore;
 import net.firecraftmc.maniacore.api.channel.Channel;
 import net.firecraftmc.maniacore.api.ranks.RankInfo;
 import net.firecraftmc.maniacore.api.records.NicknameRecord;
 import net.firecraftmc.maniacore.api.skin.Skin;
 import net.firecraftmc.maniacore.api.user.User;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import net.firecraftmc.manialib.sql.IRecord;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.minecraft.server.v1_8_R3.*;
@@ -63,7 +63,7 @@ public class SpigotUser extends User {
     public void sendMessage(String s) {
         Player player = getBukkitPlayer();
         if (player != null) {
-            player.sendMessage(ManiaUtils.color(s));
+            player.sendMessage(CenturionsUtils.color(s));
         }
     }
     
@@ -136,18 +136,18 @@ public class SpigotUser extends User {
             player.showPlayer(getBukkitPlayer());
         }
         
-        ManiaCore.getInstance().getPlugin().runTaskAsynchronously(() -> new NicknameRecord(nickname).push(ManiaCore.getInstance().getDatabase()));
+        CenturionsCore.getInstance().getPlugin().runTaskAsynchronously(() -> new NicknameRecord(nickname).push(CenturionsCore.getInstance().getDatabase()));
     }
 
     public void applyNickname() {
         if (nickname.isActive()) {
-            applySkinAndName(ManiaCore.getInstance().getSkinManager().getSkin(nickname.getSkinUUID()), nickname.getName());
+            applySkinAndName(CenturionsCore.getInstance().getSkinManager().getSkin(nickname.getSkinUUID()), nickname.getName());
         }
         super.applyNickname();
     }
 
     public void loadPerks() {
-        List<IRecord> records = ManiaCore.getInstance().getDatabase().getRecords(net.firecraftmc.maniacore.spigot.perks.PerkInfoRecord.class, "uuid", this.uniqueId.toString());
+        List<IRecord> records = CenturionsCore.getInstance().getDatabase().getRecords(net.firecraftmc.maniacore.spigot.perks.PerkInfoRecord.class, "uuid", this.uniqueId.toString());
         for (IRecord record : records) {
             if (record instanceof net.firecraftmc.maniacore.spigot.perks.PerkInfoRecord) {
                 net.firecraftmc.maniacore.spigot.perks.PerkInfoRecord perkInfoRecord = (PerkInfoRecord) record;

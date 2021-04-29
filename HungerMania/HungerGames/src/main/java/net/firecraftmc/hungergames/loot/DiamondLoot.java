@@ -3,7 +3,7 @@ package net.firecraftmc.hungergames.loot;
 import lombok.Getter;
 import net.firecraftmc.hungergames.HungerGames;
 import net.firecraftmc.hungergames.game.Game;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -44,7 +44,7 @@ public class DiamondLoot extends Loot {
         }
         
         if (game.isDiamondSpecial()) {
-            return lootChances.get(ManiaCore.RANDOM.nextInt(lootChances.size())).generateItemStack();
+            return lootChances.get(CenturionsCore.RANDOM.nextInt(lootChances.size())).generateItemStack();
         }
         
         return DIAMOND.generateItemStack();

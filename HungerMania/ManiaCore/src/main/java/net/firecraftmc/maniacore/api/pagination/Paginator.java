@@ -1,7 +1,7 @@
 package net.firecraftmc.maniacore.api.pagination;
 
 import net.firecraftmc.maniacore.api.user.User;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 
@@ -50,7 +50,7 @@ public class Paginator<T extends IElement> {
         try {
             pageNumber = Integer.parseInt(page);
         } catch (NumberFormatException e) {
-            user.sendMessage(ManiaUtils.color("&cThe value for the page number is not a valid number."));
+            user.sendMessage(CenturionsUtils.color("&cThe value for the page number is not a valid number."));
             return;
         }
         this.display(user, pageNumber, args);
@@ -64,7 +64,7 @@ public class Paginator<T extends IElement> {
         }
         String header = this.header.replace("{pagenumber}", pageNumber + "");
         header = header.replace("{totalpages}", pages.size() + "");
-        user.sendMessage(ManiaUtils.color(header));
+        user.sendMessage(CenturionsUtils.color(header));
         for (Entry<Integer, T> element : page.getElements().entrySet()) {
             if (!StringUtils.isEmpty(element.getValue().formatLine(args))) {
                 user.sendMessage(ChatColor.translateAlternateColorCodes('&', element.getValue().formatLine(args)));
@@ -74,7 +74,7 @@ public class Paginator<T extends IElement> {
         }
         if (!(pageNumber == pages.size())) {
             String footer = this.footer.replace("{nextpage}", (pageNumber + 1) + "");
-            user.sendMessage(ManiaUtils.color(footer));
+            user.sendMessage(CenturionsUtils.color(footer));
         }
     }
 }

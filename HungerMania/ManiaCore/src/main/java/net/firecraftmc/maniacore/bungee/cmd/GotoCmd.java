@@ -1,7 +1,7 @@
 package net.firecraftmc.maniacore.bungee.cmd;
 
 import net.firecraftmc.maniacore.bungee.util.BungeeUtils;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.ranks.Rank;
 import net.firecraftmc.maniacore.api.user.User;
 import net.md_5.bungee.api.*;
@@ -30,7 +30,7 @@ public class GotoCmd extends Command {
         
         ProxiedPlayer player = (ProxiedPlayer) sender;
     
-        User user = ManiaCore.getInstance().getUserManager().getUser(player.getUniqueId());
+        User user = CenturionsCore.getInstance().getUserManager().getUser(player.getUniqueId());
         if (!user.hasPermission(Rank.HELPER)) {
             net.firecraftmc.maniacore.bungee.util.BungeeUtils.sendMessage(sender, "You do not have permission to use that command", ChatColor.RED);
             return;

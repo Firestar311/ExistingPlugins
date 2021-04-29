@@ -3,7 +3,7 @@ package net.firecraftmc.hungergames.game.tasks;
 import net.firecraftmc.hungergames.HungerGames;
 import net.firecraftmc.hungergames.game.Game;
 import net.firecraftmc.hungergames.game.GamePlayer;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.util.State;
 import net.firecraftmc.maniacore.spigot.util.SpigotUtils;
 import net.firecraftmc.manialib.util.Constants;
@@ -110,7 +110,7 @@ public class PlayerTrackerTask extends BukkitRunnable {
         long end = System.currentTimeMillis();
         long totalTime = end - start;
         if (totalTime > 20) {
-            ManiaCore.getInstance().getLogger().severe("Player Tracker task took " + totalTime);
+            CenturionsCore.getInstance().getLogger().severe("Player Tracker task took " + totalTime);
         }
         
     }

@@ -1,6 +1,6 @@
 package net.firecraftmc.maniacore.spigot.perks.gui;
 
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.spigot.gui.GUIButton;
 import net.firecraftmc.maniacore.spigot.gui.Gui;
 import net.firecraftmc.maniacore.spigot.perks.Perk;
@@ -18,9 +18,9 @@ public class PerkMainGui extends Gui {
                 if (e.getClick() == ClickType.LEFT) {
                     perk.handlePurchase(user);
                 } else if (e.getClick() == ClickType.RIGHT) {
-                    net.firecraftmc.maniacore.spigot.perks.PerkInfo perkInfo = ((SpigotUser) ManiaCore.getInstance().getUserManager().getUser(e.getWhoClicked().getUniqueId())).getPerkInfo(perk);
+                    net.firecraftmc.maniacore.spigot.perks.PerkInfo perkInfo = ((SpigotUser) CenturionsCore.getInstance().getUserManager().getUser(e.getWhoClicked().getUniqueId())).getPerkInfo(perk);
                     perkInfo.setActive(true);
-                    new net.firecraftmc.maniacore.spigot.perks.PerkInfoRecord(perkInfo).push(ManiaCore.getInstance().getDatabase());
+                    new net.firecraftmc.maniacore.spigot.perks.PerkInfoRecord(perkInfo).push(CenturionsCore.getInstance().getDatabase());
                 }
                 refreshInventory(e.getWhoClicked());
             });

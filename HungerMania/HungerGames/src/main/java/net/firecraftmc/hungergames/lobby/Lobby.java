@@ -13,12 +13,12 @@ import net.firecraftmc.hungergames.game.GamePlayer;
 import net.firecraftmc.hungergames.map.HGMap;
 import net.firecraftmc.hungergames.map.MapManager;
 import net.firecraftmc.hungergames.util.Messager;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.ranks.Rank;
 import net.firecraftmc.maniacore.api.redis.Redis;
 import net.firecraftmc.maniacore.api.user.User;
 import net.firecraftmc.maniacore.api.user.toggle.Toggles;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import net.firecraftmc.maniacore.memory.MemoryHook;
 import net.firecraftmc.maniacore.memory.MemoryHook.Task;
 import net.firecraftmc.maniacore.spigot.user.SpigotUser;
@@ -58,7 +58,7 @@ public class Lobby implements Listener, CommandExecutor {
         this.messager = new LobbyMessanger(this);
         
         MemoryHook voidDetector = new MemoryHook("Lobby Void Detector");
-        ManiaCore.getInstance().getMemoryManager().addMemoryHook(voidDetector);
+        CenturionsCore.getInstance().getMemoryManager().addMemoryHook(voidDetector);
         new BukkitRunnable() {
             public void run() {
                 if (game != null) { return; }
@@ -73,7 +73,7 @@ public class Lobby implements Listener, CommandExecutor {
         }.runTaskTimer(HungerGames.getInstance(), 20L, 20L);
         
         MemoryHook playerCount = new MemoryHook("Lobby Player Count Auto Start");
-        ManiaCore.getInstance().getMemoryManager().addMemoryHook(playerCount);
+        CenturionsCore.getInstance().getMemoryManager().addMemoryHook(playerCount);
         new BukkitRunnable() {
             public void run() {
                 Task task = playerCount.task().start();
@@ -104,7 +104,7 @@ public class Lobby implements Listener, CommandExecutor {
         }.runTaskTimer(plugin, 20L, 1200L);
         
         MemoryHook worldCheck = new MemoryHook("Lobby World Checker");
-        ManiaCore.getInstance().getMemoryManager().addMemoryHook(worldCheck);
+        CenturionsCore.getInstance().getMemoryManager().addMemoryHook(worldCheck);
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -131,7 +131,7 @@ public class Lobby implements Listener, CommandExecutor {
         }.runTaskTimer(HungerGames.getInstance(), 100L, 200L);
         
         MemoryHook playerChecker = new MemoryHook("Lobby Player Checker");
-        ManiaCore.getInstance().getMemoryManager().addMemoryHook(playerChecker);
+        CenturionsCore.getInstance().getMemoryManager().addMemoryHook(playerChecker);
         new BukkitRunnable() {
             public void run() {
                 Task task = playerChecker.task().start();
@@ -162,7 +162,7 @@ public class Lobby implements Listener, CommandExecutor {
                                     user.getBukkitPlayer().setTotalExperience(0);
                                     user.getBukkitPlayer().setExp(0);
                                     DisguiseAPI.undisguiseToAll(user.getBukkitPlayer());
-                                    user.getBukkitPlayer().setPlayerListName(ManiaUtils.color(user.getDisplayName()));
+                                    user.getBukkitPlayer().setPlayerListName(CenturionsUtils.color(user.getDisplayName()));
                                 }
                             }
                         }
@@ -191,7 +191,7 @@ public class Lobby implements Listener, CommandExecutor {
                 this.mapOptions.addMap(value);
             }
         } else {
-            Random random = ManiaCore.RANDOM;
+            Random random = CenturionsCore.RANDOM;
             List<HGMap> maps = new LinkedList<>(mapManager.getMaps().values());
             Collections.shuffle(maps);
             for (int i = 0; i < totalOptions; i++) {
@@ -213,7 +213,7 @@ public class Lobby implements Listener, CommandExecutor {
             public void run() {
                 TimoCloudAPI.getBukkitAPI().getThisServer().setExtra("map:Undecided;time:" + time + "s");
                 TimoCloudAPI.getBukkitAPI().getThisServer().setState("LOBBY");
-                Redis.sendCommand("gameReady " + ManiaCore.getInstance().getServerManager().getCurrentServer().getName());
+                Redis.sendCommand("gameReady " + CenturionsCore.getInstance().getServerManager().getCurrentServer().getName());
             }
         }.runTaskLaterAsynchronously(HungerGames.getInstance(), 1L);
     }
@@ -261,18 +261,18 @@ public class Lobby implements Listener, CommandExecutor {
         if (this.game == null) {
             Entry<HGMap, Integer> mostVotedMap = mapOptions.getMostVotedMap();
             if (mostVotedMap == null) {
-                sendMessage(ManiaUtils.color("&cThere was an error determining the map to be used."));
+                sendMessage(CenturionsUtils.color("&cThere was an error determining the map to be used."));
                 return;
             }
     
             if (mostVotedMap.getKey() == null) {
-                sendMessage(ManiaUtils.color("&cThere was an error generating the map"));
+                sendMessage(CenturionsUtils.color("&cThere was an error generating the map"));
                 return;
             }
     
             this.game = new Game(mostVotedMap.getKey(), this.gameSettings);
             try {
-                plugin.getManiaCore().getDatabase().pushRecord(new GameRecord(game));
+                plugin.getCenturionsCore().getDatabase().pushRecord(new GameRecord(game));
             } catch (Exception e) {
                 e.printStackTrace();
                 handleError(e.getMessage());
@@ -366,7 +366,7 @@ public class Lobby implements Listener, CommandExecutor {
     }
 
     public void addVote(int map, UUID player) {
-        User user = plugin.getManiaCore().getUserManager().getUser(player);
+        User user = plugin.getCenturionsCore().getUserManager().getUser(player);
         Rank rank = user.getRank();
         
         int weight = 1;
@@ -384,7 +384,7 @@ public class Lobby implements Listener, CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (cmd.getName().equalsIgnoreCase("map")) {
             if (!(args.length > 0)) {
-                sender.sendMessage(ManiaUtils.color("&cYou must provide a map name"));
+                sender.sendMessage(CenturionsUtils.color("&cYou must provide a map name"));
                 return true;
             }
             
@@ -392,13 +392,13 @@ public class Lobby implements Listener, CommandExecutor {
             try {
                 map = Integer.parseInt(args[0]);
             } catch (NumberFormatException e) {
-                sender.sendMessage(ManiaUtils.color("&cInvalid number."));
+                sender.sendMessage(CenturionsUtils.color("&cInvalid number."));
                 return true;
             }
             
             HGMap hgMap = mapOptions.getMaps().get(map);
             if (hgMap == null) {
-                sender.sendMessage(ManiaUtils.color("&cInvalid map option."));
+                sender.sendMessage(CenturionsUtils.color("&cInvalid map option."));
                 return true;
             }
             
@@ -406,7 +406,7 @@ public class Lobby implements Listener, CommandExecutor {
             
             for (SpigotUser user : this.hiddenStaff) {
                 if (user.getUniqueId().equals(player.getUniqueId())) {
-                    player.sendMessage(ManiaUtils.color("&cYou cannot vote for a map."));
+                    player.sendMessage(CenturionsUtils.color("&cYou cannot vote for a map."));
                     return true;
                 }
             }
@@ -426,8 +426,8 @@ public class Lobby implements Listener, CommandExecutor {
                 }
             }
             
-            player.sendMessage(ManiaUtils.color("&6&l>> &eYou voted for&8: &b" + hgMap.getName() + " &7&oby " + creatorNames));
-            User user = plugin.getManiaCore().getUserManager().getUser(player.getUniqueId());
+            player.sendMessage(CenturionsUtils.color("&6&l>> &eYou voted for&8: &b" + hgMap.getName() + " &7&oby " + creatorNames));
+            User user = plugin.getCenturionsCore().getUserManager().getUser(player.getUniqueId());
             Rank rank = user.getRank();
             
             int weight = 1;
@@ -435,46 +435,46 @@ public class Lobby implements Listener, CommandExecutor {
                 weight = rank.getVoteWeight();
             }
             
-            player.sendMessage(ManiaUtils.color("&6&l>> &eVoting Weight&8: &b" + weight + " Vote(s)&e."));
+            player.sendMessage(CenturionsUtils.color("&6&l>> &eVoting Weight&8: &b" + weight + " Vote(s)&e."));
         } else if (cmd.getName().equalsIgnoreCase("lobby")) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(ManiaUtils.color("&cOnly players may use that command."));
+                sender.sendMessage(CenturionsUtils.color("&cOnly players may use that command."));
                 return true;
             }
             
             Player player = (Player) sender;
-            User user = ManiaCore.getInstance().getUserManager().getUser(player.getUniqueId());
+            User user = CenturionsCore.getInstance().getUserManager().getUser(player.getUniqueId());
             if (!user.hasPermission(Rank.ADMIN)) {
-                player.sendMessage(ManiaUtils.color("&cYou do not have permission to use that command."));
+                player.sendMessage(CenturionsUtils.color("&cYou do not have permission to use that command."));
                 return true;
             }
             
             if (!(args.length > 0)) {
-                player.sendMessage(ManiaUtils.color("&cYou must provide a sub command."));
+                player.sendMessage(CenturionsUtils.color("&cYou must provide a sub command."));
                 return true;
             }
     
-            if (ManiaUtils.checkCmdAliases(args, 0, "signs")) {
+            if (CenturionsUtils.checkCmdAliases(args, 0, "signs")) {
                 if (!(args.length > 1)) {
-                    player.sendMessage(ManiaUtils.color("&cYou must provide a subcommand."));
+                    player.sendMessage(CenturionsUtils.color("&cYou must provide a subcommand."));
                     return true;
                 }
         
                 Block target = player.getTargetBlock((Set<Material>) null, 20);
                 if (!(target.getState() instanceof Sign)) {
-                    player.sendMessage(ManiaUtils.color("&cYou must be looking at a sign."));
+                    player.sendMessage(CenturionsUtils.color("&cYou must be looking at a sign."));
                     return true;
                 }
         
-                if (ManiaUtils.checkCmdAliases(args, 1, "setvotetitle")) {
+                if (CenturionsUtils.checkCmdAliases(args, 1, "setvotetitle")) {
                     this.lobbySigns.setVoteTitleSign(SpigotUtils.locationToPosition(target.getLocation()));
-                    player.sendMessage(ManiaUtils.color("&aSet the voting title sign to the block you are looking at."));
-                } else if (ManiaUtils.checkCmdAliases(args, 1, "setvotinginfo")) {
+                    player.sendMessage(CenturionsUtils.color("&aSet the voting title sign to the block you are looking at."));
+                } else if (CenturionsUtils.checkCmdAliases(args, 1, "setvotinginfo")) {
                     this.lobbySigns.setVotingInfo(SpigotUtils.locationToPosition(target.getLocation()));
-                    player.sendMessage(ManiaUtils.color("&aSet the voting info sign to the block you are looking at."));
-                } else if (ManiaUtils.checkCmdAliases(args, 1, "setmapsign")) {
+                    player.sendMessage(CenturionsUtils.color("&aSet the voting info sign to the block you are looking at."));
+                } else if (CenturionsUtils.checkCmdAliases(args, 1, "setmapsign")) {
                     if (!(args.length > 2)) {
-                        sender.sendMessage(ManiaUtils.color("&cYou must provide the map position number for that sign."));
+                        sender.sendMessage(CenturionsUtils.color("&cYou must provide the map position number for that sign."));
                         return true;
                     }
             
@@ -482,45 +482,45 @@ public class Lobby implements Listener, CommandExecutor {
                     try {
                         pos = Integer.parseInt(args[2]);
                     } catch (NumberFormatException e) {
-                        player.sendMessage(ManiaUtils.color("&cInvalid number"));
+                        player.sendMessage(CenturionsUtils.color("&cInvalid number"));
                         return true;
                     }
                     
                     if (pos == 0 || pos > gameSettings.getMaxMapOptions()) {
-                        player.sendMessage(ManiaUtils.color("&cInvalid position, it must be between 1 and " + gameSettings.getMaxMapOptions()));
+                        player.sendMessage(CenturionsUtils.color("&cInvalid position, it must be between 1 and " + gameSettings.getMaxMapOptions()));
                         return true;
                     }
                     
                     this.lobbySigns.getMapSigns().put(pos, SpigotUtils.locationToPosition(target.getLocation()));
-                    player.sendMessage(ManiaUtils.color("&aSet the current location to the map sign position &b" + pos));
+                    player.sendMessage(CenturionsUtils.color("&aSet the current location to the map sign position &b" + pos));
                 }
             }
         } else if (cmd.getName().equalsIgnoreCase("votestart")) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(ManiaUtils.color("&cOnly players can do that."));
+                sender.sendMessage(CenturionsUtils.color("&cOnly players can do that."));
                 return true;
             }
             
             Player player = (Player) sender;
             
             if (game != null) {
-                player.sendMessage(ManiaUtils.color("&cThere is a game already running."));
+                player.sendMessage(CenturionsUtils.color("&cThere is a game already running."));
                 return true;
             }
             
             if (this.voteTimer != null) {
-                player.sendMessage(ManiaUtils.color("&cThe vote timer has already started."));
+                player.sendMessage(CenturionsUtils.color("&cThe vote timer has already started."));
                 return true;
             }
             
             if (this.voteStart.contains(player.getUniqueId())) {
-                player.sendMessage(ManiaUtils.color("&cYou have already voted to start the game."));
+                player.sendMessage(CenturionsUtils.color("&cYou have already voted to start the game."));
                 return true;
             }
             
             for (SpigotUser user : this.hiddenStaff) {
                 if (user.getUniqueId().equals(player.getUniqueId())) {
-                    player.sendMessage(ManiaUtils.color("&cYou cannot vote for a map."));
+                    player.sendMessage(CenturionsUtils.color("&cYou cannot vote for a map."));
                     return true;
                 }
             }
@@ -535,7 +535,7 @@ public class Lobby implements Listener, CommandExecutor {
             sendMessage("&6&l>> &b" + player.getName() + " &ehas voted to start the game. &5(&f" + this.voteStart.size() + "&d/&f" + votesNeeded + "&d)");
         } else if (cmd.getName().equalsIgnoreCase("nextgame")) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(ManiaUtils.color("&cOnly players can use that command."));
+                sender.sendMessage(CenturionsUtils.color("&cOnly players can use that command."));
                 return true;
             }
             for (ServerObject server : TimoCloudAPI.getUniversalAPI().getServerGroup("HG").getServers()) {
@@ -548,7 +548,7 @@ public class Lobby implements Listener, CommandExecutor {
                 }
             }
             
-            sender.sendMessage(ManiaUtils.color("&cCould not find a free server."));
+            sender.sendMessage(CenturionsUtils.color("&cCould not find a free server."));
         }
         
         return true;

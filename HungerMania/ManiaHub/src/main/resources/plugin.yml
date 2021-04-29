@@ -1,8 +1,8 @@
-name: ManiaHub
+name: ${project.name}
 version: ${project.version}
-main: net.firecraftmc.hub.ManiaHub
+main: net.firecraftmc.hub.CenturionsHub
 description: HungerMania's Hub
-depend: [ManiaCore]
+depend: [CenturionsCore]
 commands:
     testadmin:
     fly:

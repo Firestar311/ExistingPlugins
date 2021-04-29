@@ -1,7 +1,7 @@
 package net.firecraftmc.maniacore.spigot.anticheat;
 
 import me.vagdedes.spartan.api.PlayerViolationEvent;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
@@ -12,11 +12,11 @@ public class SpartanManager implements Listener {
     
     @EventHandler
     public void onSpartanViolation(PlayerViolationEvent e) {
-        String server = ManiaCore.getInstance().getServerManager().getCurrentServer().getName();
+        String server = CenturionsCore.getInstance().getServerManager().getCurrentServer().getName();
         int ping = ((CraftPlayer) e.getPlayer()).getHandle().ping;
         double tps = ((CraftServer) Bukkit.getServer()).getServer().recentTps[0];
         if (e.getViolation() >= 5) {
-            ManiaCore.getInstance().getMessageHandler().sendSpartanMessage(server, e.getPlayer().getName(), e.getHackType().name(), e.getViolation(), e.isFalsePositive(), tps, ping);
+            CenturionsCore.getInstance().getMessageHandler().sendSpartanMessage(server, e.getPlayer().getName(), e.getHackType().name(), e.getViolation(), e.isFalsePositive(), tps, ping);
         }
     }
 }

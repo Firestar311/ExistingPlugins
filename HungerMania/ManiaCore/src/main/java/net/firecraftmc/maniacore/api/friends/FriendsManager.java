@@ -1,7 +1,9 @@
 package net.firecraftmc.maniacore.api.friends;
 
+import net.firecraftmc.maniacore.api.CenturionsCore;
+import net.firecraftmc.maniacore.api.records.FriendNotificationRecord;
+import net.firecraftmc.maniacore.api.records.FriendRequestRecord;
 import net.firecraftmc.maniacore.api.records.FriendshipRecord;
-import net.firecraftmc.maniacore.api.ManiaCore;
 import net.firecraftmc.maniacore.api.redis.Redis;
 import net.firecraftmc.maniacore.api.user.User;
 import net.firecraftmc.manialib.sql.Database;
@@ -13,33 +15,33 @@ import java.util.*;
 public class FriendsManager {
     
     public void loadDataFromDatabase(UUID player) {
-        Database database = ManiaCore.getInstance().getDatabase();
-        List<IRecord> friendshipRecords = new ArrayList<>(database.getRecords(net.firecraftmc.maniacore.api.records.FriendshipRecord.class, "player1", player.toString()));
-        friendshipRecords.addAll(database.getRecords(net.firecraftmc.maniacore.api.records.FriendshipRecord.class, "player2", player.toString()));
+        Database database = CenturionsCore.getInstance().getDatabase();
+        List<IRecord> friendshipRecords = new ArrayList<>(database.getRecords(FriendshipRecord.class, "player1", player.toString()));
+        friendshipRecords.addAll(database.getRecords(FriendshipRecord.class, "player2", player.toString()));
         
-        List<IRecord> friendRequestRecords = new ArrayList<>(database.getRecords(net.firecraftmc.maniacore.api.records.FriendRequestRecord.class, "from", player.toString()));
-        friendRequestRecords.addAll(database.getRecords(net.firecraftmc.maniacore.api.records.FriendshipRecord.class, "to", player.toString()));
+        List<IRecord> friendRequestRecords = new ArrayList<>(database.getRecords(FriendRequestRecord.class, "from", player.toString()));
+        friendRequestRecords.addAll(database.getRecords(FriendshipRecord.class, "to", player.toString()));
         
-        List<IRecord> friendNotificationRecords = new ArrayList<>(database.getRecords(net.firecraftmc.maniacore.api.records.FriendNotificationRecord.class, "sender", player.toString()));
-        friendNotificationRecords.addAll(database.getRecords(net.firecraftmc.maniacore.api.records.FriendshipRecord.class, "target", player.toString()));
+        List<IRecord> friendNotificationRecords = new ArrayList<>(database.getRecords(FriendNotificationRecord.class, "sender", player.toString()));
+        friendNotificationRecords.addAll(database.getRecords(FriendshipRecord.class, "target", player.toString()));
         
         for (IRecord record : friendshipRecords) {
-            if (record instanceof net.firecraftmc.maniacore.api.records.FriendshipRecord) {
-                net.firecraftmc.maniacore.api.records.FriendshipRecord friendshipRecord = (net.firecraftmc.maniacore.api.records.FriendshipRecord) record;
+            if (record instanceof FriendshipRecord) {
+                FriendshipRecord friendshipRecord = (FriendshipRecord) record;
                 Redis.pushFriendship(friendshipRecord.toObject());
             }
         }
         
         for (IRecord record : friendRequestRecords) {
-            if (record instanceof net.firecraftmc.maniacore.api.records.FriendRequestRecord) {
-                net.firecraftmc.maniacore.api.records.FriendRequestRecord friendshipRecord = (net.firecraftmc.maniacore.api.records.FriendRequestRecord) record;
+            if (record instanceof FriendRequestRecord) {
+                FriendRequestRecord friendshipRecord = (FriendRequestRecord) record;
                 Redis.pushFriendRequest(friendshipRecord.toObject());
             }
         }
         
         for (IRecord record : friendNotificationRecords) {
-            if (record instanceof net.firecraftmc.maniacore.api.records.FriendNotificationRecord) {
-                net.firecraftmc.maniacore.api.records.FriendNotificationRecord friendshipRecord = (net.firecraftmc.maniacore.api.records.FriendNotificationRecord) record;
+            if (record instanceof FriendNotificationRecord) {
+                FriendNotificationRecord friendshipRecord = (FriendNotificationRecord) record;
                 Redis.pushFriendNotification(friendshipRecord.toObject());
             }
         }
@@ -55,7 +57,7 @@ public class FriendsManager {
         }
         
         FriendRequest request = new FriendRequest(sender.getUniqueId(), target.getUniqueId(), System.currentTimeMillis());
-        ManiaCore.getInstance().getDatabase().pushRecord(new net.firecraftmc.maniacore.api.records.FriendRequestRecord(request));
+        CenturionsCore.getInstance().getDatabase().pushRecord(new FriendRequestRecord(request));
         if (request.getId() == 0) {
             return FriendResult.DATABASE_ERROR;
         }
@@ -107,9 +109,9 @@ public class FriendsManager {
         return friendRequests;
     }
      
-    public List<net.firecraftmc.maniacore.api.friends.FriendNotification> getNotfications(UUID uuid) {
-        List<net.firecraftmc.maniacore.api.friends.FriendNotification> notifications = new ArrayList<>();
-        for (net.firecraftmc.maniacore.api.friends.FriendNotification friendNotification : Redis.getFriendNotifications()) {
+    public List<FriendNotification> getNotfications(UUID uuid) {
+        List<FriendNotification> notifications = new ArrayList<>();
+        for (FriendNotification friendNotification : Redis.getFriendNotifications()) {
             if (friendNotification.getSender().equals(uuid)) {
                 notifications.add(friendNotification);
             }
@@ -136,12 +138,12 @@ public class FriendsManager {
         }
         
         Redis.deleteFriendship(friendship);
-        ManiaCore.getInstance().getDatabase().deleteRecord(new net.firecraftmc.maniacore.api.records.FriendshipRecord(friendship));
+        CenturionsCore.getInstance().getDatabase().deleteRecord(new FriendshipRecord(friendship));
         return new Pair<>(FriendResult.SUCCESS, friendship);
     }
     
     public void addNotification(FriendNotification friendNotification) {
-        ManiaCore.getInstance().getDatabase().pushRecord(new net.firecraftmc.maniacore.api.records.FriendNotificationRecord(friendNotification));
+        CenturionsCore.getInstance().getDatabase().pushRecord(new FriendNotificationRecord(friendNotification));
         Redis.pushFriendNotification(friendNotification);
     }
     
@@ -168,7 +170,7 @@ public class FriendsManager {
         }
     
         Friendship friendship = new Friendship(user.getUniqueId(), target.getUniqueId(), System.currentTimeMillis());
-        ManiaCore.getInstance().getDatabase().pushRecord(new FriendshipRecord(friendship));
+        CenturionsCore.getInstance().getDatabase().pushRecord(new FriendshipRecord(friendship));
         if (friendship.getId() == 0) {
             return new Pair<>(FriendResult.DATABASE_ERROR, request);
         }

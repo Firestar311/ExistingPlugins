@@ -1,9 +1,9 @@
 package net.firecraftmc.maniacore.spigot.mutations;
 
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.stats.Stats;
 import net.firecraftmc.maniacore.api.user.User;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import net.firecraftmc.maniacore.spigot.gui.GUIButton;
 import net.firecraftmc.maniacore.spigot.gui.Gui;
 import net.firecraftmc.maniacore.spigot.util.ItemBuilder;
@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class MutateGui extends Gui {
 
     public MutateGui(UUID mutator) {
-        super(Bukkit.getPluginManager().getPlugin("ManiaCore"), "Purchase Mutations", false, 27);
+        super(Bukkit.getPluginManager().getPlugin("CenturionsCore"), "Purchase Mutations", false, 27);
 
         GUIButton unlockedWool = new GUIButton(ItemBuilder.start(Material.WOOL, 1, (short) 13).setDisplayName("&a&lAvailable").build());
         GUIButton purchasableWool = new GUIButton(ItemBuilder.start(Material.WOOL, 1, (short) 4).setDisplayName("&e&lPurchasable").build());
@@ -39,7 +39,7 @@ public class MutateGui extends Gui {
 
         net.firecraftmc.maniacore.spigot.mutations.Mutation[] mutations = net.firecraftmc.maniacore.spigot.mutations.Mutations.MUTATIONS.values().toArray(new net.firecraftmc.maniacore.spigot.mutations.Mutation[0]);
         Map<net.firecraftmc.maniacore.spigot.mutations.MutationStatus, Map<net.firecraftmc.maniacore.spigot.mutations.MutationType, ItemStack>> mutationStacks = new HashMap<>();
-        User user = ManiaCore.getInstance().getUserManager().getUser(mutator);
+        User user = CenturionsCore.getInstance().getUserManager().getUser(mutator);
         String[] rawUnlocked = user.getStat(Stats.HG_UNLOCKED_MUTATIONS).getAsString().split(";");
         Set<net.firecraftmc.maniacore.spigot.mutations.MutationType> unlockedTypes = new HashSet<>();
         for (String s : rawUnlocked) {
@@ -102,7 +102,7 @@ public class MutateGui extends Gui {
             if (status == net.firecraftmc.maniacore.spigot.mutations.MutationStatus.AVAILABLE) {
                 for (Entry<net.firecraftmc.maniacore.spigot.mutations.MutationType, ItemStack> entry : items.entrySet()) {
                     setButton(availableCounter.get(), new GUIButton(entry.getValue()).setListener((e) -> {
-                        e.getWhoClicked().sendMessage(ManiaUtils.color("&cYou have already purchased that mutation."));
+                        e.getWhoClicked().sendMessage(CenturionsUtils.color("&cYou have already purchased that mutation."));
                         e.getWhoClicked().closeInventory();
                     }));
                     availableCounter.getAndIncrement();

@@ -1,6 +1,6 @@
 package net.firecraftmc.maniacore.spigot.cmd;
 
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.friends.FriendResult;
 import net.firecraftmc.maniacore.api.pagination.PaginatorFactory;
 import net.firecraftmc.maniacore.api.friends.FriendNotification.Type;
@@ -9,7 +9,7 @@ import net.firecraftmc.maniacore.api.records.FriendshipRecord;
 import net.firecraftmc.maniacore.api.redis.Redis;
 import net.firecraftmc.maniacore.api.user.IgnoreInfo;
 import net.firecraftmc.maniacore.api.user.User;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import net.firecraftmc.manialib.util.Pair;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -21,20 +21,20 @@ public class FriendsCmd implements CommandExecutor {
     
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ManiaUtils.color("&cOnly players may use that command."));
+            sender.sendMessage(CenturionsUtils.color("&cOnly players may use that command."));
             return true;
         }
         
-        User user = ManiaCore.getInstance().getUserManager().getUser(((Player) sender).getUniqueId());
+        User user = CenturionsCore.getInstance().getUserManager().getUser(((Player) sender).getUniqueId());
         
         if (!(args.length > 0)) {
             user.sendMessage("&cUsage: /friends <subcommand>");
             return true;
         }
         
-        net.firecraftmc.maniacore.api.friends.FriendsManager friendsManager = ManiaCore.getInstance().getFriendsManager();
+        net.firecraftmc.maniacore.api.friends.FriendsManager friendsManager = CenturionsCore.getInstance().getFriendsManager();
         
-        if (ManiaUtils.checkCmdAliases(args, 0, "list", "l")) {
+        if (CenturionsUtils.checkCmdAliases(args, 0, "list", "l")) {
             List<net.firecraftmc.maniacore.api.friends.Friendship> friendships = friendsManager.getFriendships(user.getUniqueId());
             net.firecraftmc.maniacore.api.pagination.Paginator<net.firecraftmc.maniacore.api.friends.Friendship> paginator = PaginatorFactory.generatePaginator(7, friendships, new HashMap<net.firecraftmc.maniacore.api.pagination.DefaultVariables, String>() {{
                 put(net.firecraftmc.maniacore.api.pagination.DefaultVariables.TYPE, "Friends");
@@ -45,13 +45,13 @@ public class FriendsCmd implements CommandExecutor {
             } else {
                 paginator.display(user, args[1], user.getUniqueId().toString());
             }
-        } else if (ManiaUtils.checkCmdAliases(args, 0, "add")) {
+        } else if (CenturionsUtils.checkCmdAliases(args, 0, "add")) {
             if (!(args.length > 1)) {
                 user.sendMessage("&cUsage: /friends add <name>");
                 return true;
             }
             
-            User target = ManiaCore.getInstance().getUserManager().getUser(args[1]);
+            User target = CenturionsCore.getInstance().getUserManager().getUser(args[1]);
             if (target == null) {
                 user.sendMessage("&cCould not find a user with that name.");
                 return true;
@@ -90,13 +90,13 @@ public class FriendsCmd implements CommandExecutor {
             }
             
             user.sendMessage(message);
-        } else if (ManiaUtils.checkCmdAliases(args, 0, "remove")) {
+        } else if (CenturionsUtils.checkCmdAliases(args, 0, "remove")) {
             if (!(args.length > 1)) {
                 user.sendMessage("&cUsage: /friends remove <name>");
                 return true;
             }
             
-            User target = ManiaCore.getInstance().getUserManager().getUser(args[1]);
+            User target = CenturionsCore.getInstance().getUserManager().getUser(args[1]);
             if (target == null) {
                 user.sendMessage("&cCould not find a user with that name.");
                 return true;
@@ -125,19 +125,19 @@ public class FriendsCmd implements CommandExecutor {
                     target.sendMessage("&a" + user.getName() + " has removed you as a friend.");
                 }
                 
-                ManiaCore.getInstance().getDatabase().deleteRecord(new FriendshipRecord(resultPair.getValue2()));
+                CenturionsCore.getInstance().getDatabase().deleteRecord(new FriendshipRecord(resultPair.getValue2()));
             }
             
             user.sendMessage(message);
-        } else if (ManiaUtils.checkCmdAliases(args, 0, "requests")) {
+        } else if (CenturionsUtils.checkCmdAliases(args, 0, "requests")) {
             //List
-        } else if (ManiaUtils.checkCmdAliases(args, 0, "accept", "deny")) {
+        } else if (CenturionsUtils.checkCmdAliases(args, 0, "accept", "deny")) {
             if (!(args.length > 1)) {
                 user.sendMessage("&cYou must provide a name.");
                 return true;
             }
             
-            User target = ManiaCore.getInstance().getUserManager().getUser(args[1]);
+            User target = CenturionsCore.getInstance().getUserManager().getUser(args[1]);
             if (target == null) {
                 sender.sendMessage("&cYou provided an invalid name.");
                 return true;
@@ -148,7 +148,7 @@ public class FriendsCmd implements CommandExecutor {
             Type notificationType;
             net.firecraftmc.maniacore.api.friends.FriendResult result;
             Pair<net.firecraftmc.maniacore.api.friends.FriendResult, net.firecraftmc.maniacore.api.friends.FriendRequest> resultPair;
-            if (ManiaUtils.checkCmdAliases(args, 0, "accept")) {
+            if (CenturionsUtils.checkCmdAliases(args, 0, "accept")) {
                 resultPair = friendsManager.acceptRequest(user, target);
                 result = resultPair.getValue1();
                 switch (result) {
@@ -207,7 +207,7 @@ public class FriendsCmd implements CommandExecutor {
                 } else {
                     target.sendMessage(targetMessage);
                 }
-                ManiaCore.getInstance().getDatabase().deleteRecord(new FriendRequestRecord(resultPair.getValue2()));
+                CenturionsCore.getInstance().getDatabase().deleteRecord(new FriendRequestRecord(resultPair.getValue2()));
             }
             
             user.sendMessage(message);

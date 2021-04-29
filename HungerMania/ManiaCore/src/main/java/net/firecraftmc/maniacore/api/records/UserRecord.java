@@ -4,23 +4,28 @@ import net.firecraftmc.maniacore.api.channel.Channel;
 import net.firecraftmc.maniacore.api.ranks.Rank;
 import net.firecraftmc.maniacore.api.ranks.RankInfo;
 import net.firecraftmc.maniacore.api.user.User;
+import net.firecraftmc.manialib.sql.Column;
+import net.firecraftmc.manialib.sql.DataType;
+import net.firecraftmc.manialib.sql.Database;
+import net.firecraftmc.manialib.sql.IRecord;
+import net.firecraftmc.manialib.sql.Row;
 import net.firecraftmc.manialib.sql.Table;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class UserRecord implements net.firecraftmc.manialib.sql.IRecord<User> {
+public class UserRecord implements IRecord<User> {
     
     private User user;
     
-    public static net.firecraftmc.manialib.sql.Table generateTable(net.firecraftmc.manialib.sql.Database database) {
-        net.firecraftmc.manialib.sql.Table table = new Table(database, "users");
-        net.firecraftmc.manialib.sql.Column id = new net.firecraftmc.manialib.sql.Column("id", net.firecraftmc.manialib.sql.DataType.INT, true, true);
-        net.firecraftmc.manialib.sql.Column uniqueId = new net.firecraftmc.manialib.sql.Column("uniqueId", net.firecraftmc.manialib.sql.DataType.VARCHAR, 64, false, false);
-        net.firecraftmc.manialib.sql.Column name = new net.firecraftmc.manialib.sql.Column("name", net.firecraftmc.manialib.sql.DataType.VARCHAR, 32, false, false);
-        net.firecraftmc.manialib.sql.Column rank = new net.firecraftmc.manialib.sql.Column("rank", net.firecraftmc.manialib.sql.DataType.VARCHAR, 1000);
-        net.firecraftmc.manialib.sql.Column channel = new net.firecraftmc.manialib.sql.Column("channel", net.firecraftmc.manialib.sql.DataType.VARCHAR, 15);
+    public static Table generateTable(Database database) {
+        Table table = new Table(database, "users");
+        Column id = new Column("id", DataType.INT, true, true);
+        Column uniqueId = new Column("uniqueId", DataType.VARCHAR, 64, false, false);
+        Column name = new Column("name", DataType.VARCHAR, 32, false, false);
+        Column rank = new Column("rank", DataType.VARCHAR, 1000);
+        Column channel = new Column("channel", DataType.VARCHAR, 15);
         table.addColumns(id, uniqueId, name, rank, channel);
         return table;
     }
@@ -29,7 +34,7 @@ public class UserRecord implements net.firecraftmc.manialib.sql.IRecord<User> {
         this.user = user;
     }
     
-    public UserRecord(net.firecraftmc.manialib.sql.Row row) {
+    public UserRecord(Row row) {
         int id = row.getInt("id");
         UUID uniqueId = UUID.fromString(row.getString("uniqueId"));
         String name = row.getString("name");

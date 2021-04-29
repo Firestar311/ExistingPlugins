@@ -1,26 +1,26 @@
 package net.firecraftmc.maniacore.api.chat;
 
 import net.firecraftmc.maniacore.api.channel.Channel;
-import net.firecraftmc.maniacore.plugin.ManiaPlugin;
+import net.firecraftmc.maniacore.plugin.CenturionsPlugin;
 import net.firecraftmc.manialib.util.Priority;
 
 import java.util.*;
 
 public class ChatManager {
     
-    private Set<net.firecraftmc.maniacore.api.chat.ChatProvider> chatProviders = new HashSet<>();
-    private Map<net.firecraftmc.maniacore.api.channel.Channel, net.firecraftmc.maniacore.api.chat.ChatFormatter> formatters = new HashMap<>();
+    private Set<ChatProvider> chatProviders = new HashSet<>();
+    private Map<Channel, ChatFormatter> formatters = new HashMap<>();
     
-    public static final net.firecraftmc.maniacore.api.chat.ChatFormatter DEFAULT_FORMATTER = new net.firecraftmc.maniacore.api.chat.ChatFormatter("{name}&8: {message}");
+    public static final ChatFormatter DEFAULT_FORMATTER = new ChatFormatter("{name}&8: {message}");
     
-    public static final net.firecraftmc.maniacore.api.chat.ChatHandler DEFAULT_HANDLER = new net.firecraftmc.maniacore.api.chat.ChatHandler() {
+    public static final ChatHandler DEFAULT_HANDLER = new ChatHandler() {
         public Set<UUID> getAllTargets() {
             return new HashSet<>();
         }
     };
     
-    public net.firecraftmc.maniacore.api.chat.ChatFormatter getChatFormatter(net.firecraftmc.maniacore.api.channel.Channel channel) {
-        net.firecraftmc.maniacore.api.chat.ChatFormatter chatFormatter = this.formatters.get(channel);
+    public ChatFormatter getChatFormatter(Channel channel) {
+        ChatFormatter chatFormatter = this.formatters.get(channel);
         return chatFormatter != null ? chatFormatter : DEFAULT_FORMATTER;
     }
     
@@ -28,12 +28,12 @@ public class ChatManager {
         this.formatters.put(channel, formatter);
     }
     
-    public void registerHandler(ManiaPlugin plugin, net.firecraftmc.maniacore.api.chat.ChatHandler chatHandler, Priority priority) {
-        this.chatProviders.add(new net.firecraftmc.maniacore.api.chat.ChatProvider(plugin, chatHandler, priority));
+    public void registerHandler(CenturionsPlugin plugin, ChatHandler chatHandler, Priority priority) {
+        this.chatProviders.add(new ChatProvider(plugin, chatHandler, priority));
     }
     
     public ChatHandler getHandler() {
-        net.firecraftmc.maniacore.api.chat.ChatProvider provider = null;
+        ChatProvider provider = null;
         for (ChatProvider chatProvider : chatProviders) {
             if (provider == null) {
                 provider = chatProvider;

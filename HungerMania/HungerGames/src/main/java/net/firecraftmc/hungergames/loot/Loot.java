@@ -2,8 +2,8 @@ package net.firecraftmc.hungergames.loot;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.firecraftmc.maniacore.api.ManiaCore;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.CenturionsCore;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import net.firecraftmc.manialib.data.model.IRecord;
 import net.firecraftmc.manialib.util.Utils;
 import org.bukkit.Material;
@@ -56,14 +56,14 @@ public class Loot implements IRecord {
     public ItemStack generateItemStack() {
         int amount;
         if (this.maxAmount != 0) {
-            amount = ManiaCore.RANDOM.nextInt(maxAmount - 1) + 1;
+            amount = CenturionsCore.RANDOM.nextInt(maxAmount - 1) + 1;
         } else {
             amount = 1;
         }
         ItemStack itemStack = new ItemStack(this.material, amount);
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (!name.equalsIgnoreCase(material.name().replace("_", " "))) {
-            itemMeta.setDisplayName(ManiaUtils.color("&f" + this.name));
+            itemMeta.setDisplayName(CenturionsUtils.color("&f" + this.name));
         }
         if (this.material == Material.FLINT_AND_STEEL) {
             itemStack.setDurability((short) (material.getMaxDurability() -4));

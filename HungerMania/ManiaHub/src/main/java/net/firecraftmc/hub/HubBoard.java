@@ -2,11 +2,11 @@ package net.firecraftmc.hub;
 
 import cloud.timo.TimoCloud.api.TimoCloudAPI;
 import cloud.timo.TimoCloud.api.objects.ServerObject;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.ranks.Rank;
-import net.firecraftmc.maniacore.api.server.ManiaServer;
+import net.firecraftmc.maniacore.api.server.CenturionsServer;
 import net.firecraftmc.maniacore.api.stats.Stats;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import net.firecraftmc.maniacore.spigot.user.PlayerBoard;
 import net.firecraftmc.maniacore.spigot.user.SpigotUser;
 import org.bukkit.ChatColor;
@@ -19,14 +19,14 @@ public class HubBoard extends PlayerBoard {
     private final SpigotUser user;
     private final int rankLine;
     private final int killsLine;
-    private ManiaCore maniaCore;
+    private CenturionsCore centurionsCore;
     
     public HubBoard(SpigotUser spigotUser) {
-        super(ManiaUtils.color("&6&lCENTURIONS BG"));
+        super(CenturionsUtils.color("&6&lCENTURIONS BG"));
         this.user = spigotUser;
         addLine("", ChatColor.GOLD + "" + ChatColor.BOLD + "RANK", "");
-        maniaCore = ManiaCore.getInstance();
-        this.rankLine = addLine(ChatColor.WHITE + "", ChatColor.DARK_PURPLE.toString(), ManiaUtils.color(spigotUser.getRank().getBaseColor() + "&l" + spigotUser.getRank().getName().toUpperCase()));
+        centurionsCore = CenturionsCore.getInstance();
+        this.rankLine = addLine(ChatColor.WHITE + "", ChatColor.DARK_PURPLE.toString(), CenturionsUtils.color(spigotUser.getRank().getBaseColor() + "&l" + spigotUser.getRank().getName().toUpperCase()));
         addLine("", ChatColor.LIGHT_PURPLE.toString(), "");
         addLine("", ChatColor.GOLD + "" + ChatColor.BOLD + "ONLINE", "");
         int hubOnline = 0, gameOnline = 0;
@@ -47,7 +47,7 @@ public class HubBoard extends PlayerBoard {
         this.coinsLine = addLine("", ChatColor.WHITE + "Coins: " + ChatColor.YELLOW, "" + spigotUser.getStat(Stats.COINS).getAsInt());
         addLine("", ChatColor.GRAY.toString(), "");
         addLine("", ChatColor.GOLD + "" + ChatColor.BOLD + "SERVER", "");
-        ManiaServer currentServer = maniaCore.getServerManager().getCurrentServer();
+        CenturionsServer currentServer = centurionsCore.getServerManager().getCurrentServer();
         String serverName;
         if (currentServer != null) {
             serverName = currentServer.getName();
@@ -55,14 +55,14 @@ public class HubBoard extends PlayerBoard {
             serverName = "";
         }
         addLine("", ChatColor.WHITE + "", serverName);
-        addLine(ChatColor.YELLOW + "play.", "hungermania.net", "");
+        addLine(ChatColor.YELLOW + "play.", "centurionsbg.net", "");
         spigotUser.setScoreboard(this);
         send(spigotUser.getBukkitPlayer());
     }
     
     public void update() {
         Rank rank = user.getRank();
-        setLine(rankLine, ManiaUtils.color(rank.getBaseColor() + "&l" + rank.getName().toUpperCase()));
+        setLine(rankLine, CenturionsUtils.color(rank.getBaseColor() + "&l" + rank.getName().toUpperCase()));
         int hubOnline = 0, gameOnline = 0;
         for (ServerObject server : TimoCloudAPI.getUniversalAPI().getServerGroup("Hub").getServers()) {
             hubOnline += server.getOnlinePlayerCount();

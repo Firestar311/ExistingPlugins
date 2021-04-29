@@ -1,16 +1,16 @@
 package net.firecraftmc.maniacore.api.redis;
 
 import com.google.gson.Gson;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.friends.FriendNotification;
 import net.firecraftmc.maniacore.api.friends.FriendRequest;
 import net.firecraftmc.maniacore.api.friends.Friendship;
 import net.firecraftmc.maniacore.api.server.NetworkType;
-import net.firecraftmc.maniacore.api.ManiaCore;
 import net.firecraftmc.maniacore.api.stats.Statistic;
 import net.firecraftmc.maniacore.api.user.User;
 import net.firecraftmc.maniacore.api.user.toggle.Toggle;
 import net.firecraftmc.maniacore.api.user.toggle.Toggles;
-import net.firecraftmc.maniacore.api.util.ManiaProperties;
+import net.firecraftmc.maniacore.api.util.CenturionsProperties;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -35,9 +35,9 @@ public class Redis {
     private static File propertiesFile;
     private static Properties properties;
     
-    private static String host = ManiaProperties.REDIS_HOST;
-    private static int port = ManiaProperties.REDIS_PORT;
-    private static String password = ManiaProperties.REDIS_PASSWORD;
+    private static String host = CenturionsProperties.REDIS_HOST;
+    private static int port = CenturionsProperties.REDIS_PORT;
+    private static String password = CenturionsProperties.REDIS_PASSWORD;
     
     public static void startRedis() {
         CROSSTALK_CHANNEL = "Mania-Crosstalk";
@@ -53,7 +53,7 @@ public class Redis {
     }
     
     private static String getNetworkType() {
-        return ManiaCore.getInstance().getServerManager().getCurrentServer().getNetworkType().name();
+        return CenturionsCore.getInstance().getServerManager().getCurrentServer().getNetworkType().name();
     }
     
     public static void pushObject(String key, RedisObject object) {
@@ -451,15 +451,15 @@ public class Redis {
             }
         };
         if (async) {
-            ManiaCore.getInstance().getPlugin().runTaskAsynchronously(runnable);
+            CenturionsCore.getInstance().getPlugin().runTaskAsynchronously(runnable);
         } else {
-            ManiaCore.getInstance().getPlugin().runTask(runnable);
+            CenturionsCore.getInstance().getPlugin().runTask(runnable);
         }
     }
     
     public static void subscribe() {
         if (subscriber != null && subscriber.isSubscribed()) { return; }
-        ManiaCore.getInstance().getPlugin().runTaskAsynchronously(() -> crosstalk.subscribe(subscriber = new CommandSubscriber(), CROSSTALK_CHANNEL));
+        CenturionsCore.getInstance().getPlugin().runTaskAsynchronously(() -> crosstalk.subscribe(subscriber = new CommandSubscriber(), CROSSTALK_CHANNEL));
     }
     
     public static class CommandSubscriber extends JedisPubSub {
@@ -476,7 +476,7 @@ public class Redis {
                     }
                 }
             } catch (Exception e) {
-                ManiaCore.getInstance().getLogger().severe("Error while parsing Redis command Network Type: " + e.getMessage());
+                CenturionsCore.getInstance().getLogger().severe("Error while parsing Redis command Network Type: " + e.getMessage());
                 return;
             }
             String[] args = new String[]{};
@@ -490,7 +490,7 @@ public class Redis {
             }
             final String finalCommand = command.trim();
             final String[] finalArgs = args;
-            ManiaCore.getInstance().getPlugin().runTask(() -> {
+            CenturionsCore.getInstance().getPlugin().runTask(() -> {
                 for (RedisListener listener : listeners) {
                     listener.onCommand(finalCommand, finalArgs);
                 }

@@ -3,7 +3,7 @@ package net.firecraftmc.hungergames.loot;
 import lombok.Getter;
 import net.firecraftmc.hungergames.HungerGames;
 import net.firecraftmc.hungergames.records.LootRecord;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.manialib.sql.IRecord;
 import org.bukkit.Material;
 
@@ -17,7 +17,7 @@ public class LootManager {
     private HungerGames plugin = HungerGames.getInstance();
     
     public void loadFromDatabase() {
-        List<IRecord> records = plugin.getManiaCore().getDatabase().getRecords(LootRecord.class, null, null);
+        List<IRecord> records = plugin.getCenturionsCore().getDatabase().getRecords(LootRecord.class, null, null);
         if (!records.isEmpty()) {
             records:
             for (IRecord record : records) {
@@ -26,7 +26,7 @@ public class LootManager {
                     Loot loot = lootRecord.toObject();
                     for (Loot value : this.possibleLoot.values()) {
                         if (value.getMaterial() == loot.getMaterial()) {
-                            ManiaCore.getInstance().getDatabase().deleteRecord(lootRecord);
+                            CenturionsCore.getInstance().getDatabase().deleteRecord(lootRecord);
                             continue records;
                         }
                     }
@@ -102,10 +102,10 @@ public class LootManager {
             Loot wet_noodle = new Loot(Material.ROTTEN_FLESH, "Wet Noodle", 10);
             Loot golden_carrot = new Loot(Material.GOLDEN_CARROT, 15);
     
-            plugin.getManiaCore().getDatabase().addRecordsToQueue(new LootRecord(leather_helmet), new LootRecord(leather_chestplate), new LootRecord(leather_leggings), new LootRecord(leather_boots), new LootRecord(chain_helmet), new LootRecord(chain_chestplate), new LootRecord(chain_leggings), new LootRecord(chain_boots), new LootRecord(gold_helmet), new LootRecord(gold_chestplate), new LootRecord(gold_leggings), new LootRecord(gold_boots), new LootRecord(iron_helmet), new LootRecord(iron_chestplate), new LootRecord(iron_leggings), new LootRecord(iron_boots),
+            plugin.getCenturionsCore().getDatabase().addRecordsToQueue(new LootRecord(leather_helmet), new LootRecord(leather_chestplate), new LootRecord(leather_leggings), new LootRecord(leather_boots), new LootRecord(chain_helmet), new LootRecord(chain_chestplate), new LootRecord(chain_leggings), new LootRecord(chain_boots), new LootRecord(gold_helmet), new LootRecord(gold_chestplate), new LootRecord(gold_leggings), new LootRecord(gold_boots), new LootRecord(iron_helmet), new LootRecord(iron_chestplate), new LootRecord(iron_leggings), new LootRecord(iron_boots),
                     new LootRecord(wood_axe), new LootRecord(wood_sword), new LootRecord(stone_axe), new LootRecord(stone_sword), new LootRecord(bow), new LootRecord(arrows), new LootRecord(cooked_porkchop), new LootRecord(cooked_porkchop), new LootRecord(steak), new LootRecord(grilled_chicken), new LootRecord(raw_porkchop), new LootRecord(raw_beef), new LootRecord(raw_chicken), new LootRecord(carrots), new LootRecord(potato), new LootRecord(baked_potato), new LootRecord(egg_of_doom), new LootRecord(slowball), new LootRecord(iron_ingot), new LootRecord(gold_ingot),
                     new LootRecord(diamond), new LootRecord(stick), new LootRecord(flint_and_steel), new LootRecord(tnt), new LootRecord(iron_axe), new LootRecord(cake), new LootRecord(player_tracker), new LootRecord(pumpkin_pie), new LootRecord(raw_fish), new LootRecord(cooked_fish), new LootRecord(feather), new LootRecord(flint), new LootRecord(fishing_rod), new LootRecord(cobweb), new LootRecord(enchantment_bottle), new LootRecord(golden_apple), new LootRecord(wood_planks), new LootRecord(ender_pearl), new LootRecord(wet_noodle), new LootRecord(golden_carrot));
-            plugin.getManiaCore().getDatabase().pushQueue();
+            plugin.getCenturionsCore().getDatabase().pushQueue();
             this.possibleLoot.put(leather_helmet.getId(), leather_helmet);
             this.possibleLoot.put(leather_chestplate.getId(), leather_chestplate);
             this.possibleLoot.put(leather_leggings.getId(), leather_leggings);
@@ -168,7 +168,7 @@ public class LootManager {
         List<Loot> loot = new ArrayList<>();
         
         for (int i = 0; i < amount; i++) {
-            loot.add(lootChances.get(ManiaCore.RANDOM.nextInt(lootChances.size())));
+            loot.add(lootChances.get(CenturionsCore.RANDOM.nextInt(lootChances.size())));
         }
         
         return loot;

@@ -1,7 +1,7 @@
-name: HungerGames
+name: ${project.name}
 version: ${project.version}
 main: net.firecraftmc.hungergames.HungerGames
-depend: [ManiaCore, Vault]
+depend: [CenturionsCore, Vault]
 authors: [Firestar311, LibsDisguises]
 description: HungerGames Plugin
 website: hungermania.net

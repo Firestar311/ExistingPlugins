@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.firecraftmc</groupId>
-    <artifactId>ManiaLib</artifactId>
+    <artifactId>CenturionsLib</artifactId>
     <version>1.0-ALPHA</version>
     <packaging>jar</packaging>
 
-    <name>ManiaLib</name>
+    <name>CenturionsLib</name>
 
     <description>Library Plugin for FirecraftMC OldHM</description>
     <properties>

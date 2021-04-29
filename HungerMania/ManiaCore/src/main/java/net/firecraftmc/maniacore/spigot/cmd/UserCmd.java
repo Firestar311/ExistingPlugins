@@ -1,12 +1,12 @@
 package net.firecraftmc.maniacore.spigot.cmd;
 
 import net.firecraftmc.maniacore.spigot.util.SpigotUtils;
-import net.firecraftmc.maniacore.ManiaCorePlugin;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.CenturionsCorePlugin;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.ranks.Rank;
 import net.firecraftmc.maniacore.api.records.UserRecord;
 import net.firecraftmc.maniacore.api.user.User;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import net.firecraftmc.manialib.sql.IRecord;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -23,37 +23,37 @@ import java.util.Set;
 
 public class UserCmd implements CommandExecutor {
     
-    private ManiaCorePlugin plugin;
+    private CenturionsCorePlugin plugin;
 
-    public UserCmd(ManiaCorePlugin plugin) {
+    public UserCmd(CenturionsCorePlugin plugin) {
         this.plugin = plugin;
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         Rank senderRank = SpigotUtils.getRankFromSender(sender);
         if (senderRank.ordinal() > Rank.ADMIN.ordinal()) {
-            sender.sendMessage(ManiaUtils.color("&cYou are not allowed to use that command."));
+            sender.sendMessage(CenturionsUtils.color("&cYou are not allowed to use that command."));
             return true;
         }
         
         if (!(args.length > 0)) {
-            sender.sendMessage(ManiaUtils.color("&cUsage: /user <name> <subcommand>"));
+            sender.sendMessage(CenturionsUtils.color("&cUsage: /user <name> <subcommand>"));
             return true;
         }
         
-        if (ManiaUtils.checkCmdAliases(args, 0, "file")) {
+        if (CenturionsUtils.checkCmdAliases(args, 0, "file")) {
             new BukkitRunnable() {
                 public void run() {
                     Set<User> users = new HashSet<>();
-                    sender.sendMessage(ManiaUtils.color("&aProcessing your request..."));
-                    List<IRecord> records = ManiaCore.getInstance().getDatabase().getRecords(UserRecord.class, null, null);
-                    sender.sendMessage(ManiaUtils.color("&aFound a total of " + records.size() + " entries in the database"));
+                    sender.sendMessage(CenturionsUtils.color("&aProcessing your request..."));
+                    List<IRecord> records = CenturionsCore.getInstance().getDatabase().getRecords(UserRecord.class, null, null);
+                    sender.sendMessage(CenturionsUtils.color("&aFound a total of " + records.size() + " entries in the database"));
                     for (IRecord record : records) {
                         if (record instanceof UserRecord) {
                             users.add(((UserRecord) record).toObject());
                         }
                     }
-                    sender.sendMessage(ManiaUtils.color("&aFound a total of " + users.size() + " users in the database"));
+                    sender.sendMessage(CenturionsUtils.color("&aFound a total of " + users.size() + " users in the database"));
                     File folder = new File(plugin.getDataFolder() + File.separator + "output");
                     if (!folder.exists()) {
                         folder.mkdirs();
@@ -63,7 +63,7 @@ public class UserCmd implements CommandExecutor {
                         try {
                             output.createNewFile();
                         } catch (IOException e) {
-                            sender.sendMessage(ManiaUtils.color("&cCould not create the output file: " + e.getMessage()));
+                            sender.sendMessage(CenturionsUtils.color("&cCould not create the output file: " + e.getMessage()));
                             return;
                         }
                     }
@@ -74,9 +74,9 @@ public class UserCmd implements CommandExecutor {
                         }
                         out.flush();
                     } catch (Exception e) {
-                        sender.sendMessage(ManiaUtils.color("&cThere was an error saving user data to the file " + e.getMessage()));
+                        sender.sendMessage(CenturionsUtils.color("&cThere was an error saving user data to the file " + e.getMessage()));
                     } 
-                    sender.sendMessage(ManiaUtils.color("&aSuccessfully saved to the file " + output.getName()));
+                    sender.sendMessage(CenturionsUtils.color("&aSuccessfully saved to the file " + output.getName()));
                 }
             }.runTaskAsynchronously(plugin);
         }

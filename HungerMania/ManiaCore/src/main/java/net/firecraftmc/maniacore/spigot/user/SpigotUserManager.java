@@ -3,11 +3,11 @@ package net.firecraftmc.maniacore.spigot.user;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import lombok.Getter;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.spigot.events.UserActionBarUpdateEvent;
 import net.firecraftmc.maniacore.spigot.events.UserJoinEvent;
 import net.firecraftmc.maniacore.spigot.updater.UpdateEvent;
 import net.firecraftmc.maniacore.spigot.updater.UpdateType;
-import net.firecraftmc.maniacore.api.ManiaCore;
 import net.firecraftmc.maniacore.api.channel.Channel;
 import net.firecraftmc.maniacore.api.chat.ChatHandler;
 import net.firecraftmc.maniacore.api.logging.entry.ChatEntry;
@@ -23,9 +23,9 @@ import net.firecraftmc.maniacore.api.skin.Skin;
 import net.firecraftmc.maniacore.api.user.User;
 import net.firecraftmc.maniacore.api.user.UserManager;
 import net.firecraftmc.maniacore.api.user.toggle.Toggles;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import net.firecraftmc.maniacore.api.util.ReflectionUtils;
-import net.firecraftmc.maniacore.plugin.ManiaPlugin;
+import net.firecraftmc.maniacore.plugin.CenturionsPlugin;
 import net.firecraftmc.manialib.sql.IRecord;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
@@ -42,11 +42,11 @@ import java.util.*;
 
 public class SpigotUserManager extends UserManager implements Listener {
 
-    private ManiaPlugin plugin;
+    private CenturionsPlugin plugin;
 
     @Getter private Map<UUID, User> users = new HashMap<>();
 
-    public SpigotUserManager(ManiaPlugin plugin) {
+    public SpigotUserManager(CenturionsPlugin plugin) {
         this.plugin = plugin;
 
         plugin.runTaskTimer(() -> {
@@ -72,7 +72,7 @@ public class SpigotUserManager extends UserManager implements Listener {
                         continue;
                     }
                     Player player = Bukkit.getPlayer(value.getUniqueId());
-                    String message = ManiaUtils.color(value.generateActionBar());
+                    String message = CenturionsUtils.color(value.generateActionBar());
                     String jsonText = "{\"text\":\"" + message + "\"}";
 
                     try {
@@ -114,18 +114,18 @@ public class SpigotUserManager extends UserManager implements Listener {
             String message = e.getMessage();
             user.setChannel(channel);
             if ((channel == Channel.STAFF && user.hasPermission(Rank.HELPER)) || (channel == Channel.ADMIN && user.hasPermission(Rank.ADMIN))) {
-                ManiaCore.getInstance().getMessageHandler().sendChannelMessage(player.getUniqueId(), channel, message);
+                CenturionsCore.getInstance().getMessageHandler().sendChannelMessage(player.getUniqueId(), channel, message);
             }
             user.setChannel(Channel.GLOBAL);
             return;
         }
 
-        ChatHandler handler = ManiaCore.getInstance().getChatManager().getHandler();
+        ChatHandler handler = CenturionsCore.getInstance().getChatManager().getHandler();
         handler.sendChatMessage(e.getPlayer().getUniqueId(), Channel.GLOBAL, e.getMessage());
 
-        ChatEntry chatEntry = new ChatEntry(System.currentTimeMillis(), ManiaCore.getInstance().getServerManager().getCurrentServer().getName(), user.getId(), e.getMessage().replace("'", "\\'"), user.getChannel().name());
+        ChatEntry chatEntry = new ChatEntry(System.currentTimeMillis(), CenturionsCore.getInstance().getServerManager().getCurrentServer().getName(), user.getId(), e.getMessage().replace("'", "\\'"), user.getChannel().name());
         ChatEntryRecord chatEntryRecord = new ChatEntryRecord(chatEntry);
-        ManiaCore.getInstance().getDatabase().addRecordToQueue(chatEntryRecord);
+        CenturionsCore.getInstance().getDatabase().addRecordToQueue(chatEntryRecord);
     }
 
     @EventHandler
@@ -134,7 +134,7 @@ public class SpigotUserManager extends UserManager implements Listener {
         User user = this.users.get(player.getUniqueId());
         CmdEntry cmdEntry = new CmdEntry(System.currentTimeMillis(), "test", user.getId(), e.getMessage());
         CmdEntryRecord cmdEntryRecord = new CmdEntryRecord(cmdEntry);
-        ManiaCore.getInstance().getDatabase().addRecordToQueue(cmdEntryRecord);
+        CenturionsCore.getInstance().getDatabase().addRecordToQueue(cmdEntryRecord);
     }
 
     @EventHandler
@@ -157,7 +157,7 @@ public class SpigotUserManager extends UserManager implements Listener {
         }
 
         Skin skin = new Skin(player.getUniqueId(), player.getName(), value, signature);
-        ManiaCore.getInstance().getSkinManager().addSkin(skin);
+        CenturionsCore.getInstance().getSkinManager().addSkin(skin);
 
         plugin.runTaskLaterAsynchronously(() -> {
             User user = getUser(player.getUniqueId());
@@ -183,7 +183,7 @@ public class SpigotUserManager extends UserManager implements Listener {
                     }
                 }
 
-                List<IRecord> nickRecords = ManiaCore.getInstance().getDatabase().getRecords(NicknameRecord.class, "player", user.getUniqueId().toString());
+                List<IRecord> nickRecords = CenturionsCore.getInstance().getDatabase().getRecords(NicknameRecord.class, "player", user.getUniqueId().toString());
                 if (nickRecords.size() >= 1) {
                     plugin.runTask(() -> {
                         user.setNickname((Nickname) nickRecords.get(0).toObject());
@@ -193,7 +193,7 @@ public class SpigotUserManager extends UserManager implements Listener {
                 
                 if (!user.getName().equals(player.getName())) {
                     user.setName(player.getName());
-                    new UserRecord(user).push(ManiaCore.getInstance().getDatabase());
+                    new UserRecord(user).push(CenturionsCore.getInstance().getDatabase());
                 }
 
                 net.firecraftmc.maniacore.spigot.events.UserJoinEvent event = new UserJoinEvent((net.firecraftmc.maniacore.spigot.user.SpigotUser) user);

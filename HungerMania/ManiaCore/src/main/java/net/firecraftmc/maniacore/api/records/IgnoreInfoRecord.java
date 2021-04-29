@@ -1,19 +1,24 @@
 package net.firecraftmc.maniacore.api.records;
 
 import net.firecraftmc.maniacore.api.user.IgnoreInfo;
+import net.firecraftmc.manialib.sql.Column;
+import net.firecraftmc.manialib.sql.DataType;
+import net.firecraftmc.manialib.sql.Database;
+import net.firecraftmc.manialib.sql.IRecord;
+import net.firecraftmc.manialib.sql.Row;
 import net.firecraftmc.manialib.sql.Table;
 
 import java.util.*;
 
-public class IgnoreInfoRecord implements net.firecraftmc.manialib.sql.IRecord<IgnoreInfo> {
+public class IgnoreInfoRecord implements IRecord<IgnoreInfo> {
     
-    public static net.firecraftmc.manialib.sql.Table generateTable(net.firecraftmc.manialib.sql.Database database) {
-        net.firecraftmc.manialib.sql.Table table = new Table(database, "ignoredPlayers");
-        table.addColumn(new net.firecraftmc.manialib.sql.Column("id", net.firecraftmc.manialib.sql.DataType.INT, true, true));
-        table.addColumn(new net.firecraftmc.manialib.sql.Column("player", net.firecraftmc.manialib.sql.DataType.VARCHAR, 36));
-        table.addColumn(new net.firecraftmc.manialib.sql.Column("ignored", net.firecraftmc.manialib.sql.DataType.VARCHAR, 36));
-        table.addColumn(new net.firecraftmc.manialib.sql.Column("timestamp", net.firecraftmc.manialib.sql.DataType.BIGINT));
-        table.addColumn(new net.firecraftmc.manialib.sql.Column("ignoredName", net.firecraftmc.manialib.sql.DataType.VARCHAR, 32));
+    public static Table generateTable(Database database) {
+        Table table = new Table(database, "ignoredPlayers");
+        table.addColumn(new Column("id", DataType.INT, true, true));
+        table.addColumn(new Column("player", DataType.VARCHAR, 36));
+        table.addColumn(new Column("ignored", DataType.VARCHAR, 36));
+        table.addColumn(new Column("timestamp", DataType.BIGINT));
+        table.addColumn(new Column("ignoredName", DataType.VARCHAR, 32));
         return table;
     }
     
@@ -23,7 +28,7 @@ public class IgnoreInfoRecord implements net.firecraftmc.manialib.sql.IRecord<Ig
         this.ignoreInfo = ignoreInfo;
     }
     
-    public IgnoreInfoRecord(net.firecraftmc.manialib.sql.Row row) {
+    public IgnoreInfoRecord(Row row) {
         int id = row.getInt("id");
         UUID player = UUID.fromString(row.getString("player"));
         UUID ignored = UUID.fromString(row.getString("ignored"));

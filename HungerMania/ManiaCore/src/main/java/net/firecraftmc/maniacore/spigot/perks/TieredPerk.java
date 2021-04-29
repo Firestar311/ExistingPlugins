@@ -1,7 +1,7 @@
 package net.firecraftmc.maniacore.spigot.perks;
 
 import lombok.Getter;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.redis.Redis;
 import net.firecraftmc.maniacore.api.stats.Statistic;
 import net.firecraftmc.maniacore.api.stats.Stats;
@@ -54,14 +54,14 @@ public abstract class TieredPerk extends Perk {
         user.getStat(Stats.COINS).setValue(user.getStat(Stats.COINS).getAsInt() - nextTier.getCost());
         perkInfo.setValue(true);
         perkInfo.getUnlockedTiers().add(nextTier.getNumber());
-        ManiaCore.getInstance().getDatabase().pushRecord(new PerkInfoRecord(perkInfo));
+        CenturionsCore.getInstance().getDatabase().pushRecord(new PerkInfoRecord(perkInfo));
         user.sendMessage("&aYou purchased Tier " + nextTier.getNumber() + " of the perk " + getDisplayName());
         Redis.pushUser(user);
     }
     
     public ItemStack getIcon(SpigotUser user) {
         if (iconMaterial == null) {
-            ManiaCore.getInstance().getLogger().severe("Perk " + getName() + " does not have an icon setup.");
+            CenturionsCore.getInstance().getLogger().severe("Perk " + getName() + " does not have an icon setup.");
             return ItemBuilder.start(Material.REDSTONE_BLOCK).withLore("&cNo Icon Setup.").build();
         }
         ItemBuilder itemBuilder = ItemBuilder.start(iconMaterial).setDisplayName("&b" + displayName);
@@ -167,7 +167,7 @@ public abstract class TieredPerk extends Perk {
         if (!user.getPerkInfo(this).getValue()) { return false; }
         Tier tier = getTier(user);
         if (tier == null) { return false; }
-        return ManiaCore.RANDOM.nextInt(100) <= tier.getChance() && tier.activate(user);
+        return CenturionsCore.RANDOM.nextInt(100) <= tier.getChance() && tier.activate(user);
     }
     
     public Tier getTier(SpigotUser user) {

@@ -4,7 +4,7 @@ import net.firecraftmc.maniacore.api.channel.Channel;
 import net.firecraftmc.maniacore.api.leveling.Level;
 import net.firecraftmc.maniacore.api.nickname.Nickname;
 import net.firecraftmc.maniacore.api.ranks.Rank;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import net.firecraftmc.maniacore.api.user.User;
 
 public class ChatFormatter {
@@ -41,6 +41,6 @@ public class ChatFormatter {
         format = format.replace("{displayname}", user.getDisplayName());
         format = format.replace("{truerankbasecolor}", user.getRank().getBaseColor());
         format = format.replace("{truechatcolor}", user.getRank().getChatColor());
-        return ManiaUtils.color(format);
+        return CenturionsUtils.color(format);
     }
 }

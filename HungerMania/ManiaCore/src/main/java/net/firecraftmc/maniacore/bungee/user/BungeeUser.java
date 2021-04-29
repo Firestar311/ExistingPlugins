@@ -3,7 +3,7 @@ package net.firecraftmc.maniacore.bungee.user;
 import net.firecraftmc.maniacore.api.channel.Channel;
 import net.firecraftmc.maniacore.api.ranks.RankInfo;
 import net.firecraftmc.maniacore.api.user.User;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -41,7 +41,7 @@ public class BungeeUser extends User {
     public void sendMessage(String s) {
         ProxiedPlayer proxiedPlayer = getProxyPlayer();
         if (proxiedPlayer != null) {
-            proxiedPlayer.sendMessage(ChatMessageType.CHAT, TextComponent.fromLegacyText(ManiaUtils.color(s)));
+            proxiedPlayer.sendMessage(ChatMessageType.CHAT, TextComponent.fromLegacyText(CenturionsUtils.color(s)));
         }
     }
     

@@ -2,7 +2,7 @@ package net.firecraftmc.maniacore.memory;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 
 @Getter @Setter
 public class MemoryHook {
@@ -57,7 +57,7 @@ public class MemoryHook {
         
         public Task end() {
             this.end = System.currentTimeMillis();
-            ManiaUtils.updateMemoryHook(memoryHook, start, end);
+            CenturionsUtils.updateMemoryHook(memoryHook, start, end);
             return this;
         }
     }

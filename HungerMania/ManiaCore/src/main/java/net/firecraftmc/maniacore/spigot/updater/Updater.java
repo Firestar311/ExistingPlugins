@@ -1,13 +1,13 @@
 package net.firecraftmc.maniacore.spigot.updater;
 
-import net.firecraftmc.maniacore.ManiaCorePlugin;
+import net.firecraftmc.maniacore.CenturionsCorePlugin;
 
 public class Updater implements Runnable {
     
-    private ManiaCorePlugin maniaCorePlugin;
+    private CenturionsCorePlugin centurionsCorePlugin;
     
-    public Updater(ManiaCorePlugin maniaCorePlugin) {
-        this.maniaCorePlugin = maniaCorePlugin;
+    public Updater(CenturionsCorePlugin centurionsCorePlugin) {
+        this.centurionsCorePlugin = centurionsCorePlugin;
     }
     
     @Override
@@ -16,7 +16,7 @@ public class Updater implements Runnable {
             final long lastRun = type.getLastRun();
             if (type.run()) {
                 try {
-                    maniaCorePlugin.getServer().getPluginManager().callEvent(new UpdateEvent(type, lastRun));
+                    centurionsCorePlugin.getServer().getPluginManager().callEvent(new UpdateEvent(type, lastRun));
                 } catch (Exception ex) {
                     try {
                         throw new UpdateException(ex);

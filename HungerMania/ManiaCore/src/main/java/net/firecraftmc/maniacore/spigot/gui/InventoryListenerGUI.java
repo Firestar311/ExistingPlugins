@@ -1,6 +1,6 @@
 package net.firecraftmc.maniacore.spigot.gui;
 
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,7 +21,7 @@ public class InventoryListenerGUI implements Listener {
                     if (button != null && button.getListener() != null) {
                         button.getListener().onClick(event);
                     } else if (!gui.allowedToInsert(event.getSlot())) {
-                        player.sendMessage(ManiaUtils.color("&cYou are not allowed to insert items into that slot."));
+                        player.sendMessage(CenturionsUtils.color("&cYou are not allowed to insert items into that slot."));
                         return;
                     }
                 }

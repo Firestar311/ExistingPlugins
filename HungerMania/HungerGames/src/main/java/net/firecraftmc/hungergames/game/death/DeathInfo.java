@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.firecraftmc.hungergames.HungerGames;
 import net.firecraftmc.hungergames.game.Game;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.spigot.user.SpigotUser;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -26,7 +26,7 @@ public class DeathInfo {
     public String getDeathMessage(Game game) {
         String message = deathMessage;
         if (message != null) {
-            SpigotUser user = (SpigotUser) ManiaCore.getInstance().getUserManager().getUser(this.player);
+            SpigotUser user = (SpigotUser) CenturionsCore.getInstance().getUserManager().getUser(this.player);
             String name = "";
             if (user.getNickname().isActive()) {
                 name = user.getNickname().getName();

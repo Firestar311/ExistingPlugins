@@ -1,11 +1,15 @@
 package net.firecraftmc.maniacore.api.records;
 
 import net.firecraftmc.maniacore.api.user.toggle.Toggle;
+import net.firecraftmc.manialib.sql.DataType;
+import net.firecraftmc.manialib.sql.Database;
+import net.firecraftmc.manialib.sql.IRecord;
+import net.firecraftmc.manialib.sql.Row;
 import net.firecraftmc.manialib.sql.Table;
 
 import java.util.*;
 
-public class ToggleRecord implements net.firecraftmc.manialib.sql.IRecord<Toggle> {
+public class ToggleRecord implements IRecord<Toggle> {
     
     /*
     private int id; //Database purposes
@@ -13,12 +17,12 @@ public class ToggleRecord implements net.firecraftmc.manialib.sql.IRecord<Toggle
     private String name, value, defaultValue;
      */
     
-    public static net.firecraftmc.manialib.sql.Table generateTable(net.firecraftmc.manialib.sql.Database database) {
-        net.firecraftmc.manialib.sql.Table table = new Table(database, "toggles");
-        table.addColumn("id", net.firecraftmc.manialib.sql.DataType.INT, true, true);
-        table.addColumn("uuid", net.firecraftmc.manialib.sql.DataType.VARCHAR, 36);
-        table.addColumn("name", net.firecraftmc.manialib.sql.DataType.VARCHAR, 50);
-        table.addColumn("value", net.firecraftmc.manialib.sql.DataType.VARCHAR, 100);
+    public static Table generateTable(Database database) {
+        Table table = new Table(database, "toggles");
+        table.addColumn("id", DataType.INT, true, true);
+        table.addColumn("uuid", DataType.VARCHAR, 36);
+        table.addColumn("name", DataType.VARCHAR, 50);
+        table.addColumn("value", DataType.VARCHAR, 100);
         return table;
     }
     
@@ -28,7 +32,7 @@ public class ToggleRecord implements net.firecraftmc.manialib.sql.IRecord<Toggle
         this.object = object;
     }
     
-    public ToggleRecord(net.firecraftmc.manialib.sql.Row row) {
+    public ToggleRecord(Row row) {
         int id = row.getInt("id");
         UUID uuid = row.getUUID("uuid");
         String name = row.getString("name");

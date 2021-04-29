@@ -2,20 +2,24 @@ package net.firecraftmc.maniacore.api.records;
 
 import net.firecraftmc.maniacore.api.friends.FriendNotification;
 import net.firecraftmc.maniacore.api.friends.FriendNotification.Type;
+import net.firecraftmc.manialib.sql.DataType;
+import net.firecraftmc.manialib.sql.Database;
+import net.firecraftmc.manialib.sql.IRecord;
+import net.firecraftmc.manialib.sql.Row;
 import net.firecraftmc.manialib.sql.Table;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class FriendNotificationRecord implements net.firecraftmc.manialib.sql.IRecord<FriendNotification> {
+public class FriendNotificationRecord implements IRecord<FriendNotification> {
     
-    public static net.firecraftmc.manialib.sql.Table generateTable(net.firecraftmc.manialib.sql.Database database) {
-        net.firecraftmc.manialib.sql.Table table = new Table(database, "friendnotifications");
-        table.addColumn("id", net.firecraftmc.manialib.sql.DataType.INT, true, true);
-        table.addColumn("type", net.firecraftmc.manialib.sql.DataType.VARCHAR, 12);
-        table.addColumn("sender", net.firecraftmc.manialib.sql.DataType.VARCHAR, 36);
-        table.addColumn("target", net.firecraftmc.manialib.sql.DataType.VARCHAR, 36);
-        table.addColumn("timestamp", net.firecraftmc.manialib.sql.DataType.BIGINT);
+    public static Table generateTable(Database database) {
+        Table table = new Table(database, "friendnotifications");
+        table.addColumn("id", DataType.INT, true, true);
+        table.addColumn("type", DataType.VARCHAR, 12);
+        table.addColumn("sender", DataType.VARCHAR, 36);
+        table.addColumn("target", DataType.VARCHAR, 36);
+        table.addColumn("timestamp", DataType.BIGINT);
         return table;
     }
     
@@ -25,7 +29,7 @@ public class FriendNotificationRecord implements net.firecraftmc.manialib.sql.IR
         this.object = object;
     }
     
-    public FriendNotificationRecord(net.firecraftmc.manialib.sql.Row row) {
+    public FriendNotificationRecord(Row row) {
         this.object = FriendNotification.builder().id(row.getInt("id")).type(Type.valueOf(row.getString("type"))).sender(row.getUUID("sender")).target(row.getUUID("target")).timestamp(row.getLong("timestamp")).build();
     }
     

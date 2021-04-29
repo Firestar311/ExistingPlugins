@@ -3,8 +3,8 @@ package net.firecraftmc.hungergames.scoreboard;
 import net.firecraftmc.hungergames.HungerGames;
 import net.firecraftmc.hungergames.lobby.Lobby;
 import net.firecraftmc.hungergames.lobby.VoteTimer;
-import net.firecraftmc.maniacore.api.ManiaCore;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.CenturionsCore;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import net.firecraftmc.maniacore.spigot.user.PlayerBoard;
 import net.firecraftmc.maniacore.spigot.user.SpigotUser;
 import org.bukkit.ChatColor;
@@ -15,7 +15,7 @@ public class LobbyBoard extends PlayerBoard {
     private final int waitingLine, neededLine, maximumnLine, roundNumberLine, timeLeftLine, votePowerLine;
     
     public LobbyBoard(Lobby lobby, SpigotUser user) {
-        super(ManiaUtils.color("&6&lLOBBY"));
+        super(CenturionsUtils.color("&6&lLOBBY"));
         this.user = user;
         this.lobby = lobby;
         
@@ -39,7 +39,7 @@ public class LobbyBoard extends PlayerBoard {
         this.votePowerLine = addLine(ChatColor.WHITE + "", "Vote Power: " + ChatColor.BLUE, user.getRank().getVoteWeight() + "");
         addLine("", ChatColor.DARK_GRAY + "", "");
         addLine("", ChatColor.GOLD + "" + ChatColor.BOLD + "SERVER:", "");
-        addLine(ChatColor.WHITE.toString(), ManiaCore.getInstance().getServerManager().getCurrentServer().getName(), "");
+        addLine(ChatColor.WHITE.toString(), CenturionsCore.getInstance().getServerManager().getCurrentServer().getName(), "");
         addLine(ChatColor.YELLOW + "play.", "hungermania.net", "");
         user.setScoreboard(this);
         send(user.getBukkitPlayer());

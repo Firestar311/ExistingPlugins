@@ -5,10 +5,10 @@ import lombok.Setter;
 import me.libraryaddict.disguise.DisguiseAPI;
 import net.firecraftmc.hungergames.game.enums.PlayerType;
 import net.firecraftmc.hungergames.game.Game;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.ranks.Rank;
 import net.firecraftmc.maniacore.api.user.User;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import net.firecraftmc.maniacore.spigot.user.SpigotUser;
 import net.firecraftmc.maniacore.spigot.util.SpigotUtils;
 import org.bukkit.Bukkit;
@@ -89,7 +89,7 @@ public abstract class GameTeam implements Iterable<UUID> {
     }
     
     protected void setPlayerStats(Player player, boolean collides, boolean allowFlight, boolean flying) {
-        User user = ManiaCore.getInstance().getUserManager().getUser(player.getUniqueId());
+        User user = CenturionsCore.getInstance().getUserManager().getUser(player.getUniqueId());
         player.setGameMode(this.gameMode);
         player.setMaxHealth(game.getGameSettings().getMaxHealth());
         player.setHealth(game.getGameSettings().getMaxHealth());
@@ -120,7 +120,7 @@ public abstract class GameTeam implements Iterable<UUID> {
             rank = user.getRank();
             name = user.getName();
         }
-        user.getBukkitPlayer().setPlayerListName(ManiaUtils.color(rank.getPrefix() + " " + getColor() + name));
+        user.getBukkitPlayer().setPlayerListName(CenturionsUtils.color(rank.getPrefix() + " " + getColor() + name));
     }
     
     public abstract void join(UUID uuid);
@@ -128,7 +128,7 @@ public abstract class GameTeam implements Iterable<UUID> {
     public void leave(UUID uuid) {
         if (this.members.contains(uuid)) {
             this.members.remove(uuid);
-            User user = ManiaCore.getInstance().getUserManager().getUser(uuid);
+            User user = CenturionsCore.getInstance().getUserManager().getUser(uuid);
             user.sendMessage(getLeaveMessage());
         }
     }

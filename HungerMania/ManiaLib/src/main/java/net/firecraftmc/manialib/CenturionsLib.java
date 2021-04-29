@@ -9,15 +9,15 @@ import net.firecraftmc.manialib.sql.Database;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-public class ManiaLib {
+public class CenturionsLib {
     @Getter private MysqlDatabase mysqlDatabase;
     private Database database;
-    private static ManiaLib instance;
+    private static CenturionsLib instance;
     private Logger logger;
     
     private DatabaseManager databaseManager = DatabaseManager.getInstance();
     
-    public ManiaLib(Properties databaseProperties, Logger logger) {
+    public CenturionsLib(Properties databaseProperties, Logger logger) {
         this.database = new Database(databaseProperties, logger);
         this.databaseManager.registerDatabase(this.mysqlDatabase = new MysqlDatabase(databaseProperties, logger, databaseManager));
         this.logger = logger;
@@ -34,11 +34,11 @@ public class ManiaLib {
         this.databaseManager.registerRecordTypes();
     }
     
-    public ManiaLib(Logger logger) {
+    public CenturionsLib(Logger logger) {
         this.logger = logger;
     }
     
-    public static ManiaLib getInstance() {
+    public static CenturionsLib getInstance() {
         return instance;
     }
     

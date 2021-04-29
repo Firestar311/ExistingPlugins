@@ -3,8 +3,8 @@ package net.firecraftmc.hub.leaderboard;
 import com.gmail.filoghost.holographicdisplays.api.Hologram;
 import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
 import lombok.Getter;
-import net.firecraftmc.hub.ManiaHub;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.hub.CenturionsHub;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.manialib.util.Range;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -18,13 +18,13 @@ import java.util.Map.Entry;
 
 public class LeaderboardManager {
     
-    private final ManiaHub plugin;
+    private final CenturionsHub plugin;
     @Getter private Map<Integer, NPC> npcs = new HashMap<>();
     @Getter private Set<Range<Leaderboard>> leaderboards = new HashSet<>();
     private File file;
     private FileConfiguration config;
     
-    public LeaderboardManager(ManiaHub plugin) {
+    public LeaderboardManager(CenturionsHub plugin) {
         this.plugin = plugin;
         file = new File(plugin.getDataFolder(), "leaderboards.yml");
         if (!file.exists()) {
@@ -54,7 +54,7 @@ public class LeaderboardManager {
                 UUID skinUUID = UUID.fromString(section.getString(key + ".skinUuid"));
                 Location location = (Location) section.get(key + ".location");
                 int position = Integer.parseInt(key);
-                NPC npc = new NPC(position, uuid, ManiaCore.getInstance().getSkinManager().getSkin(skinUUID), location);
+                NPC npc = new NPC(position, uuid, CenturionsCore.getInstance().getSkinManager().getSkin(skinUUID), location);
                 this.npcs.put(position, npc);
             }
         }
@@ -93,7 +93,7 @@ public class LeaderboardManager {
         try {
             config.save(file);
         } catch (IOException e) {
-            ManiaCore.getInstance().getLogger().severe("Could not save the file leaderboards.yml");
+            CenturionsCore.getInstance().getLogger().severe("Could not save the file leaderboards.yml");
         }
     }
 }

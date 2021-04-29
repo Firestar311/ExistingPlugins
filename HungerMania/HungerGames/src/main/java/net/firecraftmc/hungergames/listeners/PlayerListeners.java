@@ -12,14 +12,14 @@ import net.firecraftmc.hungergames.game.team.GameTeam;
 import net.firecraftmc.hungergames.game.team.GameTeam.Perms;
 import net.firecraftmc.hungergames.loot.Loot;
 import net.firecraftmc.hungergames.util.Messager;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.ranks.Rank;
 import net.firecraftmc.maniacore.api.redis.Redis;
 import net.firecraftmc.maniacore.api.stats.Stats;
 import net.firecraftmc.maniacore.api.user.User;
 import net.firecraftmc.maniacore.api.user.toggle.Toggle;
 import net.firecraftmc.maniacore.api.user.toggle.Toggles;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import net.firecraftmc.maniacore.api.util.Position;
 import net.firecraftmc.maniacore.api.util.State;
 import net.firecraftmc.maniacore.spigot.events.UserActionBarUpdateEvent;
@@ -147,12 +147,12 @@ public class PlayerListeners extends GameListener {
                         maxAmount *= 2;
                     }
                     
-                    List<Loot> loot = plugin.getLootManager().generateLoot(ManiaCore.RANDOM.nextInt(maxAmount) + 2);
+                    List<Loot> loot = plugin.getLootManager().generateLoot(CenturionsCore.RANDOM.nextInt(maxAmount) + 2);
                     inv.clear();
                     for (Loot l : loot) {
                         int slot;
                         do {
-                            slot = ManiaCore.RANDOM.nextInt(inv.getSize());
+                            slot = CenturionsCore.RANDOM.nextInt(inv.getSize());
                         } while (inv.getItem(slot) != null);
                         inv.setItem(slot, l.generateItemStack());
                     }
@@ -173,7 +173,7 @@ public class PlayerListeners extends GameListener {
                     if (mapPosition == 0) { return; }
                     for (SpigotUser user : lobby.getHiddenStaff()) {
                         if (user.getUniqueId().equals(e.getPlayer().getUniqueId())) {
-                            e.getPlayer().sendMessage(ManiaUtils.color("&cYou cannot vote for a map."));
+                            e.getPlayer().sendMessage(CenturionsUtils.color("&cYou cannot vote for a map."));
                             return;
                         }
                     }
@@ -181,7 +181,7 @@ public class PlayerListeners extends GameListener {
                 } else if (block.getType() == Material.CAKE_BLOCK) {
                     if (e.getPlayer().getFoodLevel() != 20) {
                         try {
-                            SpigotUser user = (SpigotUser) ManiaCore.getInstance().getUserManager().getUser(e.getPlayer().getUniqueId());
+                            SpigotUser user = (SpigotUser) CenturionsCore.getInstance().getUserManager().getUser(e.getPlayer().getUniqueId());
                             Perks.FATTY.activate(user);
                         } catch (Exception ex) {}
                     }
@@ -233,51 +233,51 @@ public class PlayerListeners extends GameListener {
                     }
                     
                     if (!game.getGameSettings().isMutations()) {
-                        e.getPlayer().sendMessage(ManiaUtils.color("&cMutations have been disabled."));
+                        e.getPlayer().sendMessage(CenturionsUtils.color("&cMutations have been disabled."));
                         return;
                     }
                     
                     if (game.getGameStart() + TimeUnit.MINUTES.toMillis(game.getGameSettings().getMutationDelay()) > System.currentTimeMillis()) {
-                        e.getPlayer().sendMessage(ManiaUtils.color("&cYou must wait " + game.getGameSettings().getMutationDelay() + " minute(s) after the game starts to mutate."));
+                        e.getPlayer().sendMessage(CenturionsUtils.color("&cYou must wait " + game.getGameSettings().getMutationDelay() + " minute(s) after the game starts to mutate."));
                         return;
                     }
                     
                     GamePlayer gamePlayer = game.getPlayer(e.getPlayer().getUniqueId());
                     if (gamePlayer.hasMutated()) {
-                        e.getPlayer().sendMessage(ManiaUtils.color("&6&l>> &cYou have already mutated."));
+                        e.getPlayer().sendMessage(CenturionsUtils.color("&6&l>> &cYou have already mutated."));
                         return;
                     }
                     
                     if (!gamePlayer.isSpectatorByDeath()) {
-                        e.getPlayer().sendMessage(ManiaUtils.color("&6&l>> &cYou were not killed. No one to take revenge on!"));
+                        e.getPlayer().sendMessage(CenturionsUtils.color("&6&l>> &cYou were not killed. No one to take revenge on!"));
                         return;
                     }
                     
                     if (!(game.getState() == State.PLAYING || game.getState() == State.PLAYING_DEATHMATCH)) {
-                        e.getPlayer().sendMessage(ManiaUtils.color("&6&l>> &cYou cannot mutate right now."));
+                        e.getPlayer().sendMessage(CenturionsUtils.color("&6&l>> &cYou cannot mutate right now."));
                         return;
                     }
                     
                     if (gamePlayer.isMutating()) {
-                        e.getPlayer().sendMessage(ManiaUtils.color("&6&l>> &cYou are already mutating."));
+                        e.getPlayer().sendMessage(CenturionsUtils.color("&6&l>> &cYou are already mutating."));
                         return;
                     }
                     
                     DeathInfo deathInfo = gamePlayer.getDeathInfo();
                     if (!(deathInfo instanceof DeathInfoPlayerKill)) {
-                        e.getPlayer().sendMessage(ManiaUtils.color("&6&l>> &cNo one to take revenge on!"));
+                        e.getPlayer().sendMessage(CenturionsUtils.color("&6&l>> &cNo one to take revenge on!"));
                         return;
                     }
                     
                     DeathInfoPlayerKill playerDeath = (DeathInfoPlayerKill) deathInfo;
                     UUID target = playerDeath.getKiller();
                     if (!game.getTributesTeam().isMember(target)) {
-                        e.getPlayer().sendMessage(ManiaUtils.color("&6&l>> &cYour target died, you cannot take revenge."));
+                        e.getPlayer().sendMessage(CenturionsUtils.color("&6&l>> &cYour target died, you cannot take revenge."));
                         return;
                     }
                     
                     if (playerDeath.isMutationKill()) {
-                        e.getPlayer().sendMessage(ManiaUtils.color("&6&l>> &cYou were killed by a mutation, you cannot take revenge."));
+                        e.getPlayer().sendMessage(CenturionsUtils.color("&6&l>> &cYou were killed by a mutation, you cannot take revenge."));
                         return;
                     }
                     
@@ -285,7 +285,7 @@ public class PlayerListeners extends GameListener {
                     for (GamePlayer gp : game.getPlayers()) {
                         if (game.getMutationsTeam().isMember(gp.getUniqueId()) || gp.isMutating()) {
                             if (gp.getMutationTarget().equals(target)) {
-                                e.getPlayer().sendMessage(ManiaUtils.color("&cYou cannot mutate against that player because there already is a mutation against them."));
+                                e.getPlayer().sendMessage(CenturionsUtils.color("&cYou cannot mutate against that player because there already is a mutation against them."));
                                 return;
                             }
                         }
@@ -298,7 +298,7 @@ public class PlayerListeners extends GameListener {
                     }
                     
                     if (previousMutations.size() >= 2) {
-                        e.getPlayer().sendMessage(ManiaUtils.color("&cYou cannot mutate against that player because they already had 2 or more mutations against them already."));
+                        e.getPlayer().sendMessage(CenturionsUtils.color("&cYou cannot mutate against that player because they already had 2 or more mutations against them already."));
                         return;
                     }
                     
@@ -571,7 +571,7 @@ public class PlayerListeners extends GameListener {
                                 }
                             }
 
-                            user.getBukkitPlayer().setPlayerListName(ManiaUtils.color(user.getDisplayName()));
+                            user.getBukkitPlayer().setPlayerListName(CenturionsUtils.color(user.getDisplayName()));
                             new BukkitRunnable() {
                                 public void run() {
                                     user.sendMessage("&6&l>> &e&lDid you know that you can use &f&l/votestart &e&lto start a game early?");
@@ -608,7 +608,7 @@ public class PlayerListeners extends GameListener {
             e.setCancelled(true);
             e.getPlayer().teleport(e.getTo(), TeleportCause.PLUGIN);
             try {
-                SpigotUser user = (SpigotUser) ManiaCore.getInstance().getUserManager().getUser(e.getPlayer().getUniqueId());
+                SpigotUser user = (SpigotUser) CenturionsCore.getInstance().getUserManager().getUser(e.getPlayer().getUniqueId());
                 if (user.getPerkInfo(Perks.ENDERMAN).getValue()) {
                     e.getPlayer().damage(5.0);
                 }
@@ -622,16 +622,16 @@ public class PlayerListeners extends GameListener {
         Game game = gameManager.getCurrentGame();
         if (game == null) {
             if (lobby.getPlayers().size() >= lobby.getGameSettings().getMaxPlayers()) {
-                User user = ManiaCore.getInstance().getUserManager().getUser(e.getUniqueId());
+                User user = CenturionsCore.getInstance().getUserManager().getUser(e.getUniqueId());
                 if (!user.hasPermission(Rank.HELPER)) {
-                    e.disallow(Result.KICK_FULL, ManiaUtils.color("&cThe game is full"));
+                    e.disallow(Result.KICK_FULL, CenturionsUtils.color("&cThe game is full"));
                 }
             }
         } else {
             if (game.getPlayers().length >= game.getGameSettings().getMaxPlayers()) {
-                User user = ManiaCore.getInstance().getUserManager().getUser(e.getUniqueId());
+                User user = CenturionsCore.getInstance().getUserManager().getUser(e.getUniqueId());
                 if (!user.hasPermission(Rank.HELPER)) {
-                    e.disallow(Result.KICK_FULL, ManiaUtils.color("&cThe game is full"));
+                    e.disallow(Result.KICK_FULL, CenturionsUtils.color("&cThe game is full"));
                 }
             }
         }
@@ -640,12 +640,12 @@ public class PlayerListeners extends GameListener {
     @EventHandler(priority = EventPriority.LOW)
     public void onPlayerQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
-        SpigotUser user = (SpigotUser) plugin.getManiaCore().getUserManager().getUser(player.getUniqueId());
+        SpigotUser user = (SpigotUser) plugin.getCenturionsCore().getUserManager().getUser(player.getUniqueId());
         this.handleRemove(user);
-        plugin.getManiaCore().getDatabase().pushQueue();
+        plugin.getCenturionsCore().getDatabase().pushQueue();
         lobby.getVoteStart().remove(player.getUniqueId());
         for (PerkInfo perk : user.getPerks()) {
-            ManiaCore.getInstance().getDatabase().pushRecord(new PerkInfoRecord(perk));
+            CenturionsCore.getInstance().getDatabase().pushRecord(new PerkInfoRecord(perk));
         }
     }
     
@@ -698,7 +698,7 @@ public class PlayerListeners extends GameListener {
         if (e.getItem().getType().equals(Material.ROTTEN_FLESH)) {
             if (e.getItem().hasItemMeta() && e.getItem().getItemMeta().hasDisplayName()) {
                 if (e.getItem().getItemMeta().getDisplayName().toLowerCase().contains("wet noodle")) {
-                    if (ManiaCore.RANDOM.nextInt(10) < 1) {
+                    if (CenturionsCore.RANDOM.nextInt(10) < 1) {
                         game.playSound(Sound.ENDERMAN_STARE);
                         Player player = e.getPlayer();
                         player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 15*20, 1));

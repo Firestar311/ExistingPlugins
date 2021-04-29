@@ -2,13 +2,13 @@ package net.firecraftmc.maniacore.spigot.cmd;
 
 import net.firecraftmc.maniacore.spigot.user.SpigotUserManager;
 import net.firecraftmc.maniacore.spigot.util.SpigotUtils;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.leveling.Level;
 import net.firecraftmc.maniacore.api.ranks.Rank;
 import net.firecraftmc.maniacore.api.records.NicknameRecord;
 import net.firecraftmc.maniacore.api.stats.Stats;
 import net.firecraftmc.maniacore.api.user.User;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import net.firecraftmc.manialib.sql.IRecord;
 import net.firecraftmc.manialib.util.Constants;
 import org.bukkit.Bukkit;
@@ -22,15 +22,15 @@ import java.util.List;
 public class StatsCmd implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        ManiaCore.getInstance().getPlugin().runTaskAsynchronously(() -> {
+        CenturionsCore.getInstance().getPlugin().runTaskAsynchronously(() -> {
             User target = null;
             Rank senderRank = SpigotUtils.getRankFromSender(sender);
             if (args.length > 0) {
                 Player t = Bukkit.getPlayer(args[0]);
                 if (t != null) {
-                    target = ManiaCore.getInstance().getUserManager().getUser(t.getUniqueId());
+                    target = CenturionsCore.getInstance().getUserManager().getUser(t.getUniqueId());
                 } else {
-                    for (User value : ((SpigotUserManager) ManiaCore.getInstance().getUserManager()).getUsers().values()) {
+                    for (User value : ((SpigotUserManager) CenturionsCore.getInstance().getUserManager()).getUsers().values()) {
                         if (value.getNickname().isActive()) {
                             if (value.getNickname().getName().equalsIgnoreCase(args[0])) {
                                 target = value;
@@ -44,33 +44,33 @@ public class StatsCmd implements CommandExecutor {
                 }
                 
                 if (target == null) {
-                    List<IRecord> nicknameRecords = ManiaCore.getInstance().getDatabase().getRecords(NicknameRecord.class, "active", "true");
+                    List<IRecord> nicknameRecords = CenturionsCore.getInstance().getDatabase().getRecords(NicknameRecord.class, "active", "true");
                     for (IRecord record : nicknameRecords) {
                         NicknameRecord nickRecord = (NicknameRecord) record;
                         if (nickRecord.toObject().getName().equalsIgnoreCase(args[0])) {
-                            target = ManiaCore.getInstance().getUserManager().getUser(nickRecord.toObject().getPlayer());
+                            target = CenturionsCore.getInstance().getUserManager().getUser(nickRecord.toObject().getPlayer());
                         }
                     }
                 }
                 
                 if (target == null) {
-                    ManiaCore.getInstance().getUserManager().getUser(args[0]);
+                    CenturionsCore.getInstance().getUserManager().getUser(args[0]);
                 }
             } else {
                 if (!(sender instanceof Player)) {
-                    sender.sendMessage(ManiaUtils.color("&cYou must provide a target."));
+                    sender.sendMessage(CenturionsUtils.color("&cYou must provide a target."));
                     return;
                 }
 
-                target = ManiaCore.getInstance().getUserManager().getUser(((Player) sender).getUniqueId());
+                target = CenturionsCore.getInstance().getUserManager().getUser(((Player) sender).getUniqueId());
             }
 
             if (target == null) {
-                sender.sendMessage(ManiaUtils.color("&cCould not determine the target of the command."));
+                sender.sendMessage(CenturionsUtils.color("&cCould not determine the target of the command."));
                 return;
             }
 
-            User user = ManiaCore.getInstance().getUserManager().getUser(target.getUniqueId());
+            User user = CenturionsCore.getInstance().getUserManager().getUser(target.getUniqueId());
             int kills, deaths, wins, losses, deathmatches, chestsFound, coins, exp, winStreak, score;
 
             boolean realStats = true;
@@ -131,23 +131,23 @@ public class StatsCmd implements CommandExecutor {
                 wlr = wins / (losses * 1.0);
             }
 
-            Level level = ManiaCore.getInstance().getLevelManager().getLevel(exp);
-            Level nextLevel = ManiaCore.getInstance().getLevelManager().getLevels().getOrDefault(level.getNumber() + 1, ManiaCore.getInstance().getLevelManager().getLevel(0));
+            Level level = CenturionsCore.getInstance().getLevelManager().getLevel(exp);
+            Level nextLevel = CenturionsCore.getInstance().getLevelManager().getLevels().getOrDefault(level.getNumber() + 1, CenturionsCore.getInstance().getLevelManager().getLevel(0));
 
-            sender.sendMessage(ManiaUtils.color("&6&l>> &a" + name + "'s Stats"));
-            sender.sendMessage(ManiaUtils.color("&6&l> &7Coins: &b" + coins));
-            sender.sendMessage(ManiaUtils.color("&6&l> &7Level: &b" + level.getNumber()));
-            sender.sendMessage(ManiaUtils.color("&6&l> &7Experience: &b" + exp + "     &e&lNext Level: &b" + (nextLevel.getTotalXp() - exp)));
-            sender.sendMessage(ManiaUtils.color("&6&l> &7Kills: &b" + kills));
-            sender.sendMessage(ManiaUtils.color("&6&l> &7Deaths: &b" + deaths));
-            sender.sendMessage(ManiaUtils.color("&6&l> &7K/D: &b" + Constants.NUMBER_FORMAT.format(kdr)));
-            sender.sendMessage(ManiaUtils.color("&6&l> &7Wins: &b" + wins));
-            sender.sendMessage(ManiaUtils.color("&6&l> &7Losses: &b" + losses));
-            sender.sendMessage(ManiaUtils.color("&6&l> &7W/L: &b" + Constants.NUMBER_FORMAT.format(wlr)));
-            sender.sendMessage(ManiaUtils.color("&6&l> &7Win Streak: &b" + winStreak));
-            sender.sendMessage(ManiaUtils.color("&6&l> &7Deathmatches Reached: &b" + deathmatches));
-            sender.sendMessage(ManiaUtils.color("&6&l> &7Chests Found: &b" + chestsFound));
-            sender.sendMessage(ManiaUtils.color("&6&l> &7Score: &b" + score));
+            sender.sendMessage(CenturionsUtils.color("&6&l>> &a" + name + "'s Stats"));
+            sender.sendMessage(CenturionsUtils.color("&6&l> &7Coins: &b" + coins));
+            sender.sendMessage(CenturionsUtils.color("&6&l> &7Level: &b" + level.getNumber()));
+            sender.sendMessage(CenturionsUtils.color("&6&l> &7Experience: &b" + exp + "     &e&lNext Level: &b" + (nextLevel.getTotalXp() - exp)));
+            sender.sendMessage(CenturionsUtils.color("&6&l> &7Kills: &b" + kills));
+            sender.sendMessage(CenturionsUtils.color("&6&l> &7Deaths: &b" + deaths));
+            sender.sendMessage(CenturionsUtils.color("&6&l> &7K/D: &b" + Constants.NUMBER_FORMAT.format(kdr)));
+            sender.sendMessage(CenturionsUtils.color("&6&l> &7Wins: &b" + wins));
+            sender.sendMessage(CenturionsUtils.color("&6&l> &7Losses: &b" + losses));
+            sender.sendMessage(CenturionsUtils.color("&6&l> &7W/L: &b" + Constants.NUMBER_FORMAT.format(wlr)));
+            sender.sendMessage(CenturionsUtils.color("&6&l> &7Win Streak: &b" + winStreak));
+            sender.sendMessage(CenturionsUtils.color("&6&l> &7Deathmatches Reached: &b" + deathmatches));
+            sender.sendMessage(CenturionsUtils.color("&6&l> &7Chests Found: &b" + chestsFound));
+            sender.sendMessage(CenturionsUtils.color("&6&l> &7Score: &b" + score));
         });
         return true;
     }

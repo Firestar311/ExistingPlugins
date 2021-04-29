@@ -1,5 +1,10 @@
 package net.firecraftmc.maniacore.api.records;
 
+import net.firecraftmc.manialib.sql.Column;
+import net.firecraftmc.manialib.sql.DataType;
+import net.firecraftmc.manialib.sql.Database;
+import net.firecraftmc.manialib.sql.IRecord;
+import net.firecraftmc.manialib.sql.Row;
 import net.firecraftmc.manialib.sql.Table;
 import net.firecraftmc.maniacore.api.skin.Skin;
 
@@ -7,17 +12,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class SkinRecord implements net.firecraftmc.manialib.sql.IRecord<Skin> {
+public class SkinRecord implements IRecord<Skin> {
     
     private Skin skin;
     
-    public static net.firecraftmc.manialib.sql.Table generateTable(net.firecraftmc.manialib.sql.Database database) {
-        net.firecraftmc.manialib.sql.Table table = new Table(database, "skins");
-        table.addColumn(new net.firecraftmc.manialib.sql.Column("id", net.firecraftmc.manialib.sql.DataType.INT, true, true));
-        table.addColumn(new net.firecraftmc.manialib.sql.Column("name", net.firecraftmc.manialib.sql.DataType.VARCHAR, 200));
-        table.addColumn(new net.firecraftmc.manialib.sql.Column("uuid", net.firecraftmc.manialib.sql.DataType.VARCHAR, 48));
-        table.addColumn(new net.firecraftmc.manialib.sql.Column("value", net.firecraftmc.manialib.sql.DataType.VARCHAR, 1000));
-        table.addColumn(new net.firecraftmc.manialib.sql.Column("signature", net.firecraftmc.manialib.sql.DataType.VARCHAR, 1000));
+    public static Table generateTable(Database database) {
+        Table table = new Table(database, "skins");
+        table.addColumn(new Column("id", DataType.INT, true, true));
+        table.addColumn(new Column("name", DataType.VARCHAR, 200));
+        table.addColumn(new Column("uuid", DataType.VARCHAR, 48));
+        table.addColumn(new Column("value", DataType.VARCHAR, 1000));
+        table.addColumn(new Column("signature", DataType.VARCHAR, 1000));
         return table;
     }
     
@@ -25,7 +30,7 @@ public class SkinRecord implements net.firecraftmc.manialib.sql.IRecord<Skin> {
         this.skin = skin;
     }
     
-    public SkinRecord(net.firecraftmc.manialib.sql.Row row) {
+    public SkinRecord(Row row) {
         int id = row.getInt("id");
         String name = row.getString("name");
         UUID uuid = UUID.fromString(row.getString("uuid"));

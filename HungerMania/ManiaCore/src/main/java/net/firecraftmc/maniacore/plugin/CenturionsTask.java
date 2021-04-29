@@ -1,5 +1,5 @@
 package net.firecraftmc.maniacore.plugin;
 
-public interface ManiaTask {
+public interface CenturionsTask {
     void cancel();
 }

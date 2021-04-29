@@ -1,7 +1,7 @@
 package net.firecraftmc.maniacore.api.util;
 
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.server.NetworkType;
-import net.firecraftmc.maniacore.api.ManiaCore;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,22 +9,22 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-public class ManiaProperties {
+public class CenturionsProperties {
     
     private static File file;
     private static Properties properties;
     
-    private static final ManiaProperties instance = new ManiaProperties();
+    private static final CenturionsProperties instance = new CenturionsProperties();
     
     public static String MYSQL_HOST, MYSQL_PASSWORD, MYSQL_DATABASE, MYSQL_USERNAME, REDIS_HOST, REDIS_PASSWORD;
     public static int MYSQL_PORT, REDIS_PORT;
     public static NetworkType NETWORK_TYPE;
 
-    public static ManiaProperties getInstance() {
+    public static CenturionsProperties getInstance() {
         return instance;
     }
 
-    public ManiaProperties() {
+    public CenturionsProperties() {
         file = new File("./mania.properties");
         properties = new Properties();
         if (!file.exists()) {
@@ -32,7 +32,7 @@ public class ManiaProperties {
                 file.createNewFile();
                 createDefaultProperties();
             } catch (IOException e) {
-                ManiaCore.getInstance().getLogger().severe("Could not create the mania.properties file!");
+                CenturionsCore.getInstance().getLogger().severe("Could not create the mania.properties file!");
             }
         }
         

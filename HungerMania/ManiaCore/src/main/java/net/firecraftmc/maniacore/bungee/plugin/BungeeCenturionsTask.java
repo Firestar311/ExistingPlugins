@@ -1,13 +1,13 @@
 package net.firecraftmc.maniacore.bungee.plugin;
 
-import net.firecraftmc.maniacore.plugin.ManiaTask;
+import net.firecraftmc.maniacore.plugin.CenturionsTask;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
 
-public class BungeeManiaTask implements ManiaTask {
+public class BungeeCenturionsTask implements CenturionsTask {
     
     private ScheduledTask task;
     
-    public BungeeManiaTask(ScheduledTask task) {
+    public BungeeCenturionsTask(ScheduledTask task) {
         this.task = task;
     }
     

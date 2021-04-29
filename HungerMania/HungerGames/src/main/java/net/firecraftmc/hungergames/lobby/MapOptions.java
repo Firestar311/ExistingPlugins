@@ -1,7 +1,7 @@
 package net.firecraftmc.hungergames.lobby;
 
 import net.firecraftmc.hungergames.map.HGMap;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 
 import java.util.*;
 import java.util.Map.Entry;
@@ -69,7 +69,7 @@ public class MapOptions {
         }
         
         if (mapVotes.isEmpty()) {
-            mapVotes.put(this.maps.get(ManiaCore.RANDOM.nextInt(this.maps.size() + 1)), 0);
+            mapVotes.put(this.maps.get(CenturionsCore.RANDOM.nextInt(this.maps.size() + 1)), 0);
         }
     
         Entry<HGMap, Integer> option = null;

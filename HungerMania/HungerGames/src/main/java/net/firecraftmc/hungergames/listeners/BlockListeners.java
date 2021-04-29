@@ -2,7 +2,7 @@ package net.firecraftmc.hungergames.listeners;
 
 import net.firecraftmc.hungergames.game.Game;
 import net.firecraftmc.hungergames.game.team.GameTeam.Perms;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import net.firecraftmc.maniacore.api.util.State;
 import net.minecraft.server.v1_8_R3.EntityTNTPrimed;
 import org.bukkit.Location;
@@ -73,7 +73,7 @@ public class BlockListeners extends GameListener {
         
                 if (this.placedCraftingTables.containsKey(e.getPlayer().getUniqueId())) {
                     e.setCancelled(true);
-                    e.getPlayer().sendMessage(ManiaUtils.color("&cYou have already placed a crafting table."));
+                    e.getPlayer().sendMessage(CenturionsUtils.color("&cYou have already placed a crafting table."));
                     return;
                 }
         
@@ -102,7 +102,7 @@ public class BlockListeners extends GameListener {
     
             if (e.getBlock().getType() == Material.WORKBENCH) {
                 if (!placedCraftingTables.containsValue(e.getBlock().getLocation())) {
-                    e.getPlayer().sendMessage(ManiaUtils.color("&cYou can only break crafting tables placed by a player."));
+                    e.getPlayer().sendMessage(CenturionsUtils.color("&cYou can only break crafting tables placed by a player."));
                     e.setCancelled(true);
                     return;
                 }

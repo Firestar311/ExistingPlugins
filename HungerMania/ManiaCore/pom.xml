@@ -5,13 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.firecraftmc</groupId>
-    <artifactId>ManiaCore</artifactId>
+    <artifactId>CenturionsCore</artifactId>
     <version>1.0-ALPHA</version>
     <packaging>jar</packaging>
 
-    <name>ManiaCore</name>
+    <name>CenturionsCore</name>
 
-    <description>Library Plugin for FirecraftMC OldHM</description>
+    <description>Library Plugin for FirecraftMC Centurions</description>
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -92,7 +92,7 @@
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
-            <version>1.16-R0.4-SNAPSHOT</version>
+            <version>1.16-R0.5-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -109,7 +109,7 @@
         </dependency>
         <dependency>
             <groupId>net.firecraftmc</groupId>
-            <artifactId>ManiaLib</artifactId>
+            <artifactId>CenturionsLib</artifactId>
             <version>1.0-ALPHA</version>
             <scope>compile</scope>
         </dependency>

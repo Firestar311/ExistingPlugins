@@ -1,6 +1,6 @@
 package net.firecraftmc.maniacore.spigot.user;
 
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.friends.FriendNotification;
 import net.firecraftmc.maniacore.api.redis.Redis;
 import net.firecraftmc.maniacore.api.redis.RedisListener;
@@ -16,8 +16,8 @@ public class FriendsRedisListener implements RedisListener {
         if (cmd.equalsIgnoreCase("friendRequest")) {
             UUID sender = UUID.fromString(args[0]);
             UUID target = UUID.fromString(args[1]);
-            User senderUser = ManiaCore.getInstance().getUserManager().getUser(sender);
-            User targetUser = ManiaCore.getInstance().getUserManager().getUser(target);
+            User senderUser = CenturionsCore.getInstance().getUserManager().getUser(sender);
+            User targetUser = CenturionsCore.getInstance().getUserManager().getUser(target);
             if (targetUser.isOnline() || !senderUser.isOnline()) {
                 targetUser.sendMessage("&aYou have received a friend request from " + senderUser.getName());
             }
@@ -26,8 +26,8 @@ public class FriendsRedisListener implements RedisListener {
             FriendNotification notification = Redis.getFriendNotification(id);
             if (notification == null) return;
             
-            User actor = ManiaCore.getInstance().getUserManager().getUser(notification.getSender());
-            User target = ManiaCore.getInstance().getUserManager().getUser(notification.getTarget());
+            User actor = CenturionsCore.getInstance().getUserManager().getUser(notification.getSender());
+            User target = CenturionsCore.getInstance().getUserManager().getUser(notification.getTarget());
             
             if (target.isOnline() && !actor.isOnline()) {
                 String message = "";
@@ -43,10 +43,10 @@ public class FriendsRedisListener implements RedisListener {
             }
         } else if (cmd.equalsIgnoreCase("userJoin")) {
             UUID uuid = UUID.fromString(args[0]);
-            User user = ManiaCore.getInstance().getUserManager().getUser(uuid);
+            User user = CenturionsCore.getInstance().getUserManager().getUser(uuid);
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                User onlineUser = ManiaCore.getInstance().getUserManager().getUser(onlinePlayer.getUniqueId());
-                if (ManiaCore.getInstance().getFriendsManager().getFriendship(uuid, onlineUser.getUniqueId()) != null) {
+                User onlineUser = CenturionsCore.getInstance().getUserManager().getUser(onlinePlayer.getUniqueId());
+                if (CenturionsCore.getInstance().getFriendsManager().getFriendship(uuid, onlineUser.getUniqueId()) != null) {
                     onlineUser.sendMessage("&eYour friend " + user.getName() + " joined.");
                 }
             }

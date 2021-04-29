@@ -2,6 +2,7 @@ package net.firecraftmc.maniacore.api.user;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.channel.Channel;
 import net.firecraftmc.maniacore.api.leveling.Level;
 import net.firecraftmc.maniacore.api.nickname.Nickname;
@@ -13,7 +14,6 @@ import net.firecraftmc.maniacore.api.stats.Statistic;
 import net.firecraftmc.maniacore.api.stats.Stats;
 import net.firecraftmc.maniacore.api.user.toggle.Toggle;
 import net.firecraftmc.maniacore.api.user.toggle.Toggles;
-import net.firecraftmc.maniacore.api.ManiaCore;
 import net.firecraftmc.maniacore.api.skin.Skin;
 import net.firecraftmc.manialib.data.model.IRecord;
 import net.firecraftmc.manialib.util.Pair;
@@ -25,34 +25,30 @@ import java.util.*;
 @Setter
 public class User implements IRecord {
     private static final UUID FIRESTAR311 = UUID.fromString("3f7891ce-5a73-4d52-a2ba-299839053fdc");
-    private static final UUID ASSASSINPLAYS = UUID.fromString("c292df56-5baa-4a11-87a3-cba08ce5f7a6");
-    protected static final Set<net.firecraftmc.maniacore.api.stats.Stats> FAKED_STATS = new HashSet<>(Arrays.asList(net.firecraftmc.maniacore.api.stats.Stats.EXPERIENCE, net.firecraftmc.maniacore.api.stats.Stats.COINS, net.firecraftmc.maniacore.api.stats.Stats.HG_CHESTS_FOUND, net.firecraftmc.maniacore.api.stats.Stats.HG_SCORE, net.firecraftmc.maniacore.api.stats.Stats.HG_KILLS, net.firecraftmc.maniacore.api.stats.Stats.HG_WINS, net.firecraftmc.maniacore.api.stats.Stats.HG_DEATHMATCHES, net.firecraftmc.maniacore.api.stats.Stats.HG_DEATHS, net.firecraftmc.maniacore.api.stats.Stats.HG_MUTANT_DEATHS, net.firecraftmc.maniacore.api.stats.Stats.HG_GAMES, net.firecraftmc.maniacore.api.stats.Stats.HG_HIGHEST_KILL_STREAK, net.firecraftmc.maniacore.api.stats.Stats.HG_MUTANT_KILLS, net.firecraftmc.maniacore.api.stats.Stats.HG_WINSTREAK));
+    protected static final Set<Stats> FAKED_STATS = new HashSet<>(Arrays.asList(Stats.EXPERIENCE, Stats.COINS, Stats.HG_CHESTS_FOUND, Stats.HG_SCORE, Stats.HG_KILLS, Stats.HG_WINS, Stats.HG_DEATHMATCHES, Stats.HG_DEATHS, Stats.HG_MUTANT_DEATHS, Stats.HG_GAMES, Stats.HG_HIGHEST_KILL_STREAK, Stats.HG_MUTANT_KILLS, Stats.HG_WINSTREAK));
 
     protected int id = 0;
     protected final UUID uniqueId;
     protected String name;
-    protected net.firecraftmc.maniacore.api.channel.Channel channel = net.firecraftmc.maniacore.api.channel.Channel.GLOBAL; //TODO Type handler (Probably just a default enum handler
-    protected Set<net.firecraftmc.maniacore.api.user.IgnoreInfo> ignoredPlayers = new HashSet<>(); //TODO Set type handlers
-    protected net.firecraftmc.maniacore.api.nickname.Nickname nickname;
+    protected Channel channel = Channel.GLOBAL; //TODO Type handler (Probably just a default enum handler
+    protected Set<IgnoreInfo> ignoredPlayers = new HashSet<>(); //TODO Set type handlers
+    protected Nickname nickname;
     protected final RankInfo rankInfo;
 
-    protected Map<String, net.firecraftmc.maniacore.api.stats.Statistic> stats = new HashMap<>();
-    protected Map<net.firecraftmc.maniacore.api.user.toggle.Toggles, net.firecraftmc.maniacore.api.user.toggle.Toggle> toggles = new HashMap<>();
+    protected Map<String, Statistic> stats = new HashMap<>();
+    protected Map<Toggles, Toggle> toggles = new HashMap<>();
 
-    protected Map<String, net.firecraftmc.maniacore.api.stats.Statistic> fakeStats = new HashMap<>();
+    protected Map<String, Statistic> fakeStats = new HashMap<>();
 
     public User(UUID uniqueId) {
         this.uniqueId = uniqueId;
-        this.nickname = new net.firecraftmc.maniacore.api.nickname.Nickname(uniqueId);
+        this.nickname = new Nickname(uniqueId);
         this.rankInfo = new RankInfo(uniqueId);
     }
     
-    public void setRank(net.firecraftmc.maniacore.api.ranks.Rank rank, long expire) {
+    public void setRank(Rank rank, long expire) {
         if (getUniqueId().equals(FIRESTAR311)) {
-            this.rankInfo.setRank(net.firecraftmc.maniacore.api.ranks.Rank.ROOT);
-            this.rankInfo.setExpire(-1);
-        } else if (getUniqueId().equals(ASSASSINPLAYS)) {
-            this.rankInfo.setRank(net.firecraftmc.maniacore.api.ranks.Rank.OWNER);
+            this.rankInfo.setRank(Rank.ROOT);
             this.rankInfo.setExpire(-1);
         } else {
             this.rankInfo.setPreviousRank(this.rankInfo.getRank());
@@ -61,7 +57,7 @@ public class User implements IRecord {
         }
     }
     
-    public void setRank(net.firecraftmc.maniacore.api.ranks.Rank rank) {
+    public void setRank(Rank rank) {
         setRank(rank, -1);
     }
 
@@ -69,11 +65,11 @@ public class User implements IRecord {
         boolean nicked, vanished = false, incognito = false;
         nicked = getNickname().isActive();
 
-        net.firecraftmc.maniacore.api.user.toggle.Toggle vanishedToggle = getToggle(net.firecraftmc.maniacore.api.user.toggle.Toggles.VANISHED);
+        Toggle vanishedToggle = getToggle(Toggles.VANISHED);
         if (vanishedToggle != null) {
             vanished = vanishedToggle.getAsBoolean();
         }
-        net.firecraftmc.maniacore.api.user.toggle.Toggle incognitoToggle = getToggle(net.firecraftmc.maniacore.api.user.toggle.Toggles.INCOGNITO);
+        Toggle incognitoToggle = getToggle(Toggles.INCOGNITO);
         if (incognitoToggle != null) {
             incognito = incognitoToggle.getAsBoolean();
         }
@@ -110,7 +106,7 @@ public class User implements IRecord {
         generateFakeStats();
     }
 
-    public net.firecraftmc.maniacore.api.nickname.Nickname getNickname() {
+    public Nickname getNickname() {
         return nickname;
     }
 
@@ -131,8 +127,8 @@ public class User implements IRecord {
         }
         this.uniqueId = UUID.fromString(jedisData.get("uniqueId"));
         this.name = jedisData.get("name");
-        net.firecraftmc.maniacore.api.ranks.Rank rank = net.firecraftmc.maniacore.api.ranks.Rank.valueOf(jedisData.get("rank"));
-        this.nickname = new net.firecraftmc.maniacore.api.nickname.Nickname(uniqueId);
+        Rank rank = Rank.valueOf(jedisData.get("rank"));
+        this.nickname = new Nickname(uniqueId);
         this.rankInfo = new RankInfo(uniqueId);
         this.rankInfo.setRank(rank);
     }
@@ -141,7 +137,7 @@ public class User implements IRecord {
         return false;
     }
 
-    public void setStats(Map<String, net.firecraftmc.maniacore.api.stats.Statistic> stats) {
+    public void setStats(Map<String, Statistic> stats) {
         if (stats == null) {
             this.stats = new HashMap<>();
         } else {
@@ -149,11 +145,11 @@ public class User implements IRecord {
         }
     }
 
-    public net.firecraftmc.maniacore.api.stats.Statistic getFakedStat(net.firecraftmc.maniacore.api.stats.Stat stat) {
+    public Statistic getFakedStat(Stat stat) {
         if (fakeStats.isEmpty()) {
             generateFakeStats();
         }
-        net.firecraftmc.maniacore.api.stats.Statistic s = null;
+        Statistic s = null;
         try {
             s = fakeStats.get(stat.getName());
         } catch (IllegalStateException e) {
@@ -174,14 +170,14 @@ public class User implements IRecord {
 
     private void generateFakeStats() {
         Random random = new Random();
-        for (net.firecraftmc.maniacore.api.stats.Stats fakedStat : FAKED_STATS) {
-            if (fakedStat == net.firecraftmc.maniacore.api.stats.Stats.HG_SCORE) {
-                net.firecraftmc.maniacore.api.stats.Statistic value = fakedStat.create(uniqueId);
+        for (Stats fakedStat : FAKED_STATS) {
+            if (fakedStat == Stats.HG_SCORE) {
+                Statistic value = fakedStat.create(uniqueId);
                 value.setValue(random.nextInt(90) + 10);
                 this.fakeStats.put(fakedStat.getName(), value);
             } else {
-                net.firecraftmc.maniacore.api.stats.Statistic stat = getStat(fakedStat);
-                net.firecraftmc.maniacore.api.stats.Statistic value = fakedStat.create(uniqueId);
+                Statistic stat = getStat(fakedStat);
+                Statistic value = fakedStat.create(uniqueId);
                 if (stat.getAsInt() != 0) {
                     value.setValue(random.nextInt(stat.getAsInt()));
                 } else {
@@ -192,7 +188,7 @@ public class User implements IRecord {
         }
     }
 
-    public void setToggles(Map<net.firecraftmc.maniacore.api.user.toggle.Toggles, net.firecraftmc.maniacore.api.user.toggle.Toggle> toggles) {
+    public void setToggles(Map<Toggles, Toggle> toggles) {
         if (toggles == null) {
             this.toggles = new HashMap<>();
         } else {
@@ -204,8 +200,8 @@ public class User implements IRecord {
         return this.toggles.get(type);
     }
 
-    public void incrementStat(net.firecraftmc.maniacore.api.stats.Stat stat) {
-        net.firecraftmc.maniacore.api.stats.Statistic statistic = this.stats.getOrDefault(stat.getName(), stat.create(this.getUniqueId()));
+    public void incrementStat(Stat stat) {
+        Statistic statistic = this.stats.getOrDefault(stat.getName(), stat.create(this.getUniqueId()));
         statistic.increment();
         if (!this.stats.containsKey(stat.getName())) {
             this.stats.put(stat.getName(), statistic);
@@ -215,7 +211,7 @@ public class User implements IRecord {
         }
     }
 
-    public User(int id, UUID uniqueId, String name, RankInfo rank, net.firecraftmc.maniacore.api.channel.Channel channel) {
+    public User(int id, UUID uniqueId, String name, RankInfo rank, Channel channel) {
         this.uniqueId = uniqueId;
         this.id = id;
         this.name = name;
@@ -225,30 +221,30 @@ public class User implements IRecord {
     }
 
     public void addNetworkExperience(int exp) {
-        net.firecraftmc.maniacore.api.stats.Statistic stat = getStat(net.firecraftmc.maniacore.api.stats.Stats.EXPERIENCE);
-        net.firecraftmc.maniacore.api.leveling.Level current = ManiaCore.getInstance().getLevelManager().getLevel(stat.getAsInt());
+        Statistic stat = getStat(Stats.EXPERIENCE);
+        Level current = CenturionsCore.getInstance().getLevelManager().getLevel(stat.getAsInt());
         stat.setValue((stat.getAsInt() + exp) + "");
-        net.firecraftmc.maniacore.api.leveling.Level newLevel = ManiaCore.getInstance().getLevelManager().getLevel(stat.getAsInt());
+        Level newLevel = CenturionsCore.getInstance().getLevelManager().getLevel(stat.getAsInt());
         if (current.getNumber() < newLevel.getNumber()) {
             sendMessage("&a&lLevel Up! " + current.getNumber() + " -> " + newLevel.getNumber());
             sendMessage("  &7&oThis message is temporary");
         }
     }
 
-    public void setIgnoredPlayers(Set<net.firecraftmc.maniacore.api.user.IgnoreInfo> ignoredPlayers) {
+    public void setIgnoredPlayers(Set<IgnoreInfo> ignoredPlayers) {
         this.ignoredPlayers = ignoredPlayers;
     }
 
-    public net.firecraftmc.maniacore.api.channel.Channel getChannel() {
+    public Channel getChannel() {
         return (channel != null) ? channel : Channel.GLOBAL;
     }
 
-    public Set<net.firecraftmc.maniacore.api.user.IgnoreInfo> getIgnoredPlayers() {
+    public Set<IgnoreInfo> getIgnoredPlayers() {
         return new HashSet<>(ignoredPlayers);
     }
 
     public Pair<Integer, String> addCoins(int coins, boolean coinMultiplier) {
-        net.firecraftmc.maniacore.api.stats.Statistic stat = getStat(net.firecraftmc.maniacore.api.stats.Stats.COINS);
+        Statistic stat = getStat(Stats.COINS);
         double multiplier = 1;
         String multiplierString = "";
         if (coinMultiplier) {
@@ -263,25 +259,25 @@ public class User implements IRecord {
     }
 
     public IgnoreResult addIgnoredPlayer(User user) {
-        for (net.firecraftmc.maniacore.api.user.IgnoreInfo ignoredPlayer : this.ignoredPlayers) {
+        for (IgnoreInfo ignoredPlayer : this.ignoredPlayers) {
             if (ignoredPlayer.getIgnored().equals(user.getUniqueId())) {
                 return IgnoreResult.ALREADY_ADDED;
             }
         }
 
-        if (user.hasPermission(net.firecraftmc.maniacore.api.ranks.Rank.HELPER)) {
+        if (user.hasPermission(Rank.HELPER)) {
             return IgnoreResult.PLAYER_IS_STAFF;
         }
 
-        net.firecraftmc.maniacore.api.user.IgnoreInfo ignoreInfo = new net.firecraftmc.maniacore.api.user.IgnoreInfo(this.getUniqueId(), user.getUniqueId(), System.currentTimeMillis(), user.getName());
+        IgnoreInfo ignoreInfo = new IgnoreInfo(this.getUniqueId(), user.getUniqueId(), System.currentTimeMillis(), user.getName());
         this.ignoredPlayers.add(ignoreInfo);
-        ManiaCore.getInstance().getDatabase().pushRecord(new net.firecraftmc.maniacore.api.records.IgnoreInfoRecord(ignoreInfo));
+        CenturionsCore.getInstance().getDatabase().pushRecord(new IgnoreInfoRecord(ignoreInfo));
         return IgnoreResult.SUCCESS;
     }
 
     public IgnoreResult removeIgnoredPlayer(User user) {
         boolean ignored = false;
-        for (net.firecraftmc.maniacore.api.user.IgnoreInfo ignoredPlayer : this.ignoredPlayers) {
+        for (IgnoreInfo ignoredPlayer : this.ignoredPlayers) {
             if (ignoredPlayer.getIgnored().equals(user.getUniqueId())) {
                 ignored = true;
                 break;
@@ -292,8 +288,8 @@ public class User implements IRecord {
             return IgnoreResult.NOT_IGNORED;
         }
 
-        net.firecraftmc.maniacore.api.user.IgnoreInfo ignoreInfo = null;
-        for (net.firecraftmc.maniacore.api.user.IgnoreInfo ignoredPlayer : this.ignoredPlayers) {
+        IgnoreInfo ignoreInfo = null;
+        for (IgnoreInfo ignoredPlayer : this.ignoredPlayers) {
             if (ignoredPlayer.getIgnored().equals(user.getUniqueId())) {
                 ignoreInfo = ignoredPlayer;
                 break;
@@ -301,7 +297,7 @@ public class User implements IRecord {
         }
         if (ignoreInfo != null) {
             this.ignoredPlayers.remove(ignoreInfo);
-            boolean status = ManiaCore.getInstance().getDatabase().deleteRecord(new IgnoreInfoRecord(ignoreInfo));
+            boolean status = CenturionsCore.getInstance().getDatabase().deleteRecord(new IgnoreInfoRecord(ignoreInfo));
             if (status) {
                 return IgnoreResult.SUCCESS;
             } else {
@@ -322,12 +318,12 @@ public class User implements IRecord {
         return false;
     }
 
-    public boolean hasPermission(net.firecraftmc.maniacore.api.ranks.Rank rank) {
+    public boolean hasPermission(Rank rank) {
         return getRank().ordinal() <= rank.ordinal();
     }
 
     public String getDisplayName() {
-        net.firecraftmc.maniacore.api.ranks.Rank rank;
+        Rank rank;
         String name;
         if (nickname.isActive()) {
             rank = nickname.getRank();
@@ -338,7 +334,7 @@ public class User implements IRecord {
         }
 
         String displayName = rank.getPrefix() + rank.getBaseColor();
-        if (rank != net.firecraftmc.maniacore.api.ranks.Rank.DEFAULT && rank != net.firecraftmc.maniacore.api.ranks.Rank.CONSOLE) {
+        if (rank != Rank.DEFAULT && rank != Rank.CONSOLE) {
             displayName += " ";
         }
         displayName += name;
@@ -368,12 +364,9 @@ public class User implements IRecord {
         return Objects.hash(uniqueId);
     }
 
-    public net.firecraftmc.maniacore.api.ranks.Rank getRank() {
+    public Rank getRank() {
         if (getUniqueId().equals(FIRESTAR311)) {
-            this.rankInfo.setRank(net.firecraftmc.maniacore.api.ranks.Rank.ROOT);
-            this.rankInfo.setExpire(-1);
-        } else if (getUniqueId().equals(ASSASSINPLAYS)) {
-            this.rankInfo.setRank(net.firecraftmc.maniacore.api.ranks.Rank.OWNER);
+            this.rankInfo.setRank(Rank.ROOT);
             this.rankInfo.setExpire(-1);
         }
         
@@ -383,23 +376,23 @@ public class User implements IRecord {
         return this.rankInfo.getRank();
     }
 
-    public void addIgnoredInfo(net.firecraftmc.maniacore.api.user.IgnoreInfo toObject) {
+    public void addIgnoredInfo(IgnoreInfo toObject) {
         this.ignoredPlayers.add(toObject);
     }
 
     public void incrementOnlineTime() {
-        net.firecraftmc.maniacore.api.stats.Statistic stat = getStat(net.firecraftmc.maniacore.api.stats.Stats.ONLINE_TIME);
+        Statistic stat = getStat(Stats.ONLINE_TIME);
         stat.increment();
 
         if (stat.getAsInt() % 600 == 0) {
             int multiplier = 1;
-            if (hasPermission(net.firecraftmc.maniacore.api.ranks.Rank.SCAVENGER)) {
+            if (hasPermission(Rank.SCAVENGER)) {
                 multiplier = 2;
             }
-            if (hasPermission(net.firecraftmc.maniacore.api.ranks.Rank.MEDIA)) {
+            if (hasPermission(Rank.MEDIA)) {
                 multiplier = 3;
             }
-            if (hasPermission(net.firecraftmc.maniacore.api.ranks.Rank.HELPER)) {
+            if (hasPermission(Rank.HELPER)) {
                 multiplier = 4;
             }
             if (hasPermission(Rank.ROOT)) {
@@ -412,8 +405,8 @@ public class User implements IRecord {
         }
     }
 
-    public net.firecraftmc.maniacore.api.stats.Statistic getStat(net.firecraftmc.maniacore.api.stats.Stat stat) {
-        net.firecraftmc.maniacore.api.stats.Statistic s = null;
+    public Statistic getStat(Stat stat) {
+        Statistic s = null;
         try {
             s = stats.getOrDefault(stat.getName(), stat.create(this.uniqueId));
         } catch (IllegalStateException e) {
@@ -426,8 +419,8 @@ public class User implements IRecord {
         return s;
     }
 
-    public void setStat(net.firecraftmc.maniacore.api.stats.Stat stat, int value) {
-        net.firecraftmc.maniacore.api.stats.Statistic s = stats.getOrDefault(stat.getName(), stat.create(this.uniqueId));
+    public void setStat(Stat stat, int value) {
+        Statistic s = stats.getOrDefault(stat.getName(), stat.create(this.uniqueId));
         s.setValue(value + "");
         if (!this.stats.containsKey(stat.getName())) {
             this.stats.put(stat.getName(), s);
@@ -443,7 +436,7 @@ public class User implements IRecord {
     }
 
     public Level getLevel() {
-        return ManiaCore.getInstance().getLevelManager().getLevel(this.getStat(Stats.EXPERIENCE).getAsInt());
+        return CenturionsCore.getInstance().getLevelManager().getLevel(this.getStat(Stats.EXPERIENCE).getAsInt());
     }
 
     public boolean isIgnoring(UUID target) {
@@ -456,7 +449,7 @@ public class User implements IRecord {
     }
 
     public Skin getSkin() {
-        return ManiaCore.getInstance().getSkinManager().getSkin(getUniqueId());
+        return CenturionsCore.getInstance().getSkinManager().getSkin(getUniqueId());
     }
     
     public String toString() {

@@ -1,15 +1,15 @@
 package net.firecraftmc.maniacore.spigot.cmd;
 
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.spigot.events.UserIncognitoEvent;
 import net.firecraftmc.maniacore.spigot.user.SpigotUser;
-import net.firecraftmc.maniacore.ManiaCorePlugin;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.CenturionsCorePlugin;
 import net.firecraftmc.maniacore.api.ranks.Rank;
 import net.firecraftmc.maniacore.api.records.UserRecord;
 import net.firecraftmc.maniacore.api.user.User;
 import net.firecraftmc.maniacore.api.user.toggle.Toggle;
 import net.firecraftmc.maniacore.api.user.toggle.Toggles;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
@@ -19,29 +19,29 @@ import java.util.Map.Entry;
 
 public class IncognitoCmd implements CommandExecutor {
     
-    private ManiaCorePlugin plugin;
+    private CenturionsCorePlugin plugin;
     
-    public IncognitoCmd(ManiaCorePlugin plugin) {
+    public IncognitoCmd(CenturionsCorePlugin plugin) {
         this.plugin = plugin;
     }
     
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ManiaUtils.color("&cOnly players may use that command."));
+            sender.sendMessage(CenturionsUtils.color("&cOnly players may use that command."));
             return true;
         }
         
         Player player = (Player) sender;
-        User user = ManiaCore.getInstance().getUserManager().getUser(player.getUniqueId());
+        User user = CenturionsCore.getInstance().getUserManager().getUser(player.getUniqueId());
         if (!user.hasPermission(Rank.HELPER)) {
-            player.sendMessage(ManiaUtils.color("&cYou do not have permission to use that command."));
+            player.sendMessage(CenturionsUtils.color("&cYou do not have permission to use that command."));
             return true;
         }
         
         Map<UUID, Boolean> affectedPlayers = new HashMap<>();
         Toggle incognito = user.getToggle(Toggles.INCOGNITO);
         for (Player p : Bukkit.getOnlinePlayers()) {
-            User u = ManiaCore.getInstance().getUserManager().getUser(p.getUniqueId());
+            User u = CenturionsCore.getInstance().getUserManager().getUser(p.getUniqueId());
             if (incognito.getAsBoolean()) {
                 affectedPlayers.put(p.getUniqueId(), true);
             } else {
@@ -53,7 +53,7 @@ public class IncognitoCmd implements CommandExecutor {
         plugin.getServer().getPluginManager().callEvent(event);
         
         if (event.isCancelled()) {
-            player.sendMessage(ManiaUtils.color("&cCould not complete incognito command for the reason " + event.getCancelledReason()));
+            player.sendMessage(CenturionsUtils.color("&cCould not complete incognito command for the reason " + event.getCancelledReason()));
             return true;
         }
         
@@ -61,9 +61,9 @@ public class IncognitoCmd implements CommandExecutor {
         incognito.setValue((!incognito.getAsBoolean()) + "");
     
         if (incognito.getAsBoolean()) {
-            player.sendMessage(ManiaUtils.color("&6&l>> &9You are &b&lINCOGNITO&9, nobody can see you and your whereabouts aren't being reported."));
+            player.sendMessage(CenturionsUtils.color("&6&l>> &9You are &b&lINCOGNITO&9, nobody can see you and your whereabouts aren't being reported."));
         } else {
-            player.sendMessage(ManiaUtils.color("&6&l>> &cYou are no longer &b&lINCOGNITO&c."));
+            player.sendMessage(CenturionsUtils.color("&6&l>> &cYou are no longer &b&lINCOGNITO&c."));
         }
         
         for (Entry<UUID, Boolean> entry : affectedPlayers.entrySet()) {

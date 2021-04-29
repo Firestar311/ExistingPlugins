@@ -1,6 +1,6 @@
-name: ManiaCore
+name: ${project.name}
 version: ${project.version}
-main: net.firecraftmc.maniacore.ManiaCorePlugin
+main: net.firecraftmc.maniacore.CenturionsCorePlugin
 authors: [Firestar311]
 description: Library Plugin for OldHM
 website: firecraftmc.net

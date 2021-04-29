@@ -5,24 +5,24 @@ import cloud.timo.TimoCloud.api.objects.ServerObject;
 import lombok.Getter;
 import net.firecraftmc.hub.leaderboard.LeaderboardManager;
 import net.firecraftmc.hub.leaderboard.Leaderboard;
-import net.firecraftmc.maniacore.ManiaCorePlugin;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.CenturionsCorePlugin;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.channel.Channel;
 import net.firecraftmc.maniacore.api.events.EventInfo;
 import net.firecraftmc.maniacore.api.leveling.Level;
 import net.firecraftmc.maniacore.api.ranks.Rank;
-import net.firecraftmc.maniacore.api.server.ManiaServer;
+import net.firecraftmc.maniacore.api.server.CenturionsServer;
 import net.firecraftmc.maniacore.api.server.ServerType;
 import net.firecraftmc.maniacore.api.stats.Stats;
 import net.firecraftmc.maniacore.api.user.User;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import net.firecraftmc.maniacore.memory.MemoryHook;
 import net.firecraftmc.maniacore.memory.MemoryHook.Task;
-import net.firecraftmc.maniacore.plugin.ManiaPlugin;
-import net.firecraftmc.maniacore.plugin.ManiaTask;
+import net.firecraftmc.maniacore.plugin.CenturionsPlugin;
+import net.firecraftmc.maniacore.plugin.CenturionsTask;
 import net.firecraftmc.maniacore.spigot.gui.GUIButton;
 import net.firecraftmc.maniacore.spigot.gui.Gui;
-import net.firecraftmc.maniacore.spigot.plugin.SpigotManiaTask;
+import net.firecraftmc.maniacore.spigot.plugin.SpigotCenturionsTask;
 import net.firecraftmc.maniacore.spigot.user.SpigotUser;
 import net.firecraftmc.maniacore.spigot.util.ItemBuilder;
 import net.firecraftmc.maniacore.spigot.util.Spawnpoint;
@@ -53,16 +53,16 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.*;
 import java.util.Map.Entry;
 
-public final class ManiaHub extends JavaPlugin implements Listener, ManiaPlugin {
+public final class CenturionsHub extends JavaPlugin implements Listener, CenturionsPlugin {
 
     @Getter private LeaderboardManager leaderboardManager;
 
-    public static ManiaHub instance;
+    public static CenturionsHub instance;
     
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e) {
         if (e.getPlayer().getGameMode() == GameMode.CREATIVE) {
-            if (!e.getPlayer().hasPermission("hungermania.hub.protection.bypass")) {
+            if (!e.getPlayer().hasPermission("centurions.hub.protection.bypass")) {
                 e.setCancelled(true);
             }
         }
@@ -71,7 +71,7 @@ public final class ManiaHub extends JavaPlugin implements Listener, ManiaPlugin 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent e) {
         if (e.getPlayer().getGameMode() == GameMode.CREATIVE) {
-            if (!e.getPlayer().hasPermission("hungermania.hub.protection.bypass")) {
+            if (!e.getPlayer().hasPermission("centurions.hub.protection.bypass")) {
                 e.setCancelled(true);
             }
         }
@@ -117,21 +117,21 @@ public final class ManiaHub extends JavaPlugin implements Listener, ManiaPlugin 
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
-        e.getPlayer().sendMessage(ManiaUtils.color("&6&l>> &bWelcome to &3&lHungerMania&b!"));
+        e.getPlayer().sendMessage(CenturionsUtils.color("&6&l>> &bWelcome to &3&lCenturions Battlegrounds&b!"));
         if (getConfig().getBoolean("testinfo.active")) {
-            e.getPlayer().sendMessage(ManiaUtils.color("&6&l>> &bThe HG Test is currently active use &3/hgtest &bto go to the server!"));
+            e.getPlayer().sendMessage(CenturionsUtils.color("&6&l>> &bThe HG Test is currently active use &3/hgtest &bto go to the server!"));
         }
         if (e.getPlayer().hasPermission(Channel.STAFF.getPermission())) {
-            e.getPlayer().sendMessage(ManiaUtils.color("&6&l>> &9Use &3@ &9in front of messages to talk in staff chat."));
+            e.getPlayer().sendMessage(CenturionsUtils.color("&6&l>> &9Use &3@ &9in front of messages to talk in staff chat."));
         }
         if (e.getPlayer().hasPermission(Channel.ADMIN.getPermission())) {
-            e.getPlayer().sendMessage(ManiaUtils.color("&6&l>> &9Use &3$ &9in front of messages to talk in admin chat."));
+            e.getPlayer().sendMessage(CenturionsUtils.color("&6&l>> &9Use &3$ &9in front of messages to talk in admin chat."));
         }
         e.getPlayer().setGameMode(GameMode.ADVENTURE);
         e.getPlayer().getInventory().clear();
         ItemStack gameBrowser = new ItemStack(Material.COMPASS);
         ItemMeta browserMeta = gameBrowser.getItemMeta();
-        browserMeta.setDisplayName(ManiaUtils.color("&e&lGAME BROWSER &7&o(Right Click)"));
+        browserMeta.setDisplayName(CenturionsUtils.color("&e&lGAME BROWSER &7&o(Right Click)"));
         gameBrowser.setItemMeta(browserMeta);
         e.getPlayer().getInventory().setItem(4, gameBrowser);
         e.getPlayer().updateInventory();
@@ -141,55 +141,55 @@ public final class ManiaHub extends JavaPlugin implements Listener, ManiaPlugin 
             }
         }.runTaskLater(this, 2L);
 
-        String[] motd = new String[]{"&6&l>> &bWelcome to HungerMania!", "", "----Server Info----", "&6&l>> &eDiscord: &fhttps://discord.gg/Z95xgD7", "&6&l>> &eWebsite: &fhttps://hungermania.net/", "&6&l>> &eStore: &fhttps://hunger-mania.tebex.io/", "&6&l>> &eRules: &f/rules"};
+        String[] motd = new String[]{"&6&l>> &bWelcome to Centurions Battlegrounds!", "", "----Server Info----", "&6&l>> &eDiscord: &fhttps://discord.gg/FyXyFBkQ", "&6&l>> &eWebsite: &fhttps://firecraftmc.net/", "&6&l>> &eStore: &cNot Available", "&6&l>> &eRules: &f/rules"};
 
         for (String message : motd) {
-            e.getPlayer().sendMessage(ManiaUtils.color(message));
+            e.getPlayer().sendMessage(CenturionsUtils.color(message));
         }
     }
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (cmd.getName().equalsIgnoreCase("testadmin")) {
-            if (!sender.hasPermission("hungermania.hub.testadmin")) {
-                sender.sendMessage(ManiaUtils.color("&cYou do not have permission to use that command."));
+            if (!sender.hasPermission("centurions.hub.testadmin")) {
+                sender.sendMessage(CenturionsUtils.color("&cYou do not have permission to use that command."));
                 return true;
             }
 
             if (!(args.length > 0)) {
-                sender.sendMessage(ManiaUtils.color("&cYou must provide a sub command"));
+                sender.sendMessage(CenturionsUtils.color("&cYou must provide a sub command"));
                 return true;
             }
 
-            if (ManiaUtils.checkCmdAliases(args, 0, "info")) {
-                sender.sendMessage(ManiaUtils.color("&6&l>> &eHG Test Information"));
-                sender.sendMessage(ManiaUtils.color("&6&l> &bActive&8: &e" + getConfig().getBoolean("testinfo.active")));
-                sender.sendMessage(ManiaUtils.color("&6&l> &bServer&8: &e" + getConfig().getString("testinfo.server")));
+            if (CenturionsUtils.checkCmdAliases(args, 0, "info")) {
+                sender.sendMessage(CenturionsUtils.color("&6&l>> &eHG Test Information"));
+                sender.sendMessage(CenturionsUtils.color("&6&l> &bActive&8: &e" + getConfig().getBoolean("testinfo.active")));
+                sender.sendMessage(CenturionsUtils.color("&6&l> &bServer&8: &e" + getConfig().getString("testinfo.server")));
                 return true;
             }
 
             if (!(args.length > 1)) {
-                sender.sendMessage(ManiaUtils.color("&cYou must provide a value"));
+                sender.sendMessage(CenturionsUtils.color("&cYou must provide a value"));
                 return true;
             }
 
-            if (ManiaUtils.checkCmdAliases(args, 0, "setactive")) {
+            if (CenturionsUtils.checkCmdAliases(args, 0, "setactive")) {
                 try {
                     boolean value = Boolean.parseBoolean(args[1]);
                     getConfig().set("testinfo.active", value);
                     saveConfig();
-                    sender.sendMessage(ManiaUtils.color("&6&l>> &aYou set the HG Test to " + value));
+                    sender.sendMessage(CenturionsUtils.color("&6&l>> &aYou set the HG Test to " + value));
                 } catch (Exception e) {
-                    sender.sendMessage(ManiaUtils.color("&4&l>> &cYou must provide the values true or false"));
+                    sender.sendMessage(CenturionsUtils.color("&4&l>> &cYou must provide the values true or false"));
                 }
-            } else if (ManiaUtils.checkCmdAliases(args, 0, "setserver")) {
+            } else if (CenturionsUtils.checkCmdAliases(args, 0, "setserver")) {
                 getConfig().set("testinfo.server", args[1]);
                 saveConfig();
-                sender.sendMessage(ManiaUtils.color("&6&l>> &aYou set the HG Test Server to " + args[1]));
-                sender.sendMessage(ManiaUtils.color("&6&l>> &cNote: This server must exist to work. This command does not check if it does."));
+                sender.sendMessage(CenturionsUtils.color("&6&l>> &aYou set the HG Test Server to " + args[1]));
+                sender.sendMessage(CenturionsUtils.color("&6&l>> &cNote: This server must exist to work. This command does not check if it does."));
             }
         } else if (cmd.getName().equalsIgnoreCase("spawn")) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(ManiaUtils.color("&cOnly players may use that command."));
+                sender.sendMessage(CenturionsUtils.color("&cOnly players may use that command."));
                 return true;
             }
 
@@ -197,31 +197,31 @@ public final class ManiaHub extends JavaPlugin implements Listener, ManiaPlugin 
             player.teleport(getSpawnpoint().getLocation());
         } else if (cmd.getName().equalsIgnoreCase("fly")) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(ManiaUtils.color("&cOnly players may use that command."));
+                sender.sendMessage(CenturionsUtils.color("&cOnly players may use that command."));
                 return true;
             }
 
             Player player = (Player) sender;
-            User user = ManiaCore.getInstance().getUserManager().getUser(player.getUniqueId());
+            User user = CenturionsCore.getInstance().getUserManager().getUser(player.getUniqueId());
             if (!user.hasPermission(Rank.HELPER)) {
-                player.sendMessage(ManiaUtils.color("&cYou do not have permission to use that command."));
+                player.sendMessage(CenturionsUtils.color("&cYou do not have permission to use that command."));
                 return true;
             }
 
             player.setAllowFlight(!player.getAllowFlight());
             if (player.getAllowFlight()) {
-                player.sendMessage(ManiaUtils.color("&6&l>> &fFly mode &a&lENABLED&f."));
+                player.sendMessage(CenturionsUtils.color("&6&l>> &fFly mode &a&lENABLED&f."));
             } else {
-                player.sendMessage(ManiaUtils.color("&6&l>> &fFly mode &c&lDISABLED&f."));
+                player.sendMessage(CenturionsUtils.color("&6&l>> &fFly mode &c&lDISABLED&f."));
             }
         } else if (cmd.getName().equalsIgnoreCase("leaderboard")) {
             if (!(args.length > 1)) {
-                sender.sendMessage(ManiaUtils.color("&cYou did not provide enough arguments"));
+                sender.sendMessage(CenturionsUtils.color("&cYou did not provide enough arguments"));
                 return true;
             }
 
             if (!(sender instanceof Player)) {
-                sender.sendMessage(ManiaUtils.color("&cOnly players can use that command."));
+                sender.sendMessage(CenturionsUtils.color("&cOnly players can use that command."));
                 return true;
             }
 
@@ -229,20 +229,20 @@ public final class ManiaHub extends JavaPlugin implements Listener, ManiaPlugin 
             try {
                 start = Integer.parseInt(args[0]);
             } catch (NumberFormatException e) {
-                sender.sendMessage(ManiaUtils.color("&cYou provided an invalid number for the starting number."));
+                sender.sendMessage(CenturionsUtils.color("&cYou provided an invalid number for the starting number."));
                 return true;
             }
 
             try {
                 end = Integer.parseInt(args[1]);
             } catch (NumberFormatException e) {
-                sender.sendMessage(ManiaUtils.color("&cYou provided an invalid number for the ending number."));
+                sender.sendMessage(CenturionsUtils.color("&cYou provided an invalid number for the ending number."));
                 return true;
             }
 
             for (Range<Leaderboard> range : leaderboardManager.getLeaderboards()) {
                 if (range.contains(start) || range.contains(end)) {
-                    sender.sendMessage(ManiaUtils.color("&cA leaderboard already exists with one of those numbers."));
+                    sender.sendMessage(CenturionsUtils.color("&cA leaderboard already exists with one of those numbers."));
                     return true;
                 }
             }
@@ -255,7 +255,7 @@ public final class ManiaHub extends JavaPlugin implements Listener, ManiaPlugin 
     }
 
     public Spawnpoint getSpawnpoint() {
-        return ((ManiaCorePlugin) Bukkit.getPluginManager().getPlugin("ManiaCore")).getSpawnpoint();
+        return ((CenturionsCorePlugin) Bukkit.getPluginManager().getPlugin("CenturionsCore")).getSpawnpoint();
     }
 
     @Override
@@ -264,19 +264,19 @@ public final class ManiaHub extends JavaPlugin implements Listener, ManiaPlugin 
         getServer().getPluginManager().registerEvents(this, this);
         saveDefaultConfig();
 
-        ManiaCore.getInstance().getServerManager().getCurrentServer().setType(ServerType.HUB);
+        CenturionsCore.getInstance().getServerManager().getCurrentServer().setType(ServerType.HUB);
 
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         getServer().getWorld("world").setDifficulty(Difficulty.PEACEFUL);
 
         MemoryHook playerUpdate = new MemoryHook("Hub Player Update");
-        ManiaCore.getInstance().getMemoryManager().addMemoryHook(playerUpdate);
+        CenturionsCore.getInstance().getMemoryManager().addMemoryHook(playerUpdate);
         new BukkitRunnable() {
             public void run() {
                 Task task = playerUpdate.task().start();
                 Map<Integer, ItemStack> serverStacks = new TreeMap<>();
                 int onlinePlayers = 0, maximumPlayers = 0;
-                EventInfo activeEvent = ManiaCore.getInstance().getEventManager().getActiveEvent();
+                EventInfo activeEvent = CenturionsCore.getInstance().getEventManager().getActiveEvent();
 
                 Collection<ServerObject> hgServers = TimoCloudAPI.getUniversalAPI().getServerGroup("HG").getServers();
                 for (ServerObject server : hgServers) {
@@ -286,7 +286,7 @@ public final class ManiaHub extends JavaPlugin implements Listener, ManiaPlugin 
                         if (activeEvent != null) {
                             if (activeEvent.getServers().contains(server.getName())) {
                                 itemMaterial = Material.ENDER_STONE;
-                                lore.add(ManiaUtils.color("&3&lACTIVE EVENT"));
+                                lore.add(CenturionsUtils.color("&3&lACTIVE EVENT"));
                             }
                         } else {
                             if (server.getState().equalsIgnoreCase("online") || server.getState().equalsIgnoreCase("lobby")) {
@@ -296,7 +296,7 @@ public final class ManiaHub extends JavaPlugin implements Listener, ManiaPlugin 
                             }
 
                             lore.add("");
-                            lore.add(ManiaUtils.color("&d&lStatus &f" + server.getState()));
+                            lore.add(CenturionsUtils.color("&d&lStatus &f" + server.getState()));
                             String time = "", map = "";
                             String extra = server.getExtra();
                             if (extra != null && !extra.isEmpty()) {
@@ -314,20 +314,20 @@ public final class ManiaHub extends JavaPlugin implements Listener, ManiaPlugin 
                                     }
                                 }
                             }
-                            lore.add(ManiaUtils.color("&d&lMap &f" + map));
-                            lore.add(ManiaUtils.color("&d&lTime &f" + time));
+                            lore.add(CenturionsUtils.color("&d&lMap &f" + map));
+                            lore.add(CenturionsUtils.color("&d&lTime &f" + time));
                             lore.add("");
-                            lore.add(ManiaUtils.color("&3&l" + server.getOnlinePlayerCount() + "/" + server.getMaxPlayerCount()));
+                            lore.add(CenturionsUtils.color("&3&l" + server.getOnlinePlayerCount() + "/" + server.getMaxPlayerCount()));
                         }
                     } else if (server.getState().equalsIgnoreCase("starting")) {
                         itemMaterial = Material.DIAMOND_BLOCK;
-                        lore.addAll(Arrays.asList("", ManiaUtils.color("&c&lSERVER IS STARTING")));
+                        lore.addAll(Arrays.asList("", CenturionsUtils.color("&c&lSERVER IS STARTING")));
                     } else if (server.getState().equalsIgnoreCase("restarting")) {
                         itemMaterial = Material.REDSTONE_BLOCK;
-                        lore.addAll(Arrays.asList("", ManiaUtils.color("&c&lSERVER IS RESTARTING")));
+                        lore.addAll(Arrays.asList("", CenturionsUtils.color("&c&lSERVER IS RESTARTING")));
                     } else {
                         itemMaterial = Material.BEDROCK;
-                        lore.addAll(Arrays.asList("", ManiaUtils.color("&c&lSERVER IS OFFLINE")));
+                        lore.addAll(Arrays.asList("", CenturionsUtils.color("&c&lSERVER IS OFFLINE")));
                     }
 
                     ItemStack itemStack = new ItemStack(itemMaterial);
@@ -342,7 +342,7 @@ public final class ManiaHub extends JavaPlugin implements Listener, ManiaPlugin 
                     } catch (Exception e) {
                         number = 1;
                     }
-                    itemMeta.setDisplayName(ManiaUtils.color("&a&lSERVER " + number));
+                    itemMeta.setDisplayName(CenturionsUtils.color("&a&lSERVER " + number));
                     itemMeta.setLore(lore);
                     itemStack.setItemMeta(itemMeta);
                     serverStacks.put(number, itemStack);
@@ -359,19 +359,19 @@ public final class ManiaHub extends JavaPlugin implements Listener, ManiaPlugin 
                         player.teleport(Bukkit.getWorld("world").getSpawnLocation());
                     }
 
-                    SpigotUser user = (SpigotUser) ManiaCore.getInstance().getUserManager().getUser(player.getUniqueId());
+                    SpigotUser user = (SpigotUser) CenturionsCore.getInstance().getUserManager().getUser(player.getUniqueId());
                     if (user.getScoreboard() == null) {
                         new HubBoard(user);
                     } else {
                         user.getScoreboard().update();
                     }
-                    user.getBukkitPlayer().setPlayerListName(ManiaUtils.color(user.getDisplayName()));
+                    user.getBukkitPlayer().setPlayerListName(CenturionsUtils.color(user.getDisplayName()));
 
-                    Level level = ManiaCore.getInstance().getLevelManager().getLevel(user.getStat(Stats.EXPERIENCE).getAsInt());
+                    Level level = CenturionsCore.getInstance().getLevelManager().getLevel(user.getStat(Stats.EXPERIENCE).getAsInt());
                     if (level != null) {
                         player.setLevel(level.getNumber());
                         if (level.getNumber() != 0) {
-                            Level nextLevel = ManiaCore.getInstance().getLevelManager().getLevels().get(level.getNumber() + 1);
+                            Level nextLevel = CenturionsCore.getInstance().getLevelManager().getLevels().get(level.getNumber() + 1);
                             float xp = 0;
                             if (nextLevel != null) {
                                 int xpToNextLevel = nextLevel.getTotalXp();
@@ -404,13 +404,13 @@ public final class ManiaHub extends JavaPlugin implements Listener, ManiaPlugin 
             }
         }.runTaskTimer(this, 20L, 30L);
 
-        ManiaServer currentServer = ManiaCore.getInstance().getServerManager().getCurrentServer();
+        CenturionsServer currentServer = CenturionsCore.getInstance().getServerManager().getCurrentServer();
         currentServer.setType(ServerType.HUB);
 
         Gui.prepare(this);
 
         for (Player player : Bukkit.getOnlinePlayers()) {
-            new HubBoard((SpigotUser) ManiaCore.getInstance().getUserManager().getUser(player.getUniqueId()));
+            new HubBoard((SpigotUser) CenturionsCore.getInstance().getUserManager().getUser(player.getUniqueId()));
         }
 
         this.leaderboardManager = new LeaderboardManager(this);
@@ -423,7 +423,7 @@ public final class ManiaHub extends JavaPlugin implements Listener, ManiaPlugin 
             }
         }.runTaskTimer(this, 1200, 1200);
 
-        ManiaCore.getInstance().getMemoryManager().addManiaPlugin(this);
+        CenturionsCore.getInstance().getMemoryManager().addManiaPlugin(this);
     }
 
     @Override
@@ -431,7 +431,7 @@ public final class ManiaHub extends JavaPlugin implements Listener, ManiaPlugin 
         leaderboardManager.saveData(true);
     }
 
-    public static ManiaHub getInstance() {
+    public static CenturionsHub getInstance() {
         return instance;
     }
 
@@ -440,27 +440,27 @@ public final class ManiaHub extends JavaPlugin implements Listener, ManiaPlugin 
         return getDescription().getVersion();
     }
 
-    public ManiaTask runTask(Runnable runnable) {
-        return new SpigotManiaTask(Bukkit.getScheduler().runTask(this, runnable));
+    public CenturionsTask runTask(Runnable runnable) {
+        return new SpigotCenturionsTask(Bukkit.getScheduler().runTask(this, runnable));
     }
 
-    public ManiaTask runTaskAsynchronously(Runnable runnable) {
-        return new SpigotManiaTask(Bukkit.getScheduler().runTaskAsynchronously(this, runnable));
+    public CenturionsTask runTaskAsynchronously(Runnable runnable) {
+        return new SpigotCenturionsTask(Bukkit.getScheduler().runTaskAsynchronously(this, runnable));
     }
 
-    public ManiaTask runTaskLater(Runnable runnable, long delay) {
-        return new SpigotManiaTask(Bukkit.getScheduler().runTaskLater(this, runnable, delay));
+    public CenturionsTask runTaskLater(Runnable runnable, long delay) {
+        return new SpigotCenturionsTask(Bukkit.getScheduler().runTaskLater(this, runnable, delay));
     }
 
-    public ManiaTask runTaskLaterAsynchronously(Runnable runnable, long delay) {
-        return new SpigotManiaTask(Bukkit.getScheduler().runTaskLaterAsynchronously(this, runnable, delay));
+    public CenturionsTask runTaskLaterAsynchronously(Runnable runnable, long delay) {
+        return new SpigotCenturionsTask(Bukkit.getScheduler().runTaskLaterAsynchronously(this, runnable, delay));
     }
 
-    public ManiaTask runTaskTimer(Runnable runnable, long delay, long period) {
-        return new SpigotManiaTask(Bukkit.getScheduler().runTaskTimer(this, runnable, delay, period));
+    public CenturionsTask runTaskTimer(Runnable runnable, long delay, long period) {
+        return new SpigotCenturionsTask(Bukkit.getScheduler().runTaskTimer(this, runnable, delay, period));
     }
 
-    public ManiaTask runTaskTimerAsynchronously(Runnable runnable, long delay, long period) {
-        return new SpigotManiaTask(Bukkit.getScheduler().runTaskTimerAsynchronously(this, runnable, delay, period));
+    public CenturionsTask runTaskTimerAsynchronously(Runnable runnable, long delay, long period) {
+        return new SpigotCenturionsTask(Bukkit.getScheduler().runTaskTimerAsynchronously(this, runnable, delay, period));
     }
 }

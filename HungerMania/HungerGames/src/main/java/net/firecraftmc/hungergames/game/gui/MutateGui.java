@@ -3,10 +3,10 @@ package net.firecraftmc.hungergames.game.gui;
 import net.firecraftmc.hungergames.HungerGames;
 import net.firecraftmc.hungergames.game.Game;
 import net.firecraftmc.hungergames.game.GamePlayer;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.stats.Stats;
 import net.firecraftmc.maniacore.api.user.User;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import net.firecraftmc.maniacore.spigot.gui.GUIButton;
 import net.firecraftmc.maniacore.spigot.gui.Gui;
 import net.firecraftmc.maniacore.spigot.mutations.Mutation;
@@ -112,10 +112,10 @@ public class MutateGui extends Gui {
             if (status == MutationStatus.AVAILABLE) {
                 for (Entry<MutationType, ItemStack> entry : items.entrySet()) {
                     setButton(availableCounter.get(), new GUIButton(entry.getValue()).setListener((e) -> {
-                        User user = ManiaCore.getInstance().getUserManager().getUser(e.getWhoClicked().getUniqueId());
+                        User user = CenturionsCore.getInstance().getUserManager().getUser(e.getWhoClicked().getUniqueId());
                         if (user.getStat(Stats.COINS).getAsInt() < Mutations.MUTATIONS.get(entry.getKey()).getUseCost()) {
                             e.getWhoClicked().closeInventory();
-                            e.getWhoClicked().sendMessage(ManiaUtils.color("&cYou do not have enough coins to use that mutation."));
+                            e.getWhoClicked().sendMessage(CenturionsUtils.color("&cYou do not have enough coins to use that mutation."));
                             return;
                         }
                         game.mutatePlayer(e.getWhoClicked().getUniqueId(), Mutations.MUTATIONS.get(entry.getKey()), target);
@@ -127,7 +127,7 @@ public class MutateGui extends Gui {
                 for (Entry<MutationType, ItemStack> entry : items.entrySet()) {
                     setButton(purchasableCounter.get(), new GUIButton(entry.getValue()).setListener(e -> {
                         if (e.getClick() == ClickType.RIGHT) {
-                            User user = ManiaCore.getInstance().getUserManager().getUser(e.getWhoClicked().getUniqueId());
+                            User user = CenturionsCore.getInstance().getUserManager().getUser(e.getWhoClicked().getUniqueId());
                             Mutation mutation = Mutations.MUTATIONS.get(entry.getKey());
                             if (user.getStat(Stats.COINS).getAsInt() >= mutation.getUnlockCost()) {
                                 user.getStat(Stats.COINS).setValue((user.getStat(Stats.COINS).getAsInt() - mutation.getUnlockCost()) + "");

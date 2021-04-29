@@ -1,7 +1,7 @@
 package net.firecraftmc.hungergames.game;
 
 import net.firecraftmc.hungergames.util.Messager;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.ranks.Rank;
 import net.firecraftmc.maniacore.api.user.User;
 import org.bukkit.Bukkit;
@@ -26,7 +26,7 @@ public class GameMessager extends Messager {
         for (UUID p : players) {
             Player player = Bukkit.getPlayer(p);
             if (player != null) {
-                User user = ManiaCore.getInstance().getUserManager().getUser(player.getUniqueId());
+                User user = CenturionsCore.getInstance().getUserManager().getUser(player.getUniqueId());
                 if (rank != null) {
                     if (user.hasPermission(rank)) {
                         user.sendMessage(message);

@@ -4,7 +4,7 @@ import net.firecraftmc.hungergames.HungerGames;
 import net.firecraftmc.hungergames.loot.DiamondLoot;
 import net.firecraftmc.hungergames.loot.Loot;
 import net.firecraftmc.hungergames.loot.LootManager;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import net.firecraftmc.manialib.util.Constants;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
@@ -16,7 +16,7 @@ public class ProbablityCmd implements CommandExecutor {
     
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (!(args.length > 0)) {
-            sender.sendMessage(ManiaUtils.color("&cYou must provide an item name or material type"));
+            sender.sendMessage(CenturionsUtils.color("&cYou must provide an item name or material type"));
             return true;
         }
 
@@ -54,13 +54,13 @@ public class ProbablityCmd implements CommandExecutor {
         }
         
         if (loot == null) {
-            sender.sendMessage(ManiaUtils.color("&cCannot find a loot table entry with the name " + rawName));
+            sender.sendMessage(CenturionsUtils.color("&cCannot find a loot table entry with the name " + rawName));
             return true;
         }
         
         double probability = ((loot.getWeight() * 1.0) / lootManager.getLootChances().size()) * 100.0D;
-        sender.sendMessage(ManiaUtils.color("&6&l>> &eYour probability of receiving &l" + loot.getName() + " &eis &b" + Constants.NUMBER_FORMAT.format(probability) + "%&e!"));
-        sender.sendMessage(ManiaUtils.color("&6&l>> &7(Or otherwise a &3" + loot.getWeight() + "&7/&3" + lootManager.getLootChances().size()));
+        sender.sendMessage(CenturionsUtils.color("&6&l>> &eYour probability of receiving &l" + loot.getName() + " &eis &b" + Constants.NUMBER_FORMAT.format(probability) + "%&e!"));
+        sender.sendMessage(CenturionsUtils.color("&6&l>> &7(Or otherwise a &3" + loot.getWeight() + "&7/&3" + lootManager.getLootChances().size()));
         return true;
     }
 }

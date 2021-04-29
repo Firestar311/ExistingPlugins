@@ -23,10 +23,10 @@ import net.firecraftmc.maniacore.api.user.IgnoreInfo;
 import net.firecraftmc.maniacore.api.user.User;
 import net.firecraftmc.maniacore.api.user.UserManager;
 import net.firecraftmc.maniacore.api.user.toggle.Toggle;
-import net.firecraftmc.maniacore.api.util.ManiaProperties;
+import net.firecraftmc.maniacore.api.util.CenturionsProperties;
 import net.firecraftmc.maniacore.memory.MemoryManager;
-import net.firecraftmc.maniacore.plugin.ManiaPlugin;
-import net.firecraftmc.manialib.ManiaLib;
+import net.firecraftmc.maniacore.plugin.CenturionsPlugin;
+import net.firecraftmc.manialib.CenturionsLib;
 import net.firecraftmc.manialib.data.DatabaseManager;
 import net.firecraftmc.manialib.data.model.DatabaseHandler;
 import net.firecraftmc.manialib.sql.Database;
@@ -35,18 +35,18 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.logging.Logger;
 
-public class ManiaCore implements DatabaseHandler {
+public class CenturionsCore implements DatabaseHandler {
 
     public static final Random RANDOM = new Random();
 
     private Database database;
 
-    private ManiaLib maniaLib;
-    private static ManiaCore instance;
+    private CenturionsLib centurionsLib;
+    private static CenturionsCore instance;
 
     private DatabaseManager databaseManager;
 
-    private net.firecraftmc.maniacore.plugin.ManiaPlugin plugin;
+    private CenturionsPlugin plugin;
 
     private net.firecraftmc.maniacore.api.user.UserManager userManager;
     private net.firecraftmc.maniacore.api.communication.MessageHandler messageHandler;
@@ -60,19 +60,19 @@ public class ManiaCore implements DatabaseHandler {
     private net.firecraftmc.maniacore.api.chat.ChatManager chatManager;
     private net.firecraftmc.maniacore.api.nickname.NicknameManager nicknameManager;
 
-    public void init(Logger logger, net.firecraftmc.maniacore.plugin.ManiaPlugin plugin) {
+    public void init(Logger logger, CenturionsPlugin plugin) {
         this.logger = logger;
         this.plugin = plugin;
         Properties databaseProperties = new Properties();
-        databaseProperties.setProperty("mysql-host", ManiaProperties.MYSQL_HOST);
-        databaseProperties.setProperty("mysql-port", ManiaProperties.MYSQL_PORT + "");
-        databaseProperties.setProperty("mysql-database", ManiaProperties.MYSQL_DATABASE);
-        databaseProperties.setProperty("mysql-username", ManiaProperties.MYSQL_USERNAME);
-        databaseProperties.setProperty("mysql-password", ManiaProperties.MYSQL_PASSWORD);
-        this.maniaLib = new ManiaLib(databaseProperties, logger);
-        this.database = maniaLib.getDatabase();
-        this.databaseManager = maniaLib.getDatabaseManager();
-        maniaLib.addDatabaseHandler(this);
+        databaseProperties.setProperty("mysql-host", CenturionsProperties.MYSQL_HOST);
+        databaseProperties.setProperty("mysql-port", CenturionsProperties.MYSQL_PORT + "");
+        databaseProperties.setProperty("mysql-database", CenturionsProperties.MYSQL_DATABASE);
+        databaseProperties.setProperty("mysql-username", CenturionsProperties.MYSQL_USERNAME);
+        databaseProperties.setProperty("mysql-password", CenturionsProperties.MYSQL_PASSWORD);
+        this.centurionsLib = new CenturionsLib(databaseProperties, logger);
+        this.database = centurionsLib.getDatabase();
+        this.databaseManager = centurionsLib.getDatabaseManager();
+        centurionsLib.addDatabaseHandler(this);
         this.database.registerRecordType(net.firecraftmc.maniacore.api.records.UserRecord.class);
         this.database.registerRecordType(net.firecraftmc.maniacore.api.records.ChatEntryRecord.class);
         this.database.registerRecordType(net.firecraftmc.maniacore.api.records.CmdEntryRecord.class);
@@ -110,7 +110,7 @@ public class ManiaCore implements DatabaseHandler {
         this.eventManager.loadData();
 
         this.friendsManager = new net.firecraftmc.maniacore.api.friends.FriendsManager();
-        plugin.runTaskLater(() -> maniaLib.init(), 1L);
+        plugin.runTaskLater(() -> centurionsLib.init(), 1L);
 
         this.chatManager = new net.firecraftmc.maniacore.api.chat.ChatManager();
         this.chatManager.setFormatter(net.firecraftmc.maniacore.api.channel.Channel.GLOBAL, new net.firecraftmc.maniacore.api.chat.ChatFormatter(net.firecraftmc.maniacore.api.chat.ChatFormatter.LEVEL_FORMAT + " " + net.firecraftmc.maniacore.api.chat.ChatFormatter.PLAYER_NAME_FORMAT + "&8: &r" + net.firecraftmc.maniacore.api.chat.ChatFormatter.MESSAGE_FORMAT));
@@ -122,7 +122,7 @@ public class ManiaCore implements DatabaseHandler {
     }
 
     public void registerRecordTypes() {
-        this.databaseManager.registerRecordClasses(maniaLib.getMysqlDatabase(), User.class, ChatEntry.class, CmdEntry.class, Skin.class, Level.class, IgnoreInfo.class, Statistic.class,
+        this.databaseManager.registerRecordClasses(centurionsLib.getMysqlDatabase(), User.class, ChatEntry.class, CmdEntry.class, Skin.class, Level.class, IgnoreInfo.class, Statistic.class,
                 FriendRequest.class, Friendship.class, FriendNotification.class, Toggle.class);
     }
 
@@ -151,12 +151,12 @@ public class ManiaCore implements DatabaseHandler {
         return userManager;
     }
 
-    public static ManiaCore getInstance() {
+    public static CenturionsCore getInstance() {
         return instance;
     }
 
-    public static void setInstance(ManiaCore instance) {
-        ManiaCore.instance = instance;
+    public static void setInstance(CenturionsCore instance) {
+        CenturionsCore.instance = instance;
     }
 
     public net.firecraftmc.maniacore.api.server.ServerManager getServerManager() {
@@ -188,11 +188,11 @@ public class ManiaCore implements DatabaseHandler {
         return eventManager;
     }
 
-    public void setPlugin(net.firecraftmc.maniacore.plugin.ManiaPlugin plugin) {
+    public void setPlugin(CenturionsPlugin plugin) {
         this.plugin = plugin;
     }
 
-    public ManiaPlugin getPlugin() {
+    public CenturionsPlugin getPlugin() {
         return plugin;
     }
 

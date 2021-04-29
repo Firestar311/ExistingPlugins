@@ -6,7 +6,7 @@ import net.firecraftmc.hungergames.records.GameRecord;
 import net.firecraftmc.hungergames.scoreboard.GameBoard;
 import net.firecraftmc.hungergames.game.Game;
 import net.firecraftmc.hungergames.game.GamePlayer;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.ranks.Rank;
 import net.firecraftmc.maniacore.api.user.User;
 import net.firecraftmc.maniacore.api.util.State;
@@ -123,7 +123,7 @@ public class GameTask extends BukkitRunnable {
                         }
                     }
 
-                    List<IRecord> gamesWithMap = HungerGames.getInstance().getManiaCore().getDatabase().getRecords(GameRecord.class, "mapName", game.getMap().getName());
+                    List<IRecord> gamesWithMap = HungerGames.getInstance().getCenturionsCore().getDatabase().getRecords(GameRecord.class, "mapName", game.getMap().getName());
                     int timesPlayed = 0;
                     long lastWeekStart = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(7);
                     for (IRecord record : gamesWithMap) {
@@ -354,7 +354,7 @@ public class GameTask extends BukkitRunnable {
         long totalTime = task.getEnd() - task.getStart();
         if (totalTime > 40) {
             for (Player player : Bukkit.getOnlinePlayers()) {
-                User user = ManiaCore.getInstance().getUserManager().getUser(player.getUniqueId());
+                User user = CenturionsCore.getInstance().getUserManager().getUser(player.getUniqueId());
                 if (user.hasPermission(Rank.ADMIN)) {
                     user.sendMessage("&8Game task took " + totalTime + " milliseconds");
                 }

@@ -1,23 +1,28 @@
 package net.firecraftmc.maniacore.api.records;
 
 import net.firecraftmc.maniacore.api.region.Region;
+import net.firecraftmc.manialib.sql.Column;
+import net.firecraftmc.manialib.sql.DataType;
+import net.firecraftmc.manialib.sql.Database;
+import net.firecraftmc.manialib.sql.IRecord;
+import net.firecraftmc.manialib.sql.Row;
 import net.firecraftmc.manialib.sql.Table;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class RegionRecord implements net.firecraftmc.manialib.sql.IRecord<Region> {
+public class RegionRecord implements IRecord<Region> {
     
-    public static net.firecraftmc.manialib.sql.Table generateTable(net.firecraftmc.manialib.sql.Database database) {
-        net.firecraftmc.manialib.sql.Table table = new Table(database, "region");
-        net.firecraftmc.manialib.sql.Column id = new net.firecraftmc.manialib.sql.Column("id", net.firecraftmc.manialib.sql.DataType.INT, true, true);
-        net.firecraftmc.manialib.sql.Column world = new net.firecraftmc.manialib.sql.Column("world", net.firecraftmc.manialib.sql.DataType.VARCHAR, 30, false, false);
-        net.firecraftmc.manialib.sql.Column xMin = new net.firecraftmc.manialib.sql.Column("xMin", net.firecraftmc.manialib.sql.DataType.INT, false, false);
-        net.firecraftmc.manialib.sql.Column yMin = new net.firecraftmc.manialib.sql.Column("yMin", net.firecraftmc.manialib.sql.DataType.INT, false, false);
-        net.firecraftmc.manialib.sql.Column zMin = new net.firecraftmc.manialib.sql.Column("zMin", net.firecraftmc.manialib.sql.DataType.INT, false, false);
-        net.firecraftmc.manialib.sql.Column xMax = new net.firecraftmc.manialib.sql.Column("xMax", net.firecraftmc.manialib.sql.DataType.INT, false, false);
-        net.firecraftmc.manialib.sql.Column yMax = new net.firecraftmc.manialib.sql.Column("yMax", net.firecraftmc.manialib.sql.DataType.INT, false, false);
-        net.firecraftmc.manialib.sql.Column zMax = new net.firecraftmc.manialib.sql.Column("zMax", net.firecraftmc.manialib.sql.DataType.INT, false, false);
+    public static Table generateTable(Database database) {
+        Table table = new Table(database, "region");
+        Column id = new Column("id", DataType.INT, true, true);
+        Column world = new Column("world", DataType.VARCHAR, 30, false, false);
+        Column xMin = new Column("xMin", DataType.INT, false, false);
+        Column yMin = new Column("yMin", DataType.INT, false, false);
+        Column zMin = new Column("zMin", DataType.INT, false, false);
+        Column xMax = new Column("xMax", DataType.INT, false, false);
+        Column yMax = new Column("yMax", DataType.INT, false, false);
+        Column zMax = new Column("zMax", DataType.INT, false, false);
         
         table.addColumns(id, world, xMin, yMin, zMin, xMax, yMax, zMax);
         return table;
@@ -29,7 +34,7 @@ public class RegionRecord implements net.firecraftmc.manialib.sql.IRecord<Region
         this.region = region;
     }
     
-    public RegionRecord(net.firecraftmc.manialib.sql.Row row) {
+    public RegionRecord(Row row) {
         int id = row.getInt("id");
         String world = row.getString("world");
         int xMin = row.getInt("xMin");

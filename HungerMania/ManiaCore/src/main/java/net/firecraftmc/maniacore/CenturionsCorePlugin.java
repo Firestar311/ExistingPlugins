@@ -2,7 +2,7 @@ package net.firecraftmc.maniacore;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.chat.ChatHandler;
 import net.firecraftmc.maniacore.api.ranks.Rank;
 import net.firecraftmc.maniacore.api.ranks.RankRedisListener;
@@ -10,8 +10,8 @@ import net.firecraftmc.maniacore.api.records.SkinRecord;
 import net.firecraftmc.maniacore.api.redis.Redis;
 import net.firecraftmc.maniacore.api.skin.Skin;
 import net.firecraftmc.maniacore.api.user.User;
-import net.firecraftmc.maniacore.plugin.ManiaPlugin;
-import net.firecraftmc.maniacore.plugin.ManiaTask;
+import net.firecraftmc.maniacore.plugin.CenturionsPlugin;
+import net.firecraftmc.maniacore.plugin.CenturionsTask;
 import net.firecraftmc.maniacore.spigot.anticheat.SpartanManager;
 import net.firecraftmc.maniacore.spigot.cmd.NicknameCmd;
 import net.firecraftmc.maniacore.spigot.cmd.SpawnCmd;
@@ -22,13 +22,13 @@ import net.firecraftmc.maniacore.spigot.map.Spawn;
 import net.firecraftmc.maniacore.spigot.perks.PerkInfo;
 import net.firecraftmc.maniacore.spigot.perks.PerkInfoRecord;
 import net.firecraftmc.maniacore.spigot.perks.Perks;
-import net.firecraftmc.maniacore.spigot.plugin.SpigotManiaTask;
+import net.firecraftmc.maniacore.spigot.plugin.SpigotCenturionsTask;
 import net.firecraftmc.maniacore.spigot.server.SpigotServerManager;
 import net.firecraftmc.maniacore.spigot.updater.Updater;
 import net.firecraftmc.maniacore.spigot.user.FriendsRedisListener;
 import net.firecraftmc.maniacore.spigot.user.SpigotUserManager;
 import net.firecraftmc.maniacore.spigot.util.Spawnpoint;
-import net.firecraftmc.manialib.ManiaLib;
+import net.firecraftmc.manialib.CenturionsLib;
 import net.firecraftmc.manialib.sql.Database;
 import net.firecraftmc.manialib.util.Priority;
 import org.bukkit.Bukkit;
@@ -44,9 +44,9 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public final class ManiaCorePlugin extends JavaPlugin implements Listener, ManiaPlugin {
+public final class CenturionsCorePlugin extends JavaPlugin implements Listener, CenturionsPlugin {
     
-    private net.firecraftmc.maniacore.api.ManiaCore maniaCore;
+    private CenturionsCore centurionsCore;
     
     static {
         ConfigurationSerialization.registerClass(Spawnpoint.class);
@@ -58,17 +58,17 @@ public final class ManiaCorePlugin extends JavaPlugin implements Listener, Mania
     
     @Override
     public void onEnable() {
-        net.firecraftmc.maniacore.api.ManiaCore.setInstance(this.maniaCore = new net.firecraftmc.maniacore.api.ManiaCore());
-        maniaCore.init(getLogger(), this);
-        maniaCore.setLogger(getLogger());
+        CenturionsCore.setInstance(this.centurionsCore = new CenturionsCore());
+        centurionsCore.init(getLogger(), this);
+        centurionsCore.setLogger(getLogger());
         this.saveDefaultConfig();
         runTask(() -> {
             //This makes sure that there is a user manager registered after the server has finished loading
-            if (maniaCore.getUserManager() == null) {
+            if (centurionsCore.getUserManager() == null) {
                 net.firecraftmc.maniacore.spigot.user.SpigotUserManager userManager = new net.firecraftmc.maniacore.spigot.user.SpigotUserManager(this);
-                maniaCore.setUserManager(userManager);
+                centurionsCore.setUserManager(userManager);
             }
-            getServer().getPluginManager().registerEvents((net.firecraftmc.maniacore.spigot.user.SpigotUserManager) maniaCore.getUserManager(), this);
+            getServer().getPluginManager().registerEvents((net.firecraftmc.maniacore.spigot.user.SpigotUserManager) centurionsCore.getUserManager(), this);
         });
         
         getServer().getPluginManager().registerEvents(new SpartanManager(), this);
@@ -104,11 +104,11 @@ public final class ManiaCorePlugin extends JavaPlugin implements Listener, Mania
             }
         }.runTaskTimerAsynchronously(this, 6000, 6000);
 
-        maniaCore.setMessageHandler(new SpigotMessageHandler(this));
+        centurionsCore.setMessageHandler(new SpigotMessageHandler(this));
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         
         net.firecraftmc.maniacore.memory.MemoryHook playerUpdate = new net.firecraftmc.maniacore.memory.MemoryHook("Core Player Update");
-        net.firecraftmc.maniacore.api.ManiaCore.getInstance().getMemoryManager().addMemoryHook(playerUpdate);
+        CenturionsCore.getInstance().getMemoryManager().addMemoryHook(playerUpdate);
         new BukkitRunnable() {
             public void run() {
                 net.firecraftmc.maniacore.memory.MemoryHook.Task task = playerUpdate.task().start();
@@ -129,7 +129,7 @@ public final class ManiaCorePlugin extends JavaPlugin implements Listener, Mania
                         }
 
                         for (Player p : Bukkit.getOnlinePlayers()) {
-                            User user = maniaCore.getUserManager().getUser(p.getUniqueId());
+                            User user = centurionsCore.getUserManager().getUser(p.getUniqueId());
                             Rank rank = user.getRank();
                             String name = user.getName();
                             if (user.getNickname().isActive()) {
@@ -170,13 +170,13 @@ public final class ManiaCorePlugin extends JavaPlugin implements Listener, Mania
                 task.end();
             }
         }.runTaskTimer(this, 20L, 20L);
-        maniaCore.getMemoryManager().addManiaPlugin(this);
+        centurionsCore.getMemoryManager().addManiaPlugin(this);
         
-        this.runTaskLater(() -> maniaCore.getServerManager().sendServerStart(getManiaCore().getServerManager().getCurrentServer().getName()), 1L);
+        this.runTaskLater(() -> centurionsCore.getServerManager().sendServerStart(getCenturionsCore().getServerManager().getCurrentServer().getName()), 1L);
         this.runTaskTimer(new Updater(this), 1L, 1L);
         Perks.PERKS.size();
         
-        net.firecraftmc.maniacore.api.ManiaCore.getInstance().getChatManager().registerHandler(this, new ChatHandler() {
+        CenturionsCore.getInstance().getChatManager().registerHandler(this, new ChatHandler() {
             public Set<UUID> getAllTargets() {
                 Set<UUID> targets = new HashSet<>();
                 for (Player player : Bukkit.getOnlinePlayers()) {
@@ -193,16 +193,16 @@ public final class ManiaCorePlugin extends JavaPlugin implements Listener, Mania
         }
     }
     
-    public net.firecraftmc.maniacore.api.ManiaCore getManiaCore() {
-        return maniaCore;
+    public CenturionsCore getCenturionsCore() {
+        return centurionsCore;
     }
 
     public void registerRecordTypes() {
-        ManiaLib.getInstance().getDatabaseManager().registerRecordClasses(ManiaLib.getInstance().getMysqlDatabase(), PerkInfo.class, GameMap.class, Spawn.class);
+        CenturionsLib.getInstance().getDatabaseManager().registerRecordClasses(CenturionsLib.getInstance().getMysqlDatabase(), PerkInfo.class, GameMap.class, Spawn.class);
     }
 
     public void setupDatabaseRecords() {
-        net.firecraftmc.maniacore.api.ManiaCore.getInstance().getDatabase().registerRecordType(PerkInfoRecord.class);
+        CenturionsCore.getInstance().getDatabase().registerRecordType(PerkInfoRecord.class);
     }
 
     public void setupRedisListeners() {
@@ -211,28 +211,28 @@ public final class ManiaCorePlugin extends JavaPlugin implements Listener, Mania
     }
 
     public void setupUserManager() {
-        maniaCore.setUserManager(new SpigotUserManager(this));
+        centurionsCore.setUserManager(new SpigotUserManager(this));
     }
 
     public void setupServerManager() {
-        net.firecraftmc.maniacore.api.ManiaCore.getInstance().setServerManager(new SpigotServerManager(maniaCore));
-        ManiaCore.getInstance().getServerManager().init();
+        CenturionsCore.getInstance().setServerManager(new SpigotServerManager(centurionsCore));
+        CenturionsCore.getInstance().getServerManager().init();
     }
 
     @Override
     public void onDisable() {
-        //ManiaCore.getInstance().getServerManager().sendServerStop(getManiaCore().getServerManager().getCurrentServer().getName());
-        for (Skin skin : getManiaCore().getSkinManager().getSkins()) {
-            maniaCore.getDatabase().addRecordToQueue(new SkinRecord(skin));
+        //CenturionsCore.getInstance().getServerManager().sendServerStop(getCenturionsCore().getServerManager().getCurrentServer().getName());
+        for (Skin skin : getCenturionsCore().getSkinManager().getSkins()) {
+            centurionsCore.getDatabase().addRecordToQueue(new SkinRecord(skin));
         }
         
         getConfig().set("spawnpoint", spawnpoint);
-        this.maniaCore.getDatabase().pushQueue();
+        this.centurionsCore.getDatabase().pushQueue();
         saveConfig();
     }
     
     public Database getManiaDatabase() {
-        return maniaCore.getDatabase();
+        return centurionsCore.getDatabase();
     }
     
     @Override
@@ -240,27 +240,27 @@ public final class ManiaCorePlugin extends JavaPlugin implements Listener, Mania
         return getDescription().getVersion();
     }
     
-    public net.firecraftmc.maniacore.plugin.ManiaTask runTask(Runnable runnable) {
-        return new net.firecraftmc.maniacore.spigot.plugin.SpigotManiaTask(Bukkit.getScheduler().runTask(this, runnable));
+    public CenturionsTask runTask(Runnable runnable) {
+        return new SpigotCenturionsTask(Bukkit.getScheduler().runTask(this, runnable));
     }
     
-    public net.firecraftmc.maniacore.plugin.ManiaTask runTaskAsynchronously(Runnable runnable) {
-        return new net.firecraftmc.maniacore.spigot.plugin.SpigotManiaTask(Bukkit.getScheduler().runTaskAsynchronously(this, runnable));
+    public CenturionsTask runTaskAsynchronously(Runnable runnable) {
+        return new SpigotCenturionsTask(Bukkit.getScheduler().runTaskAsynchronously(this, runnable));
     }
     
-    public net.firecraftmc.maniacore.plugin.ManiaTask runTaskLater(Runnable runnable, long delay) {
-        return new net.firecraftmc.maniacore.spigot.plugin.SpigotManiaTask(Bukkit.getScheduler().runTaskLater(this, runnable, delay));
+    public CenturionsTask runTaskLater(Runnable runnable, long delay) {
+        return new SpigotCenturionsTask(Bukkit.getScheduler().runTaskLater(this, runnable, delay));
     }
     
-    public net.firecraftmc.maniacore.plugin.ManiaTask runTaskLaterAsynchronously(Runnable runnable, long delay) {
-        return new net.firecraftmc.maniacore.spigot.plugin.SpigotManiaTask(Bukkit.getScheduler().runTaskLaterAsynchronously(this, runnable, delay));
+    public CenturionsTask runTaskLaterAsynchronously(Runnable runnable, long delay) {
+        return new SpigotCenturionsTask(Bukkit.getScheduler().runTaskLaterAsynchronously(this, runnable, delay));
     }
     
-    public net.firecraftmc.maniacore.plugin.ManiaTask runTaskTimer(Runnable runnable, long delay, long period) {
-        return new net.firecraftmc.maniacore.spigot.plugin.SpigotManiaTask(Bukkit.getScheduler().runTaskTimer(this, runnable, delay, period));
+    public CenturionsTask runTaskTimer(Runnable runnable, long delay, long period) {
+        return new SpigotCenturionsTask(Bukkit.getScheduler().runTaskTimer(this, runnable, delay, period));
     }
     
-    public ManiaTask runTaskTimerAsynchronously(Runnable runnable, long delay, long period) {
-        return new SpigotManiaTask(Bukkit.getScheduler().runTaskTimerAsynchronously(this, runnable, delay, period));
+    public CenturionsTask runTaskTimerAsynchronously(Runnable runnable, long delay, long period) {
+        return new SpigotCenturionsTask(Bukkit.getScheduler().runTaskTimerAsynchronously(this, runnable, delay, period));
     }
 }

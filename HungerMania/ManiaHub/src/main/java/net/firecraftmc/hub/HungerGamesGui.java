@@ -4,7 +4,7 @@ import cloud.timo.TimoCloud.api.TimoCloudAPI;
 import cloud.timo.TimoCloud.api.objects.PlayerObject;
 import cloud.timo.TimoCloud.api.objects.ServerGroupObject;
 import cloud.timo.TimoCloud.api.objects.ServerObject;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import net.firecraftmc.maniacore.spigot.gui.GUIButton;
 import net.firecraftmc.maniacore.spigot.gui.Gui;
 import net.firecraftmc.maniacore.spigot.util.ItemBuilder;
@@ -21,7 +21,7 @@ public class HungerGamesGui extends Gui {
 
     private static final ServerGroupObject HG_GROUP = TimoCloudAPI.getUniversalAPI().getServerGroup("HG");
 
-    public HungerGamesGui(ManiaHub plugin) {
+    public HungerGamesGui(CenturionsHub plugin) {
         super(plugin, "&3&lHUNGER GAMES &8- &rServer Select", false, 54);
         Map<Integer, ItemStack> serverStacks = new TreeMap<>();
         int onlinePlayers = 0, maximumPlayers = 0;
@@ -51,7 +51,7 @@ public class HungerGamesGui extends Gui {
                 }
 
                 lore.add("");
-                lore.add(ManiaUtils.color("&d&lStatus &f" + server.getState()));
+                lore.add(CenturionsUtils.color("&d&lStatus &f" + server.getState()));
                 String time = "", map = "";
                 String extra = server.getExtra();
                 if (extra != null && !extra.isEmpty()) {
@@ -69,19 +69,19 @@ public class HungerGamesGui extends Gui {
                         }
                     }
                 }
-                lore.add(ManiaUtils.color("&d&lMap &f" + map));
-                lore.add(ManiaUtils.color("&d&lTime &f" + time));
+                lore.add(CenturionsUtils.color("&d&lMap &f" + map));
+                lore.add(CenturionsUtils.color("&d&lTime &f" + time));
                 lore.add("");
-                lore.add(ManiaUtils.color("&3&l" + server.getOnlinePlayerCount() + "/" + server.getMaxPlayerCount()));
+                lore.add(CenturionsUtils.color("&3&l" + server.getOnlinePlayerCount() + "/" + server.getMaxPlayerCount()));
             } else if (server.getState().equalsIgnoreCase("starting")) {
                 itemMaterial = Material.DIAMOND_BLOCK;
-                lore.addAll(Arrays.asList("", ManiaUtils.color("&c&lSERVER IS STARTING")));
+                lore.addAll(Arrays.asList("", CenturionsUtils.color("&c&lSERVER IS STARTING")));
             } else if (server.getState().equalsIgnoreCase("restarting")) {
                 itemMaterial = Material.REDSTONE_BLOCK;
-                lore.addAll(Arrays.asList("", ManiaUtils.color("&c&lSERVER IS RESTARTING")));
+                lore.addAll(Arrays.asList("", CenturionsUtils.color("&c&lSERVER IS RESTARTING")));
             } else {
                 itemMaterial = Material.BEDROCK;
-                lore.addAll(Arrays.asList("", ManiaUtils.color("&c&lSERVER IS OFFLINE")));
+                lore.addAll(Arrays.asList("", CenturionsUtils.color("&c&lSERVER IS OFFLINE")));
             }
 
             ItemStack itemStack = new ItemStack(itemMaterial);
@@ -91,7 +91,7 @@ public class HungerGamesGui extends Gui {
 
             ItemMeta itemMeta = itemStack.getItemMeta();
             int number = Integer.parseInt(server.getName().split("-")[1]);
-            itemMeta.setDisplayName(ManiaUtils.color("&a&lSERVER " + number));
+            itemMeta.setDisplayName(CenturionsUtils.color("&a&lSERVER " + number));
             itemMeta.setLore(lore);
             itemStack.setItemMeta(itemMeta);
             try {
@@ -136,7 +136,7 @@ public class HungerGamesGui extends Gui {
             }
 
             if (bestServer == null) {
-                player.sendMessage(ManiaUtils.color("&cCould not find the best server to join!"));
+                player.sendMessage(CenturionsUtils.color("&cCould not find the best server to join!"));
             } else {
                 playerObject.sendToServer(bestServer);
             }

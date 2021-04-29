@@ -5,12 +5,12 @@ import net.firecraftmc.maniacore.api.events.EventInfo;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class ManiaEventStatusChange extends Event {
+public class CenturionsEventStatusChange extends Event {
     
     private static final HandlerList handlers = new HandlerList();
     @Getter private EventInfo eventInfo;
     
-    public ManiaEventStatusChange(EventInfo eventInfo) {
+    public CenturionsEventStatusChange(EventInfo eventInfo) {
         super();
         this.eventInfo = eventInfo;
     }

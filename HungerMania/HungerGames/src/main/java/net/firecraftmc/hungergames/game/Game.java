@@ -23,13 +23,13 @@ import net.firecraftmc.hungergames.scoreboard.GameBoard;
 import net.firecraftmc.hungergames.settings.GameSettings;
 import net.firecraftmc.hungergames.util.Messager;
 import net.firecraftmc.hungergames.map.HGMap;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.ranks.Rank;
 import net.firecraftmc.maniacore.api.redis.Redis;
 import net.firecraftmc.maniacore.api.stats.Statistic;
 import net.firecraftmc.maniacore.api.stats.Stats;
 import net.firecraftmc.maniacore.api.user.User;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import net.firecraftmc.maniacore.api.util.Position;
 import net.firecraftmc.maniacore.api.util.State;
 import net.firecraftmc.maniacore.memory.MemoryHook;
@@ -176,7 +176,7 @@ public class Game implements IRecord {
         this.playerTrackerTask = new PlayerTrackerTask(this);
 
         MemoryHook spectatorUpdate = new MemoryHook("Game Spectator Update");
-        ManiaCore.getInstance().getMemoryManager().addMemoryHook(spectatorUpdate);
+        CenturionsCore.getInstance().getMemoryManager().addMemoryHook(spectatorUpdate);
         HungerGames plugin = HungerGames.getInstance();
         new BukkitRunnable() {
             public void run() {
@@ -196,7 +196,7 @@ public class Game implements IRecord {
         }.runTaskTimer(HungerGames.getInstance(), 20L, 20L);
 
         MemoryHook endermanDamage = new MemoryHook("Enderman Mutation Damage");
-        ManiaCore.getInstance().getMemoryManager().addMemoryHook(endermanDamage);
+        CenturionsCore.getInstance().getMemoryManager().addMemoryHook(endermanDamage);
         new BukkitRunnable() {
             public void run() {
                 if (archived)
@@ -233,8 +233,8 @@ public class Game implements IRecord {
                     for (UUID member : members) {
                         Player player = Bukkit.getPlayer(member);
                         player.sendMessage("");
-                        player.sendMessage(ManiaUtils.color("&6&l>> &eYou might be out of the game, but &f&lDON'T QUIT&e!"));
-                        player.sendMessage(ManiaUtils.color("&6&l>> &eAnother game will be &f&lSTARTING SOON&e!"));
+                        player.sendMessage(CenturionsUtils.color("&6&l>> &eYou might be out of the game, but &f&lDON'T QUIT&e!"));
+                        player.sendMessage(CenturionsUtils.color("&6&l>> &eAnother game will be &f&lSTARTING SOON&e!"));
                         ComponentBuilder builder = new ComponentBuilder(">>").color(net.md_5.bungee.api.ChatColor.GOLD).bold(true)
                                 .append(" Or, ").color(net.md_5.bungee.api.ChatColor.YELLOW).append("CLICK HERE").color(net.md_5.bungee.api.ChatColor.WHITE).event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/nextgame")).bold(true)
                                 .append(" to go to the next available game.").color(net.md_5.bungee.api.ChatColor.YELLOW);
@@ -257,7 +257,7 @@ public class Game implements IRecord {
 
         messager = new GameMessager(this);
         
-        if (ManiaCore.RANDOM.nextInt(1000) < 2) {
+        if (CenturionsCore.RANDOM.nextInt(1000) < 2) {
             this.diamondSpecial = true;
         }
     }
@@ -348,7 +348,7 @@ public class Game implements IRecord {
             UUID mutation = mutationIterator.next();
             resetMutation(mutation);
             Player player = Bukkit.getPlayer(mutation);
-            player.sendMessage(ManiaUtils.color("&d&l<< &7You left &dMutations"));
+            player.sendMessage(CenturionsUtils.color("&d&l<< &7You left &dMutations"));
             spectatorsTeam.join(mutation);
             mutationIterator.remove();
         }
@@ -362,7 +362,7 @@ public class Game implements IRecord {
     public void resetMutation(UUID mutation) {
         Player player = Bukkit.getPlayer(mutation);
         player.getInventory().clear();
-        User user = ManiaCore.getInstance().getUserManager().getUser(player.getUniqueId());
+        User user = CenturionsCore.getInstance().getUserManager().getUser(player.getUniqueId());
         user.getStat(Stats.COINS).setValue(user.getStat(Stats.COINS).getAsInt() + 100);
         try {
             player.getInventory().setArmorContents(null);
@@ -385,7 +385,7 @@ public class Game implements IRecord {
 
             for (UUID u : players) {
                 Player player = Bukkit.getPlayer(u);
-                player.sendMessage(ManiaUtils.color("&4&l>> &c&lTHE SERVER WILL RESTART AFTER THIS GAME FOR CLEANUP!"));
+                player.sendMessage(CenturionsUtils.color("&4&l>> &c&lTHE SERVER WILL RESTART AFTER THIS GAME FOR CLEANUP!"));
             }
         }
     }
@@ -457,24 +457,24 @@ public class Game implements IRecord {
 
     public GameResult forceAddPlayer(GamePlayer gamePlayer, CommandSender sender) {
         if (gamePlayer.isSpectatorByDeath()) {
-            sender.sendMessage(ManiaUtils.color("&cThat player was a tribute originally. Please use the command /hungergames revive instead."));
+            sender.sendMessage(CenturionsUtils.color("&cThat player was a tribute originally. Please use the command /hungergames revive instead."));
             return GameResult.WAS_TRIBUTE;
         }
 
         if (!(getState() == State.PLAYING || getState() == State.PLAYING_DEATHMATCH || getState() == State.COUNTDOWN)) {
-            sender.sendMessage(ManiaUtils.color("&cInvalid game state to add a tribute."));
+            sender.sendMessage(CenturionsUtils.color("&cInvalid game state to add a tribute."));
             return GameResult.INVALID_STATE;
         }
 
         spectatorsTeam.leave(gamePlayer.getUniqueId());
         tributesTeam.join(gamePlayer.getUniqueId());
         if (!tributesTeam.isMember(gamePlayer.getUniqueId())) {
-            sender.sendMessage(ManiaUtils.color("&cThere was a problem finding a spawn for that player. They were set as a spectator as a result."));
+            sender.sendMessage(CenturionsUtils.color("&cThere was a problem finding a spawn for that player. They were set as a spectator as a result."));
             return GameResult.SPAWN_ERROR;
         } else {
             String senderName;
             if (sender instanceof Player) {
-                SpigotUser user = (SpigotUser) ManiaCore.getInstance().getUserManager().getUser(((Player) sender).getUniqueId());
+                SpigotUser user = (SpigotUser) CenturionsCore.getInstance().getUserManager().getUser(((Player) sender).getUniqueId());
                 senderName = user.getColoredName();
             } else {
                 senderName = "&4&lCONSOLE";
@@ -518,7 +518,7 @@ public class Game implements IRecord {
         for (UUID tribute : this.tributesTeam) {
             GamePlayer player = this.players.get(tribute);
             player.getUser().incrementStat(Stats.HG_DEATHMATCHES);
-            User user = HungerGames.getInstance().getManiaCore().getUserManager().getUser(tribute);
+            User user = HungerGames.getInstance().getCenturionsCore().getUserManager().getUser(tribute);
             Pair<Integer, String> result = user.addCoins(50, gameSettings.isCoinMultiplier());
             player.setEarnedCoins(player.getEarnedCoins() + result.getValue1());
             user.sendMessage("&2&l>> &a+" + result.getValue1() + " &3COINS&a! " + result.getValue2());
@@ -555,7 +555,7 @@ public class Game implements IRecord {
                 Player player = Bukkit.getPlayer(winner);
                 GamePlayer gamePlayer = this.players.get(player.getUniqueId());
                 gamePlayer.getUser().incrementStat(Stats.HG_WINS);
-                User user = HungerGames.getInstance().getManiaCore().getUserManager().getUser(player.getUniqueId());
+                User user = HungerGames.getInstance().getCenturionsCore().getUserManager().getUser(player.getUniqueId());
                 Pair<Integer, String> result = user.addCoins(100, gameSettings.isCoinMultiplier());
                 gamePlayer.setEarnedCoins(gamePlayer.getEarnedCoins() + result.getValue1());
                 user.sendMessage("&2&l>> &a+" + result.getValue1() + " &3COINS&a! " + result.getValue2());
@@ -573,7 +573,7 @@ public class Game implements IRecord {
             sendMessage("");
             sendMessage("");
 
-            HungerGames.getInstance().getManiaCore().getDatabase().addRecordToQueue(new GameRecord(this));
+            HungerGames.getInstance().getCenturionsCore().getDatabase().addRecordToQueue(new GameRecord(this));
             for (GamePlayer gp : this.players.values()) {
                 if (!gp.getUser().getUniqueId().equals(winner)) {
                     gp.getUser().getStat(Stats.HG_WINSTREAK).setValue(0);
@@ -585,10 +585,10 @@ public class Game implements IRecord {
                 Redis.pushUser(gp.getUser());
                 gp.getUser().setScoreboard(null);
             }
-            HungerGames.getInstance().getManiaCore().getDatabase().pushQueue();
+            HungerGames.getInstance().getCenturionsCore().getDatabase().pushQueue();
             HungerGames.getInstance().getGameManager().setGameCounter(HungerGames.getInstance().getGameManager().getGameCounter() + 1);
-            ManiaCore.getInstance().getMemoryManager().removeMemoryHook("Game Spectator Update");
-            ManiaCore.getInstance().getMemoryManager().removeMemoryHook("Enderman Mutation Damage");
+            CenturionsCore.getInstance().getMemoryManager().removeMemoryHook("Game Spectator Update");
+            CenturionsCore.getInstance().getMemoryManager().removeMemoryHook("Enderman Mutation Damage");
         }
     }
     
@@ -605,7 +605,7 @@ public class Game implements IRecord {
 
         List<SponsorItem> possibleItems = new LinkedList<>(this.sponsorManager.getSponsorItems().get(type));
         Collections.shuffle(possibleItems);
-        SponsorItem chosen = possibleItems.get(ManiaCore.RANDOM.nextInt(possibleItems.size()));
+        SponsorItem chosen = possibleItems.get(CenturionsCore.RANDOM.nextInt(possibleItems.size()));
         target.getUser().getBukkitPlayer().getInventory().addItem(chosen.getItemStack());
         //TODO Nickname support, maybe just add a getDisplayName in GamePlayer that accounts for team name color and nicknames
         sendMessage("&6&l>> &a" + target.getUser().getName() + "&a was &lSPONSORED&a a(n) &l" + type.getName() + "&a by " + actor.getUser().getName() + "&a!");
@@ -761,7 +761,7 @@ public class Game implements IRecord {
                 killerName += killer.getUser().getName();
             }
             if (firstKiller == null) {
-                sendMessage("&6&l>> &c&l" + (ChatColor.stripColor(ManiaUtils.color(killerName)) + " drew first blood!").toUpperCase());
+                sendMessage("&6&l>> &c&l" + (ChatColor.stripColor(CenturionsUtils.color(killerName)) + " drew first blood!").toUpperCase());
                 playSound(Sound.WOLF_HOWL);
                 this.firstKiller = killer.getUniqueId();
                 experience += 15;
@@ -919,7 +919,7 @@ public class Game implements IRecord {
                     }
 
                     if (spawn == -1) {
-                        spawn = ManiaCore.RANDOM.nextInt(spawns.size());
+                        spawn = CenturionsCore.RANDOM.nextInt(spawns.size());
                     }
 
                     Position position = map.getSpawns().get(spawn);
@@ -1096,7 +1096,7 @@ public class Game implements IRecord {
                     if (players.hasNext()) {
                         while (players.hasNext()) {
                             Player player = players.next();
-                            player.kickPlayer(ManiaUtils.color("&cAll games and hubs are full."));
+                            player.kickPlayer(CenturionsUtils.color("&cAll games and hubs are full."));
                         }
                     }
                 }

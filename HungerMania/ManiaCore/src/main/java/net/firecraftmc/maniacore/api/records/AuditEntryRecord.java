@@ -1,15 +1,18 @@
 package net.firecraftmc.maniacore.api.records;
 
 import net.firecraftmc.maniacore.api.audit.AuditEntry;
+import net.firecraftmc.manialib.sql.Database;
+import net.firecraftmc.manialib.sql.IRecord;
+import net.firecraftmc.manialib.sql.Row;
 import net.firecraftmc.manialib.sql.Table;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class AuditEntryRecord implements net.firecraftmc.manialib.sql.IRecord<AuditEntry> {
+public class AuditEntryRecord implements IRecord<AuditEntry> {
     
-    public static net.firecraftmc.manialib.sql.Table generateTable(net.firecraftmc.manialib.sql.Database database) {
-        net.firecraftmc.manialib.sql.Table table = new Table(database, "auditentry");
+    public static Table generateTable(Database database) {
+        Table table = new Table(database, "auditentry");
         
         return table;
     }
@@ -20,7 +23,7 @@ public class AuditEntryRecord implements net.firecraftmc.manialib.sql.IRecord<Au
         this.object = object;
     }
     
-    public AuditEntryRecord(net.firecraftmc.manialib.sql.Row row) {
+    public AuditEntryRecord(Row row) {
         
     }
     

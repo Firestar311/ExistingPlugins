@@ -4,7 +4,7 @@ import cloud.timo.TimoCloud.api.TimoCloudAPI;
 import cloud.timo.TimoCloud.api.objects.PlayerObject;
 import lombok.*;
 import net.firecraftmc.maniacore.api.pagination.IElement;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.user.User;
 import net.firecraftmc.manialib.data.model.IRecord;
 
@@ -47,10 +47,10 @@ public class Friendship implements IElement, IRecord {
             return null;
         }
         
-        User otherUser = ManiaCore.getInstance().getUserManager().getUser(other);
+        User otherUser = CenturionsCore.getInstance().getUserManager().getUser(other);
         String status = null;
         if (otherUser.isOnline()) {
-            status = "&aonline &eon &b" + ManiaCore.getInstance().getServerManager().getCurrentServer().getName();
+            status = "&aonline &eon &b" + CenturionsCore.getInstance().getServerManager().getCurrentServer().getName();
         } else {
             PlayerObject playerObject = TimoCloudAPI.getUniversalAPI().getPlayer(other);
             if (playerObject != null) {

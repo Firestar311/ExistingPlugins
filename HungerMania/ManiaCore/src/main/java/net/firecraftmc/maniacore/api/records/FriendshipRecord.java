@@ -1,18 +1,22 @@
 package net.firecraftmc.maniacore.api.records;
 
 import net.firecraftmc.maniacore.api.friends.Friendship;
+import net.firecraftmc.manialib.sql.DataType;
+import net.firecraftmc.manialib.sql.Database;
+import net.firecraftmc.manialib.sql.IRecord;
+import net.firecraftmc.manialib.sql.Row;
 import net.firecraftmc.manialib.sql.Table;
 
 import java.util.*;
 
-public class FriendshipRecord implements net.firecraftmc.manialib.sql.IRecord<Friendship> {
+public class FriendshipRecord implements IRecord<Friendship> {
     
-    public static net.firecraftmc.manialib.sql.Table generateTable(net.firecraftmc.manialib.sql.Database database) {
-        net.firecraftmc.manialib.sql.Table table = new Table(database, "friendships");
-        table.addColumn("id", net.firecraftmc.manialib.sql.DataType.INT, true, true);
-        table.addColumn("player1", net.firecraftmc.manialib.sql.DataType.VARCHAR, 36);
-        table.addColumn("player2", net.firecraftmc.manialib.sql.DataType.VARCHAR, 36);
-        table.addColumn("timestamp", net.firecraftmc.manialib.sql.DataType.BIGINT);
+    public static Table generateTable(Database database) {
+        Table table = new Table(database, "friendships");
+        table.addColumn("id", DataType.INT, true, true);
+        table.addColumn("player1", DataType.VARCHAR, 36);
+        table.addColumn("player2", DataType.VARCHAR, 36);
+        table.addColumn("timestamp", DataType.BIGINT);
         return table;
     }
     
@@ -22,7 +26,7 @@ public class FriendshipRecord implements net.firecraftmc.manialib.sql.IRecord<Fr
         this.friendship = friendship;
     }
     
-    public FriendshipRecord(net.firecraftmc.manialib.sql.Row row) {
+    public FriendshipRecord(Row row) {
         this.friendship = Friendship.builder().id(row.getInt("id")).player1(row.getUUID("player1")).player2(row.getUUID("player2")).timestamp(row.getLong("timestamp")).build();
     }
     

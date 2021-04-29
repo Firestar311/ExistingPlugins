@@ -3,8 +3,8 @@ package net.firecraftmc.hungergames.listeners;
 import net.firecraftmc.hungergames.game.Game;
 import net.firecraftmc.hungergames.game.GamePlayer;
 import net.firecraftmc.hungergames.game.team.GameTeam.Perms;
-import net.firecraftmc.maniacore.api.ManiaCore;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.CenturionsCore;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import net.firecraftmc.maniacore.api.util.State;
 import net.firecraftmc.maniacore.spigot.mutations.MutationType;
 import net.firecraftmc.maniacore.spigot.perks.Perks;
@@ -67,7 +67,7 @@ public class EntityListeners extends GameListener {
                     }
                 }
             } else {
-                SpigotUser user = (SpigotUser) ManiaCore.getInstance().getUserManager().getUser(e.getEntity().getUniqueId());
+                SpigotUser user = (SpigotUser) CenturionsCore.getInstance().getUserManager().getUser(e.getEntity().getUniqueId());
                 try {
                     if (Perks.FEATHERWEIGHT.activate(user)) {
                         Tier tier = ((TieredPerk) Perks.FEATHERWEIGHT).getTier(user);
@@ -117,7 +117,7 @@ public class EntityListeners extends GameListener {
                 
                 if (game.getMutationsTeam().isMember(target.getUniqueId())) {
                     if (!targetPlayer.getMutationTarget().equals(damager.getUniqueId())) {
-                        damager.sendMessage(ManiaUtils.color("&cThat mutation is not your target. You cannot damage it."));
+                        damager.sendMessage(CenturionsUtils.color("&cThat mutation is not your target. You cannot damage it."));
                         e.setCancelled(true);
                         return;
                     }
@@ -129,7 +129,7 @@ public class EntityListeners extends GameListener {
                 
                 if (game.getMutationsTeam().isMember(damager.getUniqueId())) {
                     if (!damagerPlayer.getMutationTarget().equals(target.getUniqueId())) {
-                        damager.sendMessage(ManiaUtils.color("&cYou can only damage your target as a mutation."));
+                        damager.sendMessage(CenturionsUtils.color("&cYou can only damage your target as a mutation."));
                         e.setCancelled(true);
                     }
                 }
@@ -137,13 +137,13 @@ public class EntityListeners extends GameListener {
                 long targetRevengeTime = targetPlayer.getRevengeTime() + TimeUnit.SECONDS.toMillis(10);
                 if (System.currentTimeMillis() < targetRevengeTime) {
                     e.setCancelled(true);
-                    damager.sendMessage(ManiaUtils.color("&cThat player recently took revenge. They have a 10 second grace period."));
+                    damager.sendMessage(CenturionsUtils.color("&cThat player recently took revenge. They have a 10 second grace period."));
                 }
                 
                 long damagerRevengeTime = damagerPlayer.getRevengeTime() + TimeUnit.SECONDS.toMillis(10);
                 if (System.currentTimeMillis() < damagerRevengeTime) {
                     e.setCancelled(true);
-                    damager.sendMessage(ManiaUtils.color("&cYou just recently took revenge, you cannot attack in the 10 second grace period"));
+                    damager.sendMessage(CenturionsUtils.color("&cYou just recently took revenge, you cannot attack in the 10 second grace period"));
                 }
             } else if (e.getEntity() instanceof ItemFrame || e.getEntity() instanceof ArmorStand) {
                 e.setCancelled(true);

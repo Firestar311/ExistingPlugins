@@ -2,7 +2,7 @@ package net.firecraftmc.maniacore.api.stats;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.user.User;
 import net.firecraftmc.manialib.data.model.IRecord;
 
@@ -39,7 +39,7 @@ public class Statistic implements IRecord {
 
     public User getUser() {
         if (user == null) {
-            this.user = ManiaCore.getInstance().getUserManager().getUser(uuid);
+            this.user = CenturionsCore.getInstance().getUserManager().getUser(uuid);
         }
         return user;
     }

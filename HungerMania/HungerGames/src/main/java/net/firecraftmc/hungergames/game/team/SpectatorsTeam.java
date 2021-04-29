@@ -5,7 +5,7 @@ import net.firecraftmc.hungergames.game.death.DeathInfoPlayerKill;
 import net.firecraftmc.hungergames.game.enums.PlayerType;
 import net.firecraftmc.hungergames.game.Game;
 import net.firecraftmc.hungergames.game.GamePlayer;
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.user.User;
 import net.firecraftmc.maniacore.spigot.util.ItemBuilder;
 import org.bukkit.Bukkit;
@@ -62,7 +62,7 @@ public class SpectatorsTeam extends GameTeam {
         player.getInventory().setItem(2, mutationsBook);
         
         this.members.add(uuid);
-        User user = ManiaCore.getInstance().getUserManager().getUser(uuid);
+        User user = CenturionsCore.getInstance().getUserManager().getUser(uuid);
         user.sendMessage(getJoinMessage());
         user.sendMessage("&6&l>> &eYou are now spectating the game!");
         

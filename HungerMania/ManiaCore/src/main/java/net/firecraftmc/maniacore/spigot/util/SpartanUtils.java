@@ -1,10 +1,10 @@
 package net.firecraftmc.maniacore.spigot.util;
 
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.channel.Channel;
 import net.firecraftmc.maniacore.api.user.User;
 import net.firecraftmc.maniacore.api.user.toggle.Toggles;
-import net.firecraftmc.maniacore.api.util.ManiaUtils;
+import net.firecraftmc.maniacore.api.util.CenturionsUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -21,9 +21,9 @@ public class SpartanUtils {
         format = format.replace("{ping}", ping + "");
         for (Player p : Bukkit.getOnlinePlayers()) {
             if (p.hasPermission(Channel.STAFF.getPermission())) {
-                User user = ManiaCore.getInstance().getUserManager().getUser(p.getUniqueId());
+                User user = CenturionsCore.getInstance().getUserManager().getUser(p.getUniqueId());
                 if (user.getToggle(Toggles.SPARTAN_NOTIFICATIONS).getAsBoolean()) {
-                    p.sendMessage(ManiaUtils.color(format));
+                    p.sendMessage(CenturionsUtils.color(format));
                 }
             }
         }

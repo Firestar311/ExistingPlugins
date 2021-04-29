@@ -28,7 +28,7 @@ public class DeathInfoProjectile extends DeathInfo {
         String killerName;
         if (shooter instanceof Player) {
             Player playerShooter = (Player) shooter;
-            SpigotUser spigotUser = (SpigotUser) HungerGames.getInstance().getManiaCore().getUserManager().getUser(playerShooter.getUniqueId());
+            SpigotUser spigotUser = (SpigotUser) HungerGames.getInstance().getCenturionsCore().getUserManager().getUser(playerShooter.getUniqueId());
             if (spigotUser.getNickname() != null || spigotUser.getNickname().isActive()) {
                 killerName = killerTeamColor + spigotUser.getNickname().getName();
             } else {

@@ -1,6 +1,6 @@
 package net.firecraftmc.maniacore.api.leveling;
 
-import net.firecraftmc.maniacore.api.ManiaCore;
+import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.records.LevelRecord;
 import net.firecraftmc.manialib.sql.IRecord;
 import net.firecraftmc.manialib.util.Range;
@@ -9,15 +9,15 @@ import net.md_5.bungee.api.ChatColor;
 import java.util.*;
 
 public class LevelManager {
-    private final ManiaCore maniaCore;
+    private final CenturionsCore centurionsCore;
     private Map<Integer, net.firecraftmc.maniacore.api.leveling.Level> levels = new TreeMap<>();
     
-    public LevelManager(ManiaCore maniaCore) {
-        this.maniaCore = maniaCore;
+    public LevelManager(CenturionsCore centurionsCore) {
+        this.centurionsCore = centurionsCore;
     }
     
     public void loadFromDatabase() {
-        List<IRecord> records = maniaCore.getDatabase().getRecords(LevelRecord.class, null, null);
+        List<IRecord> records = centurionsCore.getDatabase().getRecords(LevelRecord.class, null, null);
         for (IRecord record : records) {
             if (record instanceof LevelRecord) {
                 this.levels.put(record.getId(), ((LevelRecord) record).toObject());
@@ -63,7 +63,7 @@ public class LevelManager {
                 }
                 
                 net.firecraftmc.maniacore.api.leveling.Level level = new net.firecraftmc.maniacore.api.leveling.Level(i, levelXp, 0, color);
-                ManiaCore.getInstance().getDatabase().addRecordToQueue(new LevelRecord(level));
+                CenturionsCore.getInstance().getDatabase().addRecordToQueue(new LevelRecord(level));
                 this.levels.put(i, level);
             }
         }
@@ -95,10 +95,10 @@ public class LevelManager {
     private void generateLevelDatabase(net.firecraftmc.maniacore.api.leveling.Level... levels) {
         if (levels != null) {
             for (net.firecraftmc.maniacore.api.leveling.Level level : levels) {
-                maniaCore.getDatabase().addRecordToQueue(new LevelRecord(level));
+                centurionsCore.getDatabase().addRecordToQueue(new LevelRecord(level));
             }
             
-            maniaCore.getDatabase().pushQueue();
+            centurionsCore.getDatabase().pushQueue();
             for (Level level : levels) {
                 this.levels.put(level.getNumber(), level);
             }
