@@ -397,6 +397,7 @@ public class Game implements IRecord {
         if (gameSettings.isGracePeriod()) {
             this.gracePeriodEnd = this.gameStart + TimeUnit.SECONDS.toMillis(gameSettings.getGracePeriodLength());
         }
+        this.sendMessage("&6&l>> &a&lMAY THE ODDS BE EVER IN YOUR FAVOR!");
         for (UUID tribute : this.tributesTeam) {
             GamePlayer player = this.players.get(tribute);
             player.getUser().incrementStat(Stats.HG_GAMES);
