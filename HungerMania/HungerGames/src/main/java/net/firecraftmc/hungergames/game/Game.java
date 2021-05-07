@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.Setter;
 import me.libraryaddict.disguise.DisguiseAPI;
 import net.firecraftmc.hungergames.HungerGames;
+import net.firecraftmc.hungergames.game.bounty.Bounty;
+import net.firecraftmc.hungergames.game.bounty.BountyManager;
 import net.firecraftmc.hungergames.game.death.*;
 import net.firecraftmc.hungergames.game.enums.GameResult;
 import net.firecraftmc.hungergames.game.enums.PlayerType;
@@ -18,11 +20,11 @@ import net.firecraftmc.hungergames.game.tasks.GameTask;
 import net.firecraftmc.hungergames.game.tasks.PlayerTrackerTask;
 import net.firecraftmc.hungergames.game.team.*;
 import net.firecraftmc.hungergames.lobby.Lobby;
+import net.firecraftmc.hungergames.map.HGMap;
 import net.firecraftmc.hungergames.records.GameRecord;
 import net.firecraftmc.hungergames.scoreboard.GameBoard;
 import net.firecraftmc.hungergames.settings.GameSettings;
 import net.firecraftmc.hungergames.util.Messager;
-import net.firecraftmc.hungergames.map.HGMap;
 import net.firecraftmc.maniacore.api.CenturionsCore;
 import net.firecraftmc.maniacore.api.ranks.Rank;
 import net.firecraftmc.maniacore.api.redis.Redis;
@@ -89,6 +91,7 @@ public class Game implements IRecord {
     @Getter private GameTeam tributesTeam, spectatorsTeam, hiddenStaffTeam, mutationsTeam;
     @Getter @Setter private boolean diamondSpecial;
     @Getter private SponsorManager sponsorManager;
+    @Getter private BountyManager bountyManager;
 
     public Game(HGMap map, GameSettings settings) {
         this.map = map;
@@ -116,6 +119,7 @@ public class Game implements IRecord {
         mutationsTeam = new MutationsTeam(this);
         
         this.sponsorManager = new SponsorManager();
+        this.bountyManager = new BountyManager();
 
         map.getWorld().setGameRuleValue("naturalRegeneration", "" + gameSettings.isRegeneration());
         map.getWorld().setGameRuleValue("doDaylightCycle", "" + gameSettings.isTimeProgression());
@@ -541,6 +545,8 @@ public class Game implements IRecord {
 
             this.gameEnd = System.currentTimeMillis();
             this.archived = true;
+            
+            this.bountyManager.refundBounties(this);
 
             for (Player player : Bukkit.getOnlinePlayers()) {
                 for (Player player1 : Bukkit.getOnlinePlayers()) {
@@ -630,10 +636,30 @@ public class Game implements IRecord {
     public boolean isLootedChest(Location location) {
         return this.lootedChests.contains(location);
     }
+    
+    public void addBounty(UUID actor, UUID target, int points) {
+        GamePlayer actorPlayer = getPlayer(actor), targetPlayer = getPlayer(target);
+        if (!tributesTeam.isMember(target)) {
+            actorPlayer.sendMessage("&cYou can only bounty tributes.");
+            return;
+        }
+        
+        Statistic score = actorPlayer.getUser().getStat(Stats.HG_SCORE);
+        if (score.getAsInt() < points) {
+            actorPlayer.sendMessage("&cYou do not have enough score for that high of a bounty.");
+            return;
+        }
+
+        Bounty bounty = new Bounty(actor, target, points);
+        this.bountyManager.addBounty(bounty);
+        sendMessage("&6&l>> &a" + actorPlayer.getUser().getName() + " &6has placed a " + points + " &6&lBOUNTY &6on " + targetPlayer.getUser().getName() + "!");
+    }
 
     public void removePlayer(UUID uuid) {
         GamePlayer gamePlayer = getPlayer(uuid);
         this.cachedPlayers.put(uuid, gamePlayer);
+        
+        this.bountyManager.refundBounties(this, uuid);
 
         this.tributesTeam.leave(uuid);
         this.mutationsTeam.leave(uuid);
@@ -785,6 +811,11 @@ public class Game implements IRecord {
             killer.getUser().sendMessage("&6&l>> &a+" + gained + " Score!");
 
             gamePlayer.getUser().sendMessage("&4&l>> &cYour killer &8(" + killerName + "&8) &chad &4" + Utils.formatNumber(killerHealth) + " HP &cremaining!");
+
+            int totalBounty = bountyManager.getTotalBounty(gamePlayer.getUniqueId());
+            killerScore.setValue(killerScore.getAsInt() + totalBounty);
+            bountyManager.clearBounties(gamePlayer.getUniqueId());
+            sendMessage("&6&l>> &6The &6&lBOUNTY &6on &c" + gamePlayer.getUser().getName() + " &6has been claimed by " + killerName + "&6!");
 
             if (mutationKill) {
                 sendMessage("&6&l>> " + killerName + " &ahas taken revenge , and is back in the game!");

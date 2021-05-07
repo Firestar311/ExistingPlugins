@@ -6,6 +6,7 @@ import net.firecraftmc.hungergames.chat.HGChatFormatter;
 import net.firecraftmc.hungergames.chat.HGChatHandler;
 import net.firecraftmc.hungergames.game.Game;
 import net.firecraftmc.hungergames.game.GameManager;
+import net.firecraftmc.hungergames.game.cmd.BountyCmd;
 import net.firecraftmc.hungergames.game.cmd.HGCommand;
 import net.firecraftmc.hungergames.game.cmd.ProbablityCmd;
 import net.firecraftmc.hungergames.game.gui.SpectatorInventoryGui;
@@ -94,7 +95,8 @@ public final class HungerGames extends JavaPlugin implements CenturionsPlugin {
         this.getCommand("mapsadmin").setExecutor(mapManager);
         
         this.getCommand("probability").setExecutor(new ProbablityCmd());
-    
+        this.getCommand("bounty").setExecutor(new BountyCmd());
+        
         this.gameManager = new GameManager(this);
 
         this.lobby = new Lobby(this, getSpawnpoint());
