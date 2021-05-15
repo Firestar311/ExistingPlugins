@@ -269,6 +269,10 @@ public class Game implements IRecord {
     public GamePlayer getPlayer(UUID uuid) {
         return this.players.get(uuid);
     }
+    
+    public GamePlayer getCachedPlayer(UUID uuid) {
+        return this.cachedPlayers.get(uuid);
+    }
 
     public GameSettings getGameSettings() {
         if (gameSettings == null) {

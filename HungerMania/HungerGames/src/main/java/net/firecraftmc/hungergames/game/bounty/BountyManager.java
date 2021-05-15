@@ -4,6 +4,7 @@ import net.firecraftmc.hungergames.game.Game;
 import net.firecraftmc.hungergames.game.GamePlayer;
 import net.firecraftmc.maniacore.api.stats.Statistic;
 import net.firecraftmc.maniacore.api.stats.Stats;
+import net.firecraftmc.manialib.redis.Redis;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,9 @@ public class BountyManager {
     public void refundBounties(Game game) {
         for (Bounty bounty : bounties) {
             GamePlayer actorPlayer = game.getPlayer(bounty.getActor());
+            if (actorPlayer == null) {
+                continue;
+            }
             Statistic score = actorPlayer.getUser().getStat(Stats.HG_SCORE);
             score.setValue(score.getAsInt() + bounty.getPoints());
             actorPlayer.sendMessage("&6&l>> &cThe game as ended, so your bounty of " + bounty.getPoints() + " points on " + game.getPlayer(bounty.getTarget()).getUser().getName() + " has been refunded.");
