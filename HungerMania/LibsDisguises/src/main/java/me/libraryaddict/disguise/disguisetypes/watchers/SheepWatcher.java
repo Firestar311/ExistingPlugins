@@ -2,35 +2,56 @@ package me.libraryaddict.disguise.disguisetypes.watchers;
 
 import me.libraryaddict.disguise.disguisetypes.AnimalColor;
 import me.libraryaddict.disguise.disguisetypes.Disguise;
+import me.libraryaddict.disguise.disguisetypes.MetaIndex;
+import org.bukkit.DyeColor;
 
 public class SheepWatcher extends AgeableWatcher {
 
     public SheepWatcher(Disguise disguise) {
         super(disguise);
-        setValue(16, (byte) 0);
     }
 
-    public AnimalColor getColor() {
-        return AnimalColor.getColor((Byte) getValue(16, (byte) 0) & 15);
+    public DyeColor getColor() {
+        return AnimalColor.getColorByWool(((int) getData(MetaIndex.SHEEP_WOOL) & 15)).getDyeColor();
+    }
+
+    @Deprecated
+    public void setColor(AnimalColor color) {
+        setColor(color.getDyeColor());
+    }
+
+    public void setColor(DyeColor color) {
+        byte b0 = getData(MetaIndex.SHEEP_WOOL);
+
+        setData(MetaIndex.SHEEP_WOOL, (byte) (b0 & 240 | color.getWoolData() & 15));
+        sendData(MetaIndex.SHEEP_WOOL);
+    }
+
+    public boolean isRainbowWool() {
+        return "jeb_".equals(getCustomName());
+    }
+
+    public void setRainbowWool(boolean rainbow) {
+        if (isRainbowWool() == rainbow) {
+            return;
+        }
+
+        setInteralCustomName("jeb_");
     }
 
     public boolean isSheared() {
-        return ((Byte) getValue(16, (byte) 0) & 16) != 0;
-    }
-
-    public void setColor(AnimalColor color) {
-        byte b0 = (Byte) getValue(16, (byte) 0);
-        setValue(16, (byte) (b0 & 240 | color.getId() & 15));
-        sendData(16);
+        return (getData(MetaIndex.SHEEP_WOOL) & 16) != 0;
     }
 
     public void setSheared(boolean flag) {
-        byte b0 = (Byte) getValue(16, (byte) 0);
+        byte b0 = getData(MetaIndex.SHEEP_WOOL);
+
         if (flag) {
-            setValue(16, (byte) (b0 | 16));
+            setData(MetaIndex.SHEEP_WOOL, (byte) (b0 | 16));
         } else {
-            setValue(16, (byte) (b0 & -17));
+            setData(MetaIndex.SHEEP_WOOL, (byte) (b0 & -17));
         }
-        sendData(16);
+
+        sendData(MetaIndex.SHEEP_WOOL);
     }
 }

@@ -2,6 +2,12 @@ package me.libraryaddict.disguise.disguisetypes.watchers;
 
 import me.libraryaddict.disguise.disguisetypes.Disguise;
 import me.libraryaddict.disguise.disguisetypes.FlagWatcher;
+import me.libraryaddict.disguise.disguisetypes.MetaIndex;
+import me.libraryaddict.disguise.utilities.reflection.NmsAddedIn;
+import me.libraryaddict.disguise.utilities.reflection.NmsVersion;
+import me.libraryaddict.disguise.utilities.reflection.ReflectionManager;
+import org.bukkit.Material;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.inventory.ItemStack;
 
 public class MinecartWatcher extends FlagWatcher {
@@ -10,54 +16,56 @@ public class MinecartWatcher extends FlagWatcher {
         super(disguise);
     }
 
+    @Deprecated
     public ItemStack getBlockInCart() {
-        int id = (Integer) getValue(20, 0) & 0xffff;
-        int data = (Integer) getValue(20, 0) >> 16;
-        return new ItemStack(id, 1, (short) data);
+        if (!hasValue(MetaIndex.MINECART_BLOCK)) {
+            return new ItemStack(Material.AIR);
+        }
+
+        return ReflectionManager.getItemStackByCombinedId(getData(MetaIndex.MINECART_BLOCK));
+    }
+
+    @Deprecated
+    public void setBlockInCart(ItemStack item) {
+        setData(MetaIndex.MINECART_BLOCK, ReflectionManager.getCombinedIdByItemStack(item));
+        setData(MetaIndex.MINECART_BLOCK_VISIBLE, item != null && item.getType() != Material.AIR);
+
+        sendData(MetaIndex.MINECART_BLOCK, MetaIndex.MINECART_BLOCK_VISIBLE);
+    }
+
+    @NmsAddedIn(NmsVersion.v1_13)
+    public BlockData getBlockData() {
+        return ReflectionManager.getBlockDataByCombinedId(getData(MetaIndex.MINECART_BLOCK));
+    }
+
+    @NmsAddedIn(NmsVersion.v1_13)
+    public void setBlockData(BlockData data) {
+        setData(MetaIndex.MINECART_BLOCK, ReflectionManager.getCombinedIdByBlockData(data));
+        setData(MetaIndex.MINECART_BLOCK_VISIBLE, data != null && data.getMaterial() != Material.AIR);
+
+        sendData(MetaIndex.MINECART_BLOCK, MetaIndex.MINECART_BLOCK_VISIBLE);
+    }
+
+    @Deprecated
+    public int getBlockYOffset() {
+        return getData(MetaIndex.MINECART_BLOCK_Y);
     }
 
     public int getBlockOffset() {
-        return (Integer) getValue(21, 0);
-    }
-
-    @Deprecated
-    public int getBlockOffSet() {
-        return getBlockOffset();
-    }
-
-    public float getDamage() {
-        return (Float) getValue(19, 0F);
-    }
-
-    public boolean getViewBlockInCart() {
-        return ((Byte) getValue(22, (byte) 0)) == (byte) 1;
-    }
-
-    public void setBlockInCart(ItemStack item) {
-        int id = item.getTypeId();
-        int data = item.getDurability();
-        setValue(20, id & 0xffff | data << 16);
-        setValue(22, (byte) 1);
-        sendData(20, 22);
+        return getData(MetaIndex.MINECART_BLOCK_Y);
     }
 
     public void setBlockOffset(int i) {
-        setValue(21, i);
-        sendData(21);
+        setData(MetaIndex.MINECART_BLOCK_Y, i);
+        sendData(MetaIndex.MINECART_BLOCK_Y);
     }
 
-    @Deprecated
-    public void setBlockOffSet(int i) {
-        setBlockOffset(i);
-    }
-
-    public void setDamage(float damage) {
-        setValue(19, damage);
-        sendData(19);
+    public boolean isViewBlockInCart() {
+        return getData(MetaIndex.MINECART_BLOCK_VISIBLE);
     }
 
     public void setViewBlockInCart(boolean viewBlock) {
-        setValue(22, (byte) (viewBlock ? 1 : 0));
-        sendData(22);
+        setData(MetaIndex.MINECART_BLOCK_VISIBLE, viewBlock);
+        sendData(MetaIndex.MINECART_BLOCK_VISIBLE);
     }
 }

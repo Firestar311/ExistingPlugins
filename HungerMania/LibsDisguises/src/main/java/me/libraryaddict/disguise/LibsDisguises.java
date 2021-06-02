@@ -1,272 +1,369 @@
 package me.libraryaddict.disguise;
 
-import com.comphenix.protocol.reflect.FieldAccessException;
-import java.io.IOException;
-import java.lang.reflect.Field;
-
-import me.libraryaddict.disguise.commands.*;
-import me.libraryaddict.disguise.disguisetypes.DisguiseType;
-import me.libraryaddict.disguise.disguisetypes.FlagWatcher;
-import me.libraryaddict.disguise.disguisetypes.watchers.AgeableWatcher;
-import me.libraryaddict.disguise.disguisetypes.watchers.GuardianWatcher;
-import me.libraryaddict.disguise.disguisetypes.watchers.HorseWatcher;
-import me.libraryaddict.disguise.disguisetypes.watchers.LivingWatcher;
-import me.libraryaddict.disguise.disguisetypes.watchers.MinecartWatcher;
-import me.libraryaddict.disguise.disguisetypes.watchers.SlimeWatcher;
-import me.libraryaddict.disguise.disguisetypes.watchers.TameableWatcher;
-import me.libraryaddict.disguise.disguisetypes.watchers.ZombieWatcher;
-import me.libraryaddict.disguise.utilities.DisguiseSound;
+import com.comphenix.protocol.ProtocolLibrary;
+import me.libraryaddict.disguise.commands.LibsDisguisesCommand;
+import me.libraryaddict.disguise.commands.disguise.DisguiseCommand;
+import me.libraryaddict.disguise.commands.disguise.DisguiseEntityCommand;
+import me.libraryaddict.disguise.commands.disguise.DisguisePlayerCommand;
+import me.libraryaddict.disguise.commands.disguise.DisguiseRadiusCommand;
+import me.libraryaddict.disguise.commands.modify.DisguiseModifyCommand;
+import me.libraryaddict.disguise.commands.modify.DisguiseModifyEntityCommand;
+import me.libraryaddict.disguise.commands.modify.DisguiseModifyPlayerCommand;
+import me.libraryaddict.disguise.commands.modify.DisguiseModifyRadiusCommand;
+import me.libraryaddict.disguise.commands.undisguise.UndisguiseCommand;
+import me.libraryaddict.disguise.commands.undisguise.UndisguiseEntityCommand;
+import me.libraryaddict.disguise.commands.undisguise.UndisguisePlayerCommand;
+import me.libraryaddict.disguise.commands.undisguise.UndisguiseRadiusCommand;
+import me.libraryaddict.disguise.commands.utils.*;
 import me.libraryaddict.disguise.utilities.DisguiseUtilities;
-import me.libraryaddict.disguise.utilities.PacketsManager;
-import me.libraryaddict.disguise.utilities.ReflectionManager;
-import me.libraryaddict.disguise.utilities.DisguiseValues;
-
+import me.libraryaddict.disguise.utilities.LibsPremium;
+import me.libraryaddict.disguise.utilities.config.DisguiseCommandConfig;
+import me.libraryaddict.disguise.utilities.listeners.DisguiseListener;
+import me.libraryaddict.disguise.utilities.listeners.PaperDisguiseListener;
+import me.libraryaddict.disguise.utilities.listeners.PlayerSkinHandler;
+import me.libraryaddict.disguise.utilities.metrics.MetricsInitalizer;
+import me.libraryaddict.disguise.utilities.packets.PacketsManager;
+import me.libraryaddict.disguise.utilities.parser.DisguiseParser;
+import me.libraryaddict.disguise.utilities.reflection.NmsVersion;
+import me.libraryaddict.disguise.utilities.reflection.ReflectionManager;
+import me.libraryaddict.disguise.utilities.sounds.SoundManager;
+import me.libraryaddict.disguise.utilities.updates.UpdateChecker;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Ageable;
-import org.bukkit.entity.Damageable;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Tameable;
-import org.bukkit.entity.Zombie;
+import org.bukkit.command.*;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
-import com.comphenix.protocol.wrappers.WrappedDataWatcher;
-import com.comphenix.protocol.wrappers.WrappedWatchableObject;
-import me.libraryaddict.disguise.utilities.FakeBoundingBox;
-import me.libraryaddict.disguise.utilities.Metrics;
-import org.bukkit.event.HandlerList;
+import java.io.File;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class LibsDisguises extends JavaPlugin {
-
-    public static LibsDisguises instance; //I'm sorry Sun MicroSystems and all mighty Java God
+    private static LibsDisguises instance;
     private DisguiseListener listener;
+    private String buildNumber;
+    private boolean reloaded;
+    private final UpdateChecker updateChecker = new UpdateChecker();
+    private PlayerSkinHandler skinHandler;
+    private DisguiseCommandConfig commandConfig;
+
+    public boolean isReloaded() {
+        return reloaded;
+    }
+
+    public UpdateChecker getUpdateChecker() {
+        return updateChecker;
+    }
+
+    public PlayerSkinHandler getSkinHandler() {
+        return skinHandler;
+    }
+
+    public DisguiseCommandConfig getCommandConfig() {
+        return commandConfig;
+    }
+
+    @Override
+    public void onLoad() {
+        try {
+            if (instance != null || !Bukkit.getServer().getWorlds().isEmpty() || !Bukkit.getOnlinePlayers().isEmpty()) {
+                reloaded = true;
+                getLogger().severe("Server was reloaded! Please do not report any bugs! This plugin can't handle " + "reloads gracefully!");
+            }
+
+            instance = this;
+
+            Plugin plugin = Bukkit.getPluginManager().getPlugin("ProtocolLib");
+
+            if (plugin == null || DisguiseUtilities.isOlderThan(DisguiseUtilities.getProtocolLibRequiredVersion(), plugin.getDescription().getVersion())) {
+                getLogger().warning("Noticed you're using an older version of ProtocolLib (or not using it)! We're forcibly updating you!");
+
+                try {
+                    File dest = DisguiseUtilities.updateProtocolLib();
+
+                    if (plugin == null) {
+                        getLogger().info("ProtocolLib downloaded and stuck in plugins folder! Now trying to load it!");
+                        plugin = Bukkit.getPluginManager().loadPlugin(dest);
+                        plugin.onLoad();
+
+                        Bukkit.getPluginManager().enablePlugin(plugin);
+                    } else {
+                        getLogger().severe("Please restart the server to complete the ProtocolLib update!");
+                    }
+                } catch (Exception e) {
+                    getLogger()
+                            .severe("Looks like ProtocolLib's site may be down! MythicCraft/MythicMobs has a discord server https://discord.gg/EErRhJ4qgx you" +
+                                    " can " + "join. Check the pins in #libs-support for a ProtocolLib.jar you can download!");
+                    e.printStackTrace();
+                }
+
+            }
+
+            try {
+                Class cl = Class.forName("org.bukkit.Server$Spigot");
+            } catch (ClassNotFoundException e) {
+                getLogger().severe("Oh dear, you seem to be using CraftBukkit. Please use Spigot or Paper instead! This " +
+                        "plugin will continue to load, but it will look like a mugging victim");
+            }
+
+            commandConfig = new DisguiseCommandConfig();
+
+            if (!reloaded) {
+                commandConfig.load();
+            }
+        } catch (Throwable throwable) {
+            getUpdateChecker().doUpdate();
+
+            throw throwable;
+        }
+    }
 
     @Override
     public void onEnable() {
-        saveDefaultConfig();
-
-        PacketsManager.init(this);
-        DisguiseUtilities.init(this);
-        DisguiseConfig.initConfig(getConfig());
-
-        PacketsManager.addPacketListeners();
-        listener = new DisguiseListener(this);
-        Bukkit.getPluginManager().registerEvents(listener, this);
-        getCommand("disguise").setExecutor(new DisguiseCommand());
-        getCommand("undisguise").setExecutor(new UndisguiseCommand());
-        getCommand("disguiseplayer").setExecutor(new DisguisePlayerCommand());
-        getCommand("undisguiseplayer").setExecutor(new UndisguisePlayerCommand());
-        getCommand("undisguiseentity").setExecutor(new UndisguiseEntityCommand());
-        getCommand("disguiseentity").setExecutor(new DisguiseEntityCommand());
-        getCommand("disguiseradius").setExecutor(new DisguiseRadiusCommand(getConfig().getInt("DisguiseRadiusMax")));
-        getCommand("undisguiseradius").setExecutor(new UndisguiseRadiusCommand(getConfig().getInt("UndisguiseRadiusMax")));
-        getCommand("disguisehelp").setExecutor(new DisguiseHelpCommand());
-        getCommand("disguiseclone").setExecutor(new DisguiseCloneCommand());
-        getCommand("libsdisguises").setExecutor(new LibsDisguisesCommand());
-        getCommand("disguiseviewself").setExecutor(new DisguiseViewSelf());
-        registerValues();
-        instance = this;
         try {
-            Metrics metrics = new Metrics(this);
-            metrics.start();
-        } catch (IOException e) {
+            if (reloaded) {
+                getLogger().severe("Server was reloaded! Please do not report any bugs! This plugin can't handle " + "reloads gracefully!");
+            }
+
+            try {
+                Class cl = Class.forName("org.bukkit.Server$Spigot");
+            } catch (ClassNotFoundException e) {
+                getLogger().severe("Oh dear, you seem to be using CraftBukkit. Please use Spigot or Paper instead! This " +
+                        "plugin will continue to load, but it will look like a mugging victim");
+            }
+
+            File disguiseFile = new File(getDataFolder(), "configs/disguises.yml");
+
+            if (!disguiseFile.exists()) {
+                disguiseFile.getParentFile().mkdirs();
+
+                File oldFile = new File(getDataFolder(), "disguises.yml");
+
+                if (oldFile.exists()) {
+                    oldFile.renameTo(disguiseFile);
+                } else {
+                    saveResource("configs/disguises.yml", false);
+                }
+            }
+
+            YamlConfiguration pluginYml = ReflectionManager.getPluginYAML(getFile());
+            buildNumber = StringUtils.stripToNull(pluginYml.getString("build-number"));
+
+            getLogger().info("File Name: " + getFile().getName());
+
+            getLogger().info("Discovered nms version: " + ReflectionManager.getBukkitVersion());
+
+            getLogger().info("Jenkins Build: " + (isNumberedBuild() ? "#" : "") + getBuildNo());
+
+            getLogger().info("Build Date: " + pluginYml.getString("build-date"));
+
+            DisguiseConfig.loadInternalConfig();
+
+            LibsPremium.check(getDescription().getVersion(), getFile());
+
+            if (!LibsPremium.isPremium()) {
+                getLogger()
+                        .info("You are running the free version, commands limited to non-players and operators. (Console," + " Command " + "Blocks, Admins)");
+            }
+
+            if (ReflectionManager.getVersion() == null) {
+                getLogger().severe("You're using the wrong version of Lib's Disguises for your server! This is " + "intended for " +
+                        StringUtils.join(Arrays.stream(NmsVersion.values()).map(v -> v.name().replace("_", ".")).collect(Collectors.toList()), " & ") + "!");
+                getPluginLoader().disablePlugin(this);
+                return;
+            }
+
+            String requiredProtocolLib = DisguiseUtilities.getProtocolLibRequiredVersion();
+            String version = ProtocolLibrary.getPlugin().getDescription().getVersion();
+
+            if (DisguiseUtilities.isOlderThan(requiredProtocolLib, version)) {
+                getLogger().severe("!! May I have your attention please !!");
+                getLogger()
+                        .severe("Update your ProtocolLib! You are running " + version + " but the minimum version you should be on is " + requiredProtocolLib +
+                                "!");
+                getLogger().severe("https://ci.dmulloy2.net/job/ProtocolLib/lastSuccessfulBuild/artifact/target/ProtocolLib" + ".jar");
+                getLogger().severe("Or! Use /ld updateprotocollib - To update to the latest development build");
+                getLogger().severe("!! May I have your attention please !!");
+
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        getLogger().severe("!! May I have your attention please !!");
+                        getLogger().severe("Update your ProtocolLib! You are running " + version + " but the minimum version you should be on is " +
+                                requiredProtocolLib + "!");
+                        getLogger().severe("https://ci.dmulloy2.net/job/ProtocolLib/lastSuccessfulBuild/artifact/target" + "/ProtocolLib" + ".jar");
+                        getLogger().severe("Or! Use /ld updateprotocollib - To update to the latest development build");
+                        getLogger().severe("This message is on repeat due to the sheer number of people who don't see this.");
+                    }
+                }.runTaskTimer(this, 20, 10 * 60 * 20);
+            }
+
+            // If this is a release build, even if jenkins build..
+            if (isReleaseBuild()) {
+                // If downloaded from spigot, forcibly set release build to true
+                if (LibsPremium.getUserID().matches("[0-9]+")) {
+                    DisguiseConfig.setUsingReleaseBuilds(true);
+                }
+                // Otherwise leave it untouched as they might've just happened to hit a dev build, which is a release build
+            } else {
+                DisguiseConfig.setUsingReleaseBuilds(false);
+            }
+
+            ReflectionManager.init();
+
+            PacketsManager.init();
+            DisguiseUtilities.init();
+
+            ReflectionManager.registerValues();
+
+            new SoundManager().load();
+
+            DisguiseConfig.loadConfig();
+
+            DisguiseParser.createDefaultMethods();
+
+            PacketsManager.addPacketListeners();
+
+            listener = new DisguiseListener(this);
+            skinHandler = new PlayerSkinHandler();
+
+            Bukkit.getPluginManager().registerEvents(getSkinHandler(), LibsDisguises.getInstance());
+
+            if (DisguiseUtilities.isRunningPaper()) {
+                Bukkit.getPluginManager().registerEvents(new PaperDisguiseListener(), this);
+            }
+
+            registerCommand("libsdisguises", new LibsDisguisesCommand());
+            registerCommand("disguise", new DisguiseCommand());
+            registerCommand("undisguise", new UndisguiseCommand());
+            registerCommand("disguiseplayer", new DisguisePlayerCommand());
+            registerCommand("undisguiseplayer", new UndisguisePlayerCommand());
+            registerCommand("undisguiseentity", new UndisguiseEntityCommand());
+            registerCommand("disguiseentity", new DisguiseEntityCommand());
+            registerCommand("disguiseradius", new DisguiseRadiusCommand());
+            registerCommand("undisguiseradius", new UndisguiseRadiusCommand());
+            registerCommand("disguisehelp", new DisguiseHelpCommand());
+            registerCommand("disguiseclone", new DisguiseCloneCommand());
+            registerCommand("disguiseviewself", new DisguiseViewSelfCommand());
+            registerCommand("disguiseviewbar", new DisguiseViewBarCommand());
+            registerCommand("disguisemodify", new DisguiseModifyCommand());
+            registerCommand("disguisemodifyentity", new DisguiseModifyEntityCommand());
+            registerCommand("disguisemodifyplayer", new DisguiseModifyPlayerCommand());
+            registerCommand("disguisemodifyradius", new DisguiseModifyRadiusCommand());
+            registerCommand("copydisguise", new CopyDisguiseCommand());
+            registerCommand("grabskin", new GrabSkinCommand());
+            registerCommand("savedisguise", new SaveDisguiseCommand());
+            registerCommand("grabhead", new GrabHeadCommand());
+
+            unregisterCommands(false);
+
+            new MetricsInitalizer();
+        } catch (Throwable throwable) {
+            getUpdateChecker().doUpdate();
+
+            throw throwable;
+        }
+    }
+
+    public void unregisterCommands(boolean force) {
+        CommandMap map = ReflectionManager.getCommandMap();
+        Map<String, Command> commands = ReflectionManager.getCommands(map);
+
+        for (String command : getDescription().getCommands().keySet()) {
+            PluginCommand cmd = getCommand("libsdisguises:" + command);
+
+            if (cmd == null || (cmd.getExecutor() != this && !force)) {
+                continue;
+            }
+
+            if (cmd.getPermission() != null && cmd.getPermission().startsWith("libsdisguises.seecmd")) {
+                Bukkit.getPluginManager().removePermission(cmd.getPermission());
+            }
+
+            Iterator<Map.Entry<String, Command>> itel = commands.entrySet().iterator();
+
+            while (itel.hasNext()) {
+                Map.Entry<String, Command> entry = itel.next();
+
+                if (entry.getValue() != cmd) {
+                    continue;
+                }
+
+                itel.remove();
+            }
+        }
+    }
+
+    @Override
+    public File getFile() {
+        return super.getFile();
+    }
+
+    @Override
+    public void onDisable() {
+        DisguiseUtilities.saveDisguises();
+
+        reloaded = true;
+    }
+
+    public boolean isReleaseBuild() {
+        return !getDescription().getVersion().contains("-SNAPSHOT");
+    }
+
+    public String getBuildNo() {
+        return buildNumber;
+    }
+
+    public int getBuildNumber() {
+        return isNumberedBuild() ? Integer.parseInt(getBuildNo()) : 0;
+    }
+
+    public boolean isNumberedBuild() {
+        return getBuildNo() != null && getBuildNo().matches("[0-9]+");
+    }
+
+    private void registerCommand(String commandName, CommandExecutor executioner) {
+        String name = commandConfig.getCommand(commandName);
+
+        if (name == null) {
+            return;
+        }
+
+        PluginCommand command = getCommand("libsdisguises:" + name);
+
+        if (command == null) {
+            return;
+        }
+
+        command.setExecutor(executioner);
+
+        if (executioner instanceof TabCompleter) {
+            command.setTabCompleter((TabCompleter) executioner);
         }
     }
 
     /**
      * Reloads the config with new config options.
      */
+    @Deprecated
     public void reload() {
-        HandlerList.unregisterAll(listener);
-        reloadConfig();
-        DisguiseConfig.initConfig(getConfig());
-    }
-
-    /**
-     * Here we create a nms entity for each disguise. Then grab their default values in their datawatcher. Then their sound volume for mob noises. As well as setting their watcher class and entity size.
-     */
-    private void registerValues() {
-        for (DisguiseType disguiseType : DisguiseType.values()) {
-            if (disguiseType.getEntityType() == null) {
-                continue;
-            }
-            Class watcherClass;
-            try {
-                switch (disguiseType) {
-                    case MINECART_CHEST:
-                    case MINECART_COMMAND:
-                    case MINECART_FURNACE:
-                    case MINECART_HOPPER:
-                    case MINECART_MOB_SPAWNER:
-                    case MINECART_TNT:
-                        watcherClass = MinecartWatcher.class;
-                        break;
-                    case DONKEY:
-                    case MULE:
-                    case UNDEAD_HORSE:
-                    case SKELETON_HORSE:
-                        watcherClass = HorseWatcher.class;
-                        break;
-                    case ZOMBIE_VILLAGER:
-                    case PIG_ZOMBIE:
-                        watcherClass = ZombieWatcher.class;
-                        break;
-                    case MAGMA_CUBE:
-                        watcherClass = SlimeWatcher.class;
-                        break;
-                    case ELDER_GUARDIAN:
-                        watcherClass = GuardianWatcher.class;
-                        break;
-                    case ENDERMITE:
-                        watcherClass = LivingWatcher.class;
-                        break;
-                    default:
-                        watcherClass = Class.forName("me.libraryaddict.disguise.disguisetypes.watchers."
-                                + toReadable(disguiseType.name()) + "Watcher");
-                        break;
-                }
-            } catch (ClassNotFoundException ex) {
-                // There is no explicit watcher for this entity.
-                Class entityClass = disguiseType.getEntityType().getEntityClass();
-                if (entityClass != null) {
-                    if (Tameable.class.isAssignableFrom(entityClass)) {
-                        watcherClass = TameableWatcher.class;
-                    } else if (Ageable.class.isAssignableFrom(entityClass)) {
-                        watcherClass = AgeableWatcher.class;
-                    } else if (LivingEntity.class.isAssignableFrom(entityClass)) {
-                        watcherClass = LivingWatcher.class;
-                    } else {
-                        watcherClass = FlagWatcher.class;
-                    }
-                } else {
-                    watcherClass = FlagWatcher.class; //Disguise is unknown type
-                }
-            }
-            disguiseType.setWatcherClass(watcherClass);
-            if (DisguiseValues.getDisguiseValues(disguiseType) != null) {
-                continue;
-            }
-            String nmsEntityName = toReadable(disguiseType.name());
-            switch (disguiseType) {
-                case WITHER_SKELETON:
-                case ZOMBIE_VILLAGER:
-                case DONKEY:
-                case MULE:
-                case UNDEAD_HORSE:
-                case SKELETON_HORSE:
-                    continue;
-                case PRIMED_TNT:
-                    nmsEntityName = "TNTPrimed";
-                    break;
-                case MINECART_TNT:
-                    nmsEntityName = "MinecartTNT";
-                    break;
-                case MINECART:
-                    nmsEntityName = "MinecartRideable";
-                    break;
-                case FIREWORK:
-                    nmsEntityName = "Fireworks";
-                    break;
-                case SPLASH_POTION:
-                    nmsEntityName = "Potion";
-                    break;
-                case GIANT:
-                    nmsEntityName = "GiantZombie";
-                    break;
-                case DROPPED_ITEM:
-                    nmsEntityName = "Item";
-                    break;
-                case FIREBALL:
-                    nmsEntityName = "LargeFireball";
-                    break;
-                case LEASH_HITCH:
-                    nmsEntityName = "Leash";
-                    break;
-                case ELDER_GUARDIAN:
-                    nmsEntityName = "Guardian";
-                    break;
-                default:
-                    break;
-            }
-            try {
-                if (nmsEntityName.equalsIgnoreCase("Unknown")) {
-                    DisguiseValues disguiseValues = new DisguiseValues(disguiseType, null, 0, 0);
-                    disguiseValues.setAdultBox(new FakeBoundingBox(0, 0, 0));
-                    DisguiseSound sound = DisguiseSound.getType(disguiseType.name());
-                    if (sound != null) {
-                        sound.setDamageAndIdleSoundVolume(1f);
-                    }
-                    continue;
-                }
-                Object nmsEntity = ReflectionManager.createEntityInstance(nmsEntityName);
-                if (nmsEntity == null) {
-                    continue;
-                }
-                Entity bukkitEntity = ReflectionManager.getBukkitEntity(nmsEntity);
-                int entitySize = 0;
-                for (Field field : ReflectionManager.getNmsClass("Entity").getFields()) {
-                    if (field.getType().getName().equals("EnumEntitySize")) {
-                        Enum enumEntitySize = (Enum) field.get(nmsEntity);
-                        entitySize = enumEntitySize.ordinal();
-                        break;
-                    }
-                }
-                DisguiseValues disguiseValues = new DisguiseValues(disguiseType, nmsEntity.getClass(), entitySize,
-                        bukkitEntity instanceof Damageable ? ((Damageable) bukkitEntity).getMaxHealth() : 0);
-                for (WrappedWatchableObject watch : WrappedDataWatcher.getEntityWatcher(bukkitEntity).getWatchableObjects()) {
-                    disguiseValues.setMetaValue(watch.getIndex(), watch.getValue());
-                    // Uncomment when I need to find the new datawatcher values for a class..
-
-//                    System.out.print("Disguise: " + disguiseType + ", ID: " + watch.getIndex() + ", Class: "
-//                     + (watch.getValue() == null ? "null" : watch.getValue().getClass()) + ", Value: " + watch.getValue());
-                }
-                DisguiseSound sound = DisguiseSound.getType(disguiseType.name());
-                if (sound != null) {
-                    Float soundStrength = ReflectionManager.getSoundModifier(nmsEntity);
-                    if (soundStrength != null) {
-                        sound.setDamageAndIdleSoundVolume(soundStrength);
-                    }
-                }
-
-                // Get the bounding box
-                disguiseValues.setAdultBox(ReflectionManager.getBoundingBox(bukkitEntity));
-                if (bukkitEntity instanceof Ageable) {
-                    ((Ageable) bukkitEntity).setBaby();
-                    disguiseValues.setBabyBox(ReflectionManager.getBoundingBox(bukkitEntity));
-                } else if (bukkitEntity instanceof Zombie) {
-                    ((Zombie) bukkitEntity).setBaby(true);
-                    disguiseValues.setBabyBox(ReflectionManager.getBoundingBox(bukkitEntity));
-                }
-                disguiseValues.setEntitySize(ReflectionManager.getSize(bukkitEntity));
-            } catch (SecurityException | IllegalArgumentException | IllegalAccessException | FieldAccessException ex) {
-                System.out.print("[LibsDisguises] Uh oh! Trouble while making values for the disguise " + disguiseType.name()
-                        + "!");
-                System.out.print("[LibsDisguises] Before reporting this error, "
-                        + "please make sure you are using the latest version of LibsDisguises and ProtocolLib.");
-                if (ReflectionManager.isForge()) {
-                    System.out
-                            .print("[LibsDisguises] Development builds are available at (ProtocolLib) "
-                                    + "http://assets.comphenix.net/job/ProtocolLib%20-%20Cauldron/ and (LibsDisguises) http://ci.md-5.net/job/LibsDisguises/");
-                } else {
-                    System.out
-                            .print("[LibsDisguises] Development builds are available at (ProtocolLib) "
-                                    + "http://assets.comphenix.net/job/ProtocolLib/ and (LibsDisguises) http://ci.md-5.net/job/LibsDisguises/");
-                }
-
-                ex.printStackTrace(System.out);
-            }
-        }
-    }
-
-    private String toReadable(String string) {
-        StringBuilder builder = new StringBuilder();
-        for (String s : string.split("_")) {
-            builder.append(s.substring(0, 1)).append(s.substring(1).toLowerCase());
-        }
-        return builder.toString();
+        DisguiseConfig.loadConfig();
     }
 
     public DisguiseListener getListener() {
         return listener;
+    }
+
+    /**
+     * External APIs shouldn't actually need this instance. DisguiseAPI should be enough to handle most cases.
+     *
+     * @return The instance of this plugin
+     */
+    public static LibsDisguises getInstance() {
+        return instance;
     }
 }

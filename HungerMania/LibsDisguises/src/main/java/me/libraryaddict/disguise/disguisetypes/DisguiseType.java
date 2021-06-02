@@ -1,249 +1,353 @@
 package me.libraryaddict.disguise.disguisetypes;
 
+import me.libraryaddict.disguise.utilities.reflection.NmsAddedIn;
+import me.libraryaddict.disguise.utilities.reflection.NmsRemovedIn;
+import me.libraryaddict.disguise.utilities.reflection.NmsVersion;
+import me.libraryaddict.disguise.utilities.translations.TranslateType;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Guardian;
-import org.bukkit.entity.Horse;
-import org.bukkit.entity.Skeleton;
-import org.bukkit.entity.Zombie;
 
-import java.lang.reflect.Method;
+import java.util.Locale;
 
 public enum DisguiseType {
+    AREA_EFFECT_CLOUD(3, 0),
 
     ARMOR_STAND(78),
-    ARROW(60),
+
+    ARROW(60, 0),
+
     BAT,
+
+    @NmsAddedIn(NmsVersion.v1_15) BEE,
+
     BLAZE,
+
     BOAT(1),
+
+    @NmsAddedIn(NmsVersion.v1_14) CAT,
+
     CAVE_SPIDER,
+
     CHICKEN,
+
+    COD,
+
     COW,
+
     CREEPER,
+
+    DOLPHIN,
+
     DONKEY,
+
+    DRAGON_FIREBALL(93),
+
+    DROWNED,
+
     DROPPED_ITEM(2, 1),
+
     EGG(62),
+
     ELDER_GUARDIAN,
+
     ENDER_CRYSTAL(51),
+
     ENDER_DRAGON,
+
     ENDER_PEARL(65),
+
     ENDER_SIGNAL(72),
+
     ENDERMAN,
+
     ENDERMITE,
+
+    EVOKER,
+
+    EVOKER_FANGS(79),
+
     EXPERIENCE_ORB,
-    FALLING_BLOCK(70, 1),
-    FIREBALL(63, 0),
+
+    FALLING_BLOCK(70),
+
+    FIREBALL(63),
+
     FIREWORK(76),
+
     FISHING_HOOK(90),
+
+    @NmsAddedIn(NmsVersion.v1_14) FOX,
+
     GHAST,
+
     GIANT,
+
     GUARDIAN,
+
+    @NmsAddedIn(NmsVersion.v1_16) HOGLIN,
+
     HORSE,
+
+    HUSK,
+
+    ILLUSIONER,
+
     IRON_GOLEM,
+
     ITEM_FRAME(71),
+
+    LLAMA,
+
+    LLAMA_SPIT(68),
+
     LEASH_HITCH(77),
+
     MAGMA_CUBE,
-    MINECART(10, 0),
+
+    MINECART(10),
+
     MINECART_CHEST(10, 1),
+
     MINECART_COMMAND(10, 6),
+
     MINECART_FURNACE(10, 2),
+
     MINECART_HOPPER(10, 5),
+
     MINECART_MOB_SPAWNER(10, 4),
+
     MINECART_TNT(10, 3),
+
+    MODDED_MISC,
+
+    MODDED_LIVING,
+
     MULE,
+
     MUSHROOM_COW,
+
     OCELOT,
+
     PAINTING,
+
+    @NmsAddedIn(NmsVersion.v1_14) PANDA,
+
+    PARROT,
+
+    PHANTOM,
+
     PIG,
-    PIG_ZOMBIE,
+
+    @NmsRemovedIn(NmsVersion.v1_16) PIG_ZOMBIE,
+
+    @NmsAddedIn(NmsVersion.v1_16) PIGLIN,
+
+    @NmsAddedIn(NmsVersion.v1_16) PIGLIN_BRUTE,
+
+    @NmsAddedIn(NmsVersion.v1_14) PILLAGER,
+
     PLAYER,
+
+    POLAR_BEAR,
+
     PRIMED_TNT(50),
+
+    PUFFERFISH,
+
     RABBIT,
+
+    @NmsAddedIn(NmsVersion.v1_14) RAVAGER,
+
+    SALMON,
+
     SHEEP,
+
+    SHULKER,
+
+    SHULKER_BULLET(67),
+
     SILVERFISH,
+
     SKELETON,
+
     SKELETON_HORSE,
+
     SLIME,
-    SMALL_FIREBALL(64, 0),
+
+    SMALL_FIREBALL(63),
+
     SNOWBALL(61),
+
     SNOWMAN,
+
+    SPECTRAL_ARROW(91),
+
     SPIDER,
-    SPLASH_POTION(73),
+
+    SPLASH_POTION(73, 0),
+
     SQUID,
+
+    STRAY,
+
+    @NmsAddedIn(NmsVersion.v1_16) STRIDER,
+
     THROWN_EXP_BOTTLE(75),
-    UNDEAD_HORSE,
+
+    @NmsRemovedIn(NmsVersion.v1_14) TIPPED_ARROW(60),
+
+    TRIDENT(94, 0),
+
+    @NmsAddedIn(NmsVersion.v1_14) TRADER_LLAMA,
+
+    TROPICAL_FISH,
+
+    TURTLE,
+
+    UNKNOWN,
+
+    VEX,
+
     VILLAGER,
+
+    VINDICATOR,
+
+    @NmsAddedIn(NmsVersion.v1_14) WANDERING_TRADER,
+
     WITCH,
+
     WITHER,
+
     WITHER_SKELETON,
+
     WITHER_SKULL(66),
+
     WOLF,
+
+    @NmsAddedIn(NmsVersion.v1_16) ZOGLIN,
+
     ZOMBIE,
+
+    ZOMBIE_HORSE,
+
     ZOMBIE_VILLAGER,
-    UNKNOWN;
 
-    private static Method isVillager, getVariant, getSkeletonType, isElder;
-
-    static {
-        // We set the entity type in this so that we can safely ignore disguisetypes which don't exist in older versions of MC.
-        // Without erroring up everything.
-        for (DisguiseType type : values()) {
-            try {
-                DisguiseType toUse = type;
-                switch (type) {
-                    // Disguise item frame isn't supported. So we don't give it a entity type which should prevent it from being..
-                    // Usable.
-                    case ITEM_FRAME:
-                        break;
-                    case DONKEY:
-                    case MULE:
-                    case UNDEAD_HORSE:
-                    case SKELETON_HORSE:
-                        toUse = DisguiseType.HORSE;
-                        break;
-                    case ZOMBIE_VILLAGER:
-                        toUse = DisguiseType.ZOMBIE;
-                        break;
-                    case WITHER_SKELETON:
-                        toUse = DisguiseType.SKELETON;
-                        break;
-                    case ELDER_GUARDIAN:
-                        toUse = DisguiseType.GUARDIAN;
-                        break;
-                    default:
-                        break;
-                }
-                type.setEntityType(EntityType.valueOf(toUse.name()));
-            } catch (Throwable ex) {
-                // This version of craftbukkit doesn't have the disguise.
-            }
-        }
-        try {
-            isVillager = Zombie.class.getMethod("isVillager");
-        } catch (Throwable ignored) {
-        }
-        try {
-            getVariant = Horse.class.getMethod("getVariant");
-        } catch (Throwable ignored) {
-            // Pre-1.6, but that isn't even supported
-        }
-        try {
-            getSkeletonType = Skeleton.class.getMethod("getSkeletonType");
-        } catch (Throwable ignored) {
-        }
-        try {
-            isElder = Guardian.class.getMethod("isElder");
-        } catch (Throwable ignored) {
-        }
-    }
+    @NmsAddedIn(NmsVersion.v1_16) ZOMBIFIED_PIGLIN;
 
     public static DisguiseType getType(Entity entity) {
         DisguiseType disguiseType = getType(entity.getType());
-        switch (disguiseType) {
-            case ZOMBIE:
-                try {
-                    if ((Boolean) isVillager.invoke(entity)) {
-                        disguiseType = DisguiseType.ZOMBIE_VILLAGER;
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace(System.out);
-                }
-                break;
-            case HORSE:
-                try {
-                    Object variant = getVariant.invoke(entity);
-                    disguiseType = DisguiseType.valueOf(((Enum) variant).name());
-                } catch (Exception ex) {
-                    ex.printStackTrace(System.out);
-                }
-                break;
-            case SKELETON:
-                try {
-                    Object type = getSkeletonType.invoke(entity);
-                    if (type == Skeleton.SkeletonType.WITHER) {
-                        disguiseType = DisguiseType.WITHER_SKELETON;
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace(System.out);
-                }
-                break;
-            case GUARDIAN:
-                try {
-                    if ((Boolean) isElder.invoke(entity)) {
-                        disguiseType = DisguiseType.ELDER_GUARDIAN;
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace(System.out);
-                }
-                break;
-            default:
-                break;
-        }
+
         return disguiseType;
     }
 
     public static DisguiseType getType(EntityType entityType) {
-        try {
-            return valueOf(entityType.name().toUpperCase());
-        } catch (Throwable ex) {
-            return DisguiseType.UNKNOWN;
+        for (DisguiseType type : values()) {
+            if (type.getEntityType() != entityType) {
+                continue;
+            }
+
+            return type;
         }
+
+        return DisguiseType.UNKNOWN;
     }
 
-    private int defaultId, entityId;
     private EntityType entityType;
+
+    private int objectId = -1, defaultData = 0;
+    private int typeId;
+
     private Class<? extends FlagWatcher> watcherClass;
 
     DisguiseType(int... ints) {
         for (int i = 0; i < ints.length; i++) {
             int value = ints[i];
+
             switch (i) {
                 case 0:
-                    entityId = value;
+                    objectId = value;
+
                     break;
                 case 1:
-                    defaultId = value;
+                    defaultData = value;
+
                     break;
                 default:
                     break;
             }
         }
+
+        try {
+            // Why oh why can't isCustom() work :(
+            if (name().startsWith("MODDED_")) {
+                setEntityType(EntityType.UNKNOWN);
+            } else {
+                setEntityType(EntityType.valueOf(name()));
+            }
+        }
+        catch (Exception ex) {
+        }
     }
 
-    public int getDefaultId() {
-        return defaultId;
+    public int getDefaultData() {
+        return defaultData;
     }
 
     public Class<? extends Entity> getEntityClass() {
-        if (entityType != null) {
+        if (entityType != null && getEntityType().getEntityClass() != null) {
             return getEntityType().getEntityClass();
         }
-        return Entity.class;
-    }
 
-    public int getEntityId() {
-        return entityId;
+        return Entity.class;
     }
 
     public EntityType getEntityType() {
         return entityType;
     }
 
-    public int getTypeId() {
-        return (int) getEntityType().getTypeId();
+    private void setEntityType(EntityType entityType) {
+        this.entityType = entityType;
     }
 
-    public Class getWatcherClass() {
+    /**
+     * The object type send in packets when spawning a misc entity. Otherwise, -1.
+     *
+     * @return
+     */
+    public int getObjectId() {
+        return objectId;
+    }
+
+    /**
+     * The TYPE id of this entity. Different from the Object Id send in spawn packets when spawning miscs.
+     *
+     * @return
+     */
+    public int getTypeId() {
+        return typeId;
+    }
+
+    public void setTypeId(int typeId) {
+        this.typeId = typeId;
+    }
+
+    public Class<? extends FlagWatcher> getWatcherClass() {
         return watcherClass;
     }
 
+    public void setWatcherClass(Class<? extends FlagWatcher> c) {
+        watcherClass = c;
+    }
+
     public boolean isMisc() {
-        return getEntityType() != null && !getEntityType().isAlive();
+        return this == DisguiseType.MODDED_MISC ||
+                (!isCustom() && getEntityType() != null && !getEntityType().isAlive());
     }
 
     public boolean isMob() {
-        return getEntityType() != null && getEntityType().isAlive() && !isPlayer();
+        return this == DisguiseType.MODDED_LIVING ||
+                (!isCustom() && getEntityType() != null && getEntityType().isAlive() && !isPlayer());
     }
 
     public boolean isPlayer() {
@@ -254,19 +358,17 @@ public enum DisguiseType {
         return this == DisguiseType.UNKNOWN;
     }
 
-    private void setEntityType(EntityType entityType) {
-        this.entityType = entityType;
-    }
-
-    public void setWatcherClass(Class<? extends FlagWatcher> c) {
-        watcherClass = c;
+    public boolean isCustom() {
+        return this == DisguiseType.MODDED_MISC || this == DisguiseType.MODDED_LIVING;
     }
 
     public String toReadable() {
         String[] split = name().split("_");
+
         for (int i = 0; i < split.length; i++) {
-            split[i] = split[i].substring(0, 1) + split[i].substring(1).toLowerCase();
+            split[i] = split[i].charAt(0) + split[i].substring(1).toLowerCase(Locale.ENGLISH);
         }
-        return StringUtils.join(split, " ");
+
+        return TranslateType.DISGUISES.get(StringUtils.join(split, " "));
     }
 }

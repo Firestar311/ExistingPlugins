@@ -1,62 +1,54 @@
 package me.libraryaddict.disguise.disguisetypes.watchers;
 
 import me.libraryaddict.disguise.disguisetypes.Disguise;
+import me.libraryaddict.disguise.disguisetypes.MetaIndex;
+
+import java.util.Optional;
+import java.util.UUID;
 
 public class TameableWatcher extends AgeableWatcher {
-
     public TameableWatcher(Disguise disguise) {
         super(disguise);
     }
 
-    @Override
-    public float getHealth() {
-        return (Float) getValue(18, 8F);
+    public Optional<UUID> getOwner() {
+        return getData(MetaIndex.TAMEABLE_OWNER);
     }
 
-    public String getOwner() {
-        return (String) getValue(17, null);
+    public void setOwner(UUID owner) {
+        setData(MetaIndex.TAMEABLE_OWNER, Optional.of(owner));
+        sendData(MetaIndex.TAMEABLE_OWNER);
     }
 
     public boolean isSitting() {
-        return isTrue(1);
-    }
-
-    public boolean isTamed() {
-        return isTrue(4);
-    }
-
-    protected boolean isTrue(int no) {
-        return ((Byte) getValue(16, (byte) 0) & no) != 0;
-    }
-
-    protected void setFlag(int no, boolean flag) {
-        byte b0 = (Byte) getValue(16, (byte) 0);
-        if (flag) {
-            setValue(16, (byte) (b0 | no));
-        } else {
-            setValue(16, (byte) (b0 & -(no + 1)));
-        }
-        sendData(16);
-    }
-
-    @Override
-    public void setHealth(float newHealth) {
-        setValue(18, newHealth);
-        setValue(6, newHealth);
-        sendData(6, 18);
-    }
-
-    public void setOwner(String owner) {
-        setValue(17, owner);
-        sendData(17);
+        return isTameableFlag(1);
     }
 
     public void setSitting(boolean sitting) {
-        setFlag(1, sitting);
+        setTameableFlag(1, sitting);
+    }
+
+    public boolean isTamed() {
+        return isTameableFlag(4);
     }
 
     public void setTamed(boolean tamed) {
-        setFlag(4, tamed);
+        setTameableFlag(4, tamed);
     }
 
+    protected boolean isTameableFlag(int no) {
+        return (getData(MetaIndex.TAMEABLE_META) & no) != 0;
+    }
+
+    protected void setTameableFlag(int no, boolean flag) {
+        byte value = getData(MetaIndex.TAMEABLE_META);
+
+        if (flag) {
+            setData(MetaIndex.TAMEABLE_META, (byte) (value | no));
+        } else {
+            setData(MetaIndex.TAMEABLE_META, (byte) (value & -(no + 1)));
+        }
+
+        sendData(MetaIndex.TAMEABLE_META);
+    }
 }

@@ -2,6 +2,10 @@ package me.libraryaddict.disguise.disguisetypes.watchers;
 
 import me.libraryaddict.disguise.disguisetypes.AnimalColor;
 import me.libraryaddict.disguise.disguisetypes.Disguise;
+import me.libraryaddict.disguise.disguisetypes.MetaIndex;
+import me.libraryaddict.disguise.utilities.reflection.NmsRemovedIn;
+import me.libraryaddict.disguise.utilities.reflection.NmsVersion;
+import org.bukkit.DyeColor;
 
 public class WolfWatcher extends TameableWatcher {
 
@@ -9,26 +13,76 @@ public class WolfWatcher extends TameableWatcher {
         super(disguise);
     }
 
-    public AnimalColor getCollarColor() {
-        return AnimalColor.getColor((Byte) getValue(20, (byte) 14));
+    public DyeColor getCollarColor() {
+        return AnimalColor.getColorByWool(getData(MetaIndex.WOLF_COLLAR)).getDyeColor();
     }
 
-    public boolean isAngry() {
-        return isTrue(2);
+    @Deprecated
+    public void setCollarColor(AnimalColor color) {
+        setCollarColor(color.getDyeColor());
     }
 
-    public void setAngry(boolean angry) {
-        setFlag(2, angry);
-    }
-
-    public void setCollarColor(AnimalColor newColor) {
+    public void setCollarColor(DyeColor newColor) {
         if (!isTamed()) {
             setTamed(true);
         }
-        if (newColor != getCollarColor()) {
-            setValue(20, (byte) newColor.getId());
-            sendData(20);
+
+        if (newColor == getCollarColor()) {
+            return;
         }
+
+        setData(MetaIndex.WOLF_COLLAR, (int) newColor.getWoolData());
+        sendData(MetaIndex.WOLF_COLLAR);
     }
 
+    public boolean isBegging() {
+        return getData(MetaIndex.WOLF_BEGGING);
+    }
+
+    public void setBegging(boolean begging) {
+        setData(MetaIndex.WOLF_BEGGING, begging);
+        sendData(MetaIndex.WOLF_BEGGING);
+    }
+
+    public boolean isAngry() {
+        return getAnger() > 0;
+        //return isTameableFlag(2);
+    }
+
+    public void setAngry(boolean angry) {
+        setAnger(angry ? 1 : 0);
+        //setTameableFlag(2, angry);
+    }
+
+    public int getAnger() {
+        return getData(MetaIndex.WOLF_ANGER);
+    }
+
+    public void setAnger(int anger) {
+        setData(MetaIndex.WOLF_ANGER, anger);
+        sendData(MetaIndex.WOLF_ANGER);
+    }
+
+    /**
+     * Used for tail rotation.
+     *
+     * @return
+     */
+    @NmsRemovedIn(NmsVersion.v1_15)
+    @Deprecated
+    public float getDamageTaken() {
+        return getData(MetaIndex.WOLF_DAMAGE);
+    }
+
+    /**
+     * Used for tail rotation.
+     *
+     * @param damage
+     */
+    @Deprecated
+    @NmsRemovedIn(NmsVersion.v1_15)
+    public void setDamageTaken(float damage) {
+        setData(MetaIndex.WOLF_DAMAGE, damage);
+        sendData(MetaIndex.WOLF_DAMAGE);
+    }
 }

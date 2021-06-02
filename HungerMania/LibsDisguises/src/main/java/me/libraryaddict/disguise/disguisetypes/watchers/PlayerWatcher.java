@@ -1,140 +1,241 @@
 package me.libraryaddict.disguise.disguisetypes.watchers;
 
-import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Player;
-
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.reflect.StructureModifier;
-
-import me.libraryaddict.disguise.DisguiseAPI;
+import com.comphenix.protocol.wrappers.WrappedGameProfile;
+import com.comphenix.protocol.wrappers.nbt.NbtCompound;
+import com.comphenix.protocol.wrappers.nbt.NbtFactory;
 import me.libraryaddict.disguise.DisguiseConfig;
 import me.libraryaddict.disguise.disguisetypes.Disguise;
+import me.libraryaddict.disguise.disguisetypes.MetaIndex;
 import me.libraryaddict.disguise.disguisetypes.PlayerDisguise;
-import me.libraryaddict.disguise.utilities.DisguiseUtilities;
-import me.libraryaddict.disguise.utilities.ReflectionManager.LibVersion;
+import me.libraryaddict.disguise.utilities.parser.RandomDefaultValue;
+import org.bukkit.entity.Parrot;
+import org.bukkit.inventory.MainHand;
 
 public class PlayerWatcher extends LivingWatcher {
-
-    private boolean isInBed;
-    private BlockFace sleepingDirection;
+    private boolean alwaysShowInTab = DisguiseConfig.isShowDisguisedPlayersInTab();
 
     public PlayerWatcher(Disguise disguise) {
         super(disguise);
+
+        setData(MetaIndex.PLAYER_SKIN, MetaIndex.PLAYER_SKIN.getDefault());
+        setData(MetaIndex.PLAYER_HAND, (byte) 1); // I may be left handed, but the others are right
+    }
+
+    public boolean isDisplayedInTab() {
+        return alwaysShowInTab;
+    }
+
+    public void setDisplayedInTab(boolean showPlayerInTab) {
+        if (getDisguise().isDisguiseInUse())
+            throw new IllegalStateException("Cannot set this while disguise is in use!");
+
+        alwaysShowInTab = showPlayerInTab;
+    }
+
+    public boolean isNameVisible() {
+        return ((PlayerDisguise) getDisguise()).isNameVisible();
+    }
+
+    public void setNameVisible(boolean nameVisible) {
+        ((PlayerDisguise) getDisguise()).setNameVisible(nameVisible);
+    }
+
+    @RandomDefaultValue
+    public String getName() {
+        return ((PlayerDisguise) getDisguise()).getName();
+    }
+
+    @RandomDefaultValue
+    public void setName(String name) {
+        ((PlayerDisguise) getDisguise()).setName(name);
     }
 
     @Override
     public PlayerWatcher clone(Disguise disguise) {
         PlayerWatcher watcher = (PlayerWatcher) super.clone(disguise);
-        watcher.isInBed = isInBed;
+        watcher.alwaysShowInTab = alwaysShowInTab;
         return watcher;
     }
 
-    public int getArrowsSticking() {
-        return (Byte) getValue(9, (byte) 0);
+    public MainHand getMainHand() {
+        return MainHand.values()[getData(MetaIndex.PLAYER_HAND)];
     }
 
-    public BlockFace getSleepingDirection() {
-        if (sleepingDirection == null) {
-            if (this.getDisguise().getEntity() != null && isSleeping()) {
-                this.sleepingDirection = BlockFace.values()[Math
-                        .round(this.getDisguise().getEntity().getLocation().getYaw() / 90F) & 0x3];
-            } else {
-                return BlockFace.EAST;
-            }
-        }
-        return sleepingDirection;
+    public void setMainHand(MainHand mainHand) {
+        setData(MetaIndex.PLAYER_HAND, (byte) mainHand.ordinal());
+        sendData(MetaIndex.PLAYER_HAND);
     }
 
-    private boolean getValue16(int i) {
-        return ((Byte) getValue(16, (byte) 0) & 1 << i) != 0;
+    // Bit 0 (0x01): Cape enabled
+    // Bit 1 (0x02): Jacket enabled
+    // Bit 2 (0x04): Left Sleeve enabled
+    // Bit 3 (0x08): Right Sleeve enabled
+    // Bit 4 (0x10): Left Pants Leg enabled
+    // Bit 5 (0x20): Right Pants Leg enabled
+    // Bit 6 (0x40): Hat enabled
+
+    private boolean isSkinFlag(int i) {
+        return (getData(MetaIndex.PLAYER_SKIN) & 1 << i) != 0;
     }
 
-    public boolean isHideCape() {
-        return getValue16(1);
+    public boolean isCapeEnabled() {
+        return isSkinFlag(1);
     }
 
-    public boolean isSleeping() {
-        return isInBed;
+    public void setCapeEnabled(boolean enabled) {
+        setSkinFlags(1, enabled);
+
+        sendData(MetaIndex.PLAYER_SKIN);
     }
 
-    public void setArrowsSticking(int arrowsNo) {
-        setValue(9, (byte) arrowsNo);
-        sendData(9);
+    public boolean isJacketEnabled() {
+        return isSkinFlag(2);
     }
 
-    public void setHideCape(boolean hideCape) {
-        setValue16(1, hideCape);
-        sendData(16);
+    public void setJacketEnabled(boolean enabled) {
+        setSkinFlags(2, enabled);
+
+        sendData(MetaIndex.PLAYER_SKIN);
+    }
+
+    public boolean isLeftSleeveEnabled() {
+        return isSkinFlag(3);
+    }
+
+    public void setLeftSleeveEnabled(boolean enabled) {
+        setSkinFlags(3, enabled);
+
+        sendData(MetaIndex.PLAYER_SKIN);
+    }
+
+    public boolean isRightSleeveEnabled() {
+        return isSkinFlag(4);
+    }
+
+    public void setRightSleeveEnabled(boolean enabled) {
+        setSkinFlags(4, enabled);
+
+        sendData(MetaIndex.PLAYER_SKIN);
+    }
+
+    public boolean isLeftPantsEnabled() {
+        return isSkinFlag(5);
+    }
+
+    public void setLeftPantsEnabled(boolean enabled) {
+        setSkinFlags(5, enabled);
+
+        sendData(MetaIndex.PLAYER_SKIN);
+    }
+
+    public boolean isRightPantsEnabled() {
+        return isSkinFlag(6);
+    }
+
+    public void setRightPantsEnabled(boolean enabled) {
+        setSkinFlags(6, enabled);
+
+        sendData(MetaIndex.PLAYER_SKIN);
+    }
+
+    public boolean isHatEnabled() {
+        return isSkinFlag(7);
+    }
+
+    public void setHatEnabled(boolean enabled) {
+        setSkinFlags(7, enabled);
+
+        sendData(MetaIndex.PLAYER_SKIN);
+    }
+
+    public WrappedGameProfile getSkin() {
+        return ((PlayerDisguise) getDisguise()).getGameProfile();
     }
 
     public void setSkin(String playerName) {
         ((PlayerDisguise) getDisguise()).setSkin(playerName);
     }
 
-    public void setSleeping(BlockFace sleepingDirection) {
-        setSleeping(true, sleepingDirection);
+    @RandomDefaultValue
+    public void setSkin(WrappedGameProfile profile) {
+        ((PlayerDisguise) getDisguise()).setSkin(profile);
     }
 
-    public void setSleeping(boolean sleep) {
-        setSleeping(sleep, null);
-    }
+    private void setSkinFlags(int i, boolean flag) {
+        byte b0 = getData(MetaIndex.PLAYER_SKIN);
 
-    /**
-     * If no BlockFace is supplied. It grabs it from the entities facing direction if applicable.
-     *
-     * @param sleeping
-     * @param sleepingDirection
-     */
-    public void setSleeping(boolean sleeping, BlockFace sleepingDirection) {
-        if (sleepingDirection != null) {
-            this.sleepingDirection = BlockFace.values()[sleepingDirection.ordinal() % 4];
-        }
-        if (sleeping != isSleeping()) {
-            isInBed = sleeping;
-            if (DisguiseConfig.isBedPacketsEnabled() && DisguiseUtilities.isDisguiseInUse(getDisguise())) {
-                try {
-                    if (isSleeping()) {
-                        for (Player player : DisguiseUtilities.getPerverts(getDisguise())) {
-                            PacketContainer[] packets = DisguiseUtilities.getBedPackets(player, this.getDisguise().getEntity()
-                                    .getLocation(), player.getLocation(), (PlayerDisguise) this.getDisguise());
-                            if (getDisguise().getEntity() == player) {
-                                for (PacketContainer packet : packets) {
-                                    packet = packet.shallowClone();
-                                    packet.getIntegers().write(0, DisguiseAPI.getSelfDisguiseId());
-                                    ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
-                                }
-                            } else {
-                                for (PacketContainer packet : packets) {
-                                    ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
-                                }
-                            }
-                        }
-                    } else {
-                        PacketContainer packet = new PacketContainer(PacketType.Play.Server.ANIMATION);
-                        StructureModifier<Integer> mods = packet.getIntegers();
-                        mods.write(0, getDisguise().getEntity().getEntityId());
-                        mods.write(1, 3);
-                        for (Player player : DisguiseUtilities.getPerverts(getDisguise())) {
-                            ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet);
-
-                        }
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace(System.out);
-                }
-            }
-        }
-    }
-
-    private void setValue16(int i, boolean flag) {
-        byte b0 = (Byte) getValue(16, (byte) 0);
         if (flag) {
-            setValue(16, (byte) (b0 | 1 << i));
+            setData(MetaIndex.PLAYER_SKIN, (byte) (b0 | 1 << i));
         } else {
-            setValue(16, (byte) (b0 & (1 << i ^ 0xFFFFFFFF)));
+            setData(MetaIndex.PLAYER_SKIN, (byte) (b0 & (~1 << i)));
         }
     }
 
+    public Parrot.Variant getRightShoulderParrot() {
+        NbtCompound nbt = (NbtCompound) getData(MetaIndex.PLAYER_RIGHT_SHOULDER_ENTITY);
+
+        return Parrot.Variant.values()[nbt.getIntegerOrDefault("Variant")];
+    }
+
+    public void setRightShoulderParrot(Parrot.Variant variant) {
+        NbtCompound nbt = NbtFactory.ofCompound("");
+
+        if (variant != null) {
+            nbt.put("id", "minecraft:parrot");
+            nbt.put("Variant", variant.ordinal());
+        }
+
+        setData(MetaIndex.PLAYER_RIGHT_SHOULDER_ENTITY, nbt);
+        sendData(MetaIndex.PLAYER_RIGHT_SHOULDER_ENTITY);
+    }
+
+    public Parrot.Variant getLeftShoulderParrot() {
+        NbtCompound nbt = (NbtCompound) getData(MetaIndex.PLAYER_LEFT_SHOULDER_ENTITY);
+
+        return Parrot.Variant.values()[nbt.getIntegerOrDefault("Variant")];
+    }
+
+    public void setLeftShoulderParrot(Parrot.Variant variant) {
+        NbtCompound nbt = NbtFactory.ofCompound("");
+
+        if (variant != null) {
+            nbt.put("id", "minecraft:parrot");
+            nbt.put("Variant", variant.ordinal());
+        }
+
+        setData(MetaIndex.PLAYER_LEFT_SHOULDER_ENTITY, nbt);
+        sendData(MetaIndex.PLAYER_LEFT_SHOULDER_ENTITY);
+    }
+
+    public boolean isRightShoulderHasParrot() {
+        return ((NbtCompound) getData(MetaIndex.PLAYER_RIGHT_SHOULDER_ENTITY)).containsKey("id");
+    }
+
+    public void setRightShoulderHasParrot(boolean hasParrot) {
+        if (isRightShoulderHasParrot() == hasParrot) {
+            return;
+        }
+
+        if (hasParrot) {
+            setRightShoulderParrot(Parrot.Variant.RED);
+        } else {
+            setRightShoulderParrot(null);
+        }
+    }
+
+    public boolean isLeftShoulderHasParrot() {
+        return ((NbtCompound) getData(MetaIndex.PLAYER_LEFT_SHOULDER_ENTITY)).containsKey("id");
+    }
+
+    public void setLeftShoulderHasParrot(boolean hasParrot) {
+        if (isLeftShoulderHasParrot() == hasParrot) {
+            return;
+        }
+
+        if (hasParrot) {
+            setLeftShoulderParrot(Parrot.Variant.RED);
+        } else {
+            setLeftShoulderParrot(null);
+        }
+    }
 }

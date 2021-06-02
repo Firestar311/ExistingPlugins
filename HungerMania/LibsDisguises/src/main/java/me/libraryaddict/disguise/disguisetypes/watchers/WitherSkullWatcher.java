@@ -2,6 +2,7 @@ package me.libraryaddict.disguise.disguisetypes.watchers;
 
 import me.libraryaddict.disguise.disguisetypes.Disguise;
 import me.libraryaddict.disguise.disguisetypes.FlagWatcher;
+import me.libraryaddict.disguise.disguisetypes.MetaIndex;
 
 public class WitherSkullWatcher extends FlagWatcher {
 
@@ -10,12 +11,11 @@ public class WitherSkullWatcher extends FlagWatcher {
     }
 
     public boolean isBlue() {
-        return (Byte) getValue(10, (byte) 0) == 1;
+        return getData(MetaIndex.WITHER_SKULL_BLUE);
     }
 
     public void setBlue(boolean blue) {
-        setValue(10, (byte) (blue ? 1 : 0));
-        sendData(10);
+        setData(MetaIndex.WITHER_SKULL_BLUE, blue);
+        sendData(MetaIndex.WITHER_SKULL_BLUE);
     }
-
 }

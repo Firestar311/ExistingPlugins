@@ -2,38 +2,41 @@ package me.libraryaddict.disguise.disguisetypes.watchers;
 
 import me.libraryaddict.disguise.disguisetypes.Disguise;
 import me.libraryaddict.disguise.disguisetypes.FlagWatcher;
+import me.libraryaddict.disguise.disguisetypes.MetaIndex;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 public class ItemFrameWatcher extends FlagWatcher {
-
     public ItemFrameWatcher(Disguise disguise) {
         super(disguise);
     }
 
     public ItemStack getItem() {
-        if (getValue(2, null) == null) {
-            return new ItemStack(0);
+        if (getData(MetaIndex.ITEMFRAME_ITEM) == null) {
+            return new ItemStack(Material.AIR);
         }
-        return (ItemStack) getValue(8, null);
+
+        return getData(MetaIndex.ITEMFRAME_ITEM);
     }
 
     public int getRotation() {
-        return (Integer) getValue(9, 0);
+        return getData(MetaIndex.ITEMFRAME_ROTATION);
     }
 
     public void setItem(ItemStack newItem) {
         if (newItem == null) {
-            newItem = new ItemStack(0);
+            newItem = new ItemStack(Material.AIR);
         }
+
         newItem = newItem.clone();
         newItem.setAmount(1);
-        setValue(8, newItem);
-        sendData(8);
+
+        setData(MetaIndex.ITEMFRAME_ITEM, newItem);
+        sendData(MetaIndex.ITEMFRAME_ITEM);
     }
 
     public void setRotation(int rotation) {
-        setValue(9, (byte) (rotation % 4));
-        sendData(9);
+        setData(MetaIndex.ITEMFRAME_ROTATION, rotation % 4);
+        sendData(MetaIndex.ITEMFRAME_ROTATION);
     }
-
 }

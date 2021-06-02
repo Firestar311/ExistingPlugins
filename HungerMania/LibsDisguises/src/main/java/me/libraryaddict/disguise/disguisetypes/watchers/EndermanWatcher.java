@@ -1,43 +1,59 @@
 package me.libraryaddict.disguise.disguisetypes.watchers;
 
+import com.comphenix.protocol.wrappers.WrappedBlockData;
+import me.libraryaddict.disguise.disguisetypes.Disguise;
+import me.libraryaddict.disguise.disguisetypes.MetaIndex;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import me.libraryaddict.disguise.disguisetypes.Disguise;
+import java.util.Optional;
 
-public class EndermanWatcher extends LivingWatcher {
+public class EndermanWatcher extends InsentientWatcher {
 
     public EndermanWatcher(Disguise disguise) {
         super(disguise);
     }
 
     @Override
-    public ItemStack getItemInHand() {
-        return new ItemStack((Byte) getValue(16, (byte) 0), 1, ((Byte) getValue(17, (byte) 0)));
-    }
+    public ItemStack getItemInMainHand() {
+        Optional<WrappedBlockData> value = getData(MetaIndex.ENDERMAN_ITEM);
 
-    public boolean isAggressive() {
-        return (Byte) getValue(18, (byte) 0) == 1;
-    }
-
-    @Deprecated
-    public boolean isAgressive() {
-        return isAggressive();
-    }
-
-    public void setAggressive(boolean isAggressive) {
-        setValue(18, (byte) (isAggressive ? 1 : 0));
-        sendData(18);
-    }
-
-    @Deprecated
-    public void setAgressive(boolean isAgressive) {
-        setAggressive(isAgressive);
+        if (value.isPresent()) {
+            WrappedBlockData pair = value.get();
+            return new ItemStack(pair.getType(), 1);
+        } else {
+            return null;
+        }
     }
 
     @Override
-    public void setItemInHand(ItemStack itemstack) {
-        setValue(16, (short) (itemstack.getTypeId() & 255));
-        setValue(17, (byte) (itemstack.getDurability() & 255));
+    public void setItemInMainHand(ItemStack itemstack) {
+        setItemInMainHand(itemstack.getType());
     }
 
+    public void setItemInMainHand(Material type) {
+        Optional<WrappedBlockData> optional;
+
+        if (type == null)
+            optional = Optional.empty();
+        else
+            optional = Optional.of(WrappedBlockData.createData(type));
+
+        setData(MetaIndex.ENDERMAN_ITEM, optional);
+        sendData(MetaIndex.ENDERMAN_ITEM);
+    }
+
+    @Deprecated
+    public void setItemInMainHand(Material type, int data) {
+        setItemInMainHand(type);
+    }
+
+    public boolean isAggressive() {
+        return getData(MetaIndex.ENDERMAN_AGRESSIVE);
+    }
+
+    public void setAggressive(boolean isAggressive) {
+        setData(MetaIndex.ENDERMAN_AGRESSIVE, isAggressive);
+        sendData(MetaIndex.ENDERMAN_AGRESSIVE);
+    }
 }

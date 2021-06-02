@@ -1,6 +1,7 @@
 package me.libraryaddict.disguise.disguisetypes.watchers;
 
 import me.libraryaddict.disguise.disguisetypes.Disguise;
+import me.libraryaddict.disguise.disguisetypes.MetaIndex;
 
 public class PigWatcher extends AgeableWatcher {
 
@@ -9,11 +10,11 @@ public class PigWatcher extends AgeableWatcher {
     }
 
     public boolean isSaddled() {
-        return (Byte) getValue(16, (byte) 0) == 1;
+        return getData(MetaIndex.PIG_SADDLED);
     }
 
     public void setSaddled(boolean isSaddled) {
-        setValue(16, (byte) (isSaddled ? 1 : 0));
-        sendData(16);
+        setData(MetaIndex.PIG_SADDLED, isSaddled);
+        sendData(MetaIndex.PIG_SADDLED);
     }
 }

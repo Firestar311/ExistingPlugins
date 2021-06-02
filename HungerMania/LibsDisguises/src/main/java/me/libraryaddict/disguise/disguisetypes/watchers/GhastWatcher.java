@@ -1,20 +1,20 @@
 package me.libraryaddict.disguise.disguisetypes.watchers;
 
 import me.libraryaddict.disguise.disguisetypes.Disguise;
+import me.libraryaddict.disguise.disguisetypes.MetaIndex;
 
-public class GhastWatcher extends LivingWatcher {
+public class GhastWatcher extends InsentientWatcher {
 
     public GhastWatcher(Disguise disguise) {
         super(disguise);
     }
 
     public boolean isAggressive() {
-        return (Byte) getValue(16, (byte) 0) == 1;
+        return getData(MetaIndex.GHAST_AGRESSIVE);
     }
 
     public void setAggressive(boolean isAggressive) {
-        setValue(16, (byte) (isAggressive ? 1 : 0));
-        sendData(16);
+        setData(MetaIndex.GHAST_AGRESSIVE, isAggressive);
+        sendData(MetaIndex.GHAST_AGRESSIVE);
     }
-
 }

@@ -1,8 +1,12 @@
 package me.libraryaddict.disguise.disguisetypes.watchers;
 
 import me.libraryaddict.disguise.disguisetypes.Disguise;
+import me.libraryaddict.disguise.disguisetypes.MetaIndex;
+import me.libraryaddict.disguise.utilities.reflection.NmsAddedIn;
+import me.libraryaddict.disguise.utilities.reflection.NmsRemovedIn;
+import me.libraryaddict.disguise.utilities.reflection.NmsVersion;
 
-public class ZombieWatcher extends LivingWatcher {
+public class ZombieWatcher extends InsentientWatcher {
 
     public ZombieWatcher(Disguise disguise) {
         super(disguise);
@@ -13,15 +17,12 @@ public class ZombieWatcher extends LivingWatcher {
     }
 
     public boolean isBaby() {
-        return (Byte) getValue(12, (byte) 0) == 1;
+        return getData(MetaIndex.ZOMBIE_BABY);
     }
 
-    public boolean isShaking() {
-        return (Byte) getValue(14, (byte) 0) == 1;
-    }
-
-    public boolean isVillager() {
-        return (Byte) getValue(13, (byte) 0) == 1;
+    public void setBaby(boolean baby) {
+        setData(MetaIndex.ZOMBIE_BABY, baby);
+        sendData(MetaIndex.ZOMBIE_BABY);
     }
 
     public void setAdult() {
@@ -32,19 +33,27 @@ public class ZombieWatcher extends LivingWatcher {
         setBaby(true);
     }
 
-    public void setBaby(boolean baby) {
-        setValue(12, (byte) (baby ? 1 : 0));
-        sendData(12);
+    @NmsAddedIn(NmsVersion.v1_13)
+    public boolean isConverting() {
+        return getData(MetaIndex.ZOMBIE_CONVERTING_DROWNED);
     }
 
-    public void setShaking(boolean shaking) {
-        setValue(14, (byte) (shaking ? 1 : 0));
-        sendData(14);
+    @NmsAddedIn(NmsVersion.v1_13)
+    public void setConverting(boolean converting) {
+        setData(MetaIndex.ZOMBIE_CONVERTING_DROWNED, converting);
+        sendData(MetaIndex.ZOMBIE_CONVERTING_DROWNED);
     }
 
-    public void setVillager(boolean villager) {
-        setValue(13, (byte) (villager ? 1 : 0));
-        sendData(13);
+    @Deprecated
+    @NmsRemovedIn(NmsVersion.v1_14)
+    public boolean isAggressive() {
+        return getData(MetaIndex.ZOMBIE_AGGRESSIVE);
     }
 
+    @Deprecated
+    @NmsRemovedIn(NmsVersion.v1_14)
+    public void setAggressive(boolean handsup) {
+        setData(MetaIndex.ZOMBIE_AGGRESSIVE, handsup);
+        sendData(MetaIndex.ZOMBIE_AGGRESSIVE);
+    }
 }

@@ -1,17 +1,13 @@
 package me.libraryaddict.disguise.disguisetypes;
 
-import java.security.InvalidParameterException;
-
-import me.libraryaddict.disguise.disguisetypes.watchers.AgeableWatcher;
-import me.libraryaddict.disguise.disguisetypes.watchers.LivingWatcher;
-import me.libraryaddict.disguise.disguisetypes.watchers.ZombieWatcher;
-
+import me.libraryaddict.disguise.disguisetypes.watchers.*;
+import me.libraryaddict.disguise.utilities.DisguiseValues;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-public class MobDisguise extends TargetedDisguise {
+import java.security.InvalidParameterException;
 
+public class MobDisguise extends TargetedDisguise {
     private boolean isAdult;
 
     public MobDisguise(DisguiseType disguiseType) {
@@ -19,35 +15,42 @@ public class MobDisguise extends TargetedDisguise {
     }
 
     public MobDisguise(DisguiseType disguiseType, boolean isAdult) {
+        super(disguiseType);
+
         if (!disguiseType.isMob()) {
-            throw new InvalidParameterException("Expected a living DisguiseType while constructing MobDisguise. Received "
-                    + disguiseType + " instead. Please use " + (disguiseType.isPlayer() ? "PlayerDisguise" : "MiscDisguise")
-                    + " instead");
+            throw new InvalidParameterException(
+                    "Expected a living DisguiseType while constructing MobDisguise. Received " + disguiseType +
+                            " instead. Please use " + (disguiseType.isPlayer() ? "PlayerDisguise" : "MiscDisguise") +
+                            " instead");
         }
+
         this.isAdult = isAdult;
-        createDisguise(disguiseType);
+
+        createDisguise();
     }
 
-    @Deprecated
-    public MobDisguise(DisguiseType disguiseType, boolean isAdult, boolean replaceSounds) {
-        this(disguiseType, isAdult);
-        this.setReplaceSounds(replaceSounds);
-    }
+    @Override
+    public double getHeight() {
+        DisguiseValues values = DisguiseValues.getDisguiseValues(getType());
 
-    @Deprecated
-    public MobDisguise(EntityType entityType) {
-        this(entityType, true);
-    }
+        if (values == null || values.getAdultBox() == null) {
+            return 0;
+        }
 
-    @Deprecated
-    public MobDisguise(EntityType entityType, boolean isAdult) {
-        this(DisguiseType.getType(entityType), isAdult);
-    }
+        if (!isAdult() && values.getBabyBox() != null) {
+            return values.getBabyBox().getY();
+        }
 
-    @Deprecated
-    public MobDisguise(EntityType entityType, boolean isAdult, boolean replaceSounds) {
-        this(entityType, isAdult);
-        this.setReplaceSounds(replaceSounds);
+        if (getWatcher() != null) {
+            if (getType() == DisguiseType.ARMOR_STAND) {
+                return (((ArmorStandWatcher) getWatcher()).isSmall() ? values.getBabyBox() : values.getAdultBox())
+                        .getY();
+            } else if (getType() == DisguiseType.SLIME || getType() == DisguiseType.MAGMA_CUBE) {
+                return 0.51 * (0.255 * ((SlimeWatcher) getWatcher()).getSize());
+            }
+        }
+
+        return values.getAdultBox().getY();
     }
 
     @Override
@@ -63,24 +66,25 @@ public class MobDisguise extends TargetedDisguise {
     @Override
     public MobDisguise clone() {
         MobDisguise disguise = new MobDisguise(getType(), isAdult());
-        disguise.setReplaceSounds(isSoundsReplaced());
-        disguise.setViewSelfDisguise(isSelfDisguiseVisible());
-        disguise.setHearSelfDisguise(isSelfDisguiseSoundsReplaced());
-        disguise.setHideArmorFromSelf(isHidingArmorFromSelf());
-        disguise.setHideHeldItemFromSelf(isHidingHeldItemFromSelf());
-        disguise.setVelocitySent(isVelocitySent());
-        disguise.setModifyBoundingBox(isModifyBoundingBox());
-        disguise.setWatcher(getWatcher().clone(disguise));
+
+        clone(disguise);
+
         return disguise;
     }
 
     public boolean doesDisguiseAge() {
-        return getWatcher() != null && (getWatcher() instanceof AgeableWatcher || getWatcher() instanceof ZombieWatcher);
+        return getWatcher() != null &&
+                (getWatcher() instanceof AgeableWatcher || getWatcher() instanceof ZombieWatcher);
     }
 
     @Override
     public LivingWatcher getWatcher() {
         return (LivingWatcher) super.getWatcher();
+    }
+
+    @Override
+    public MobDisguise setWatcher(FlagWatcher newWatcher) {
+        return (MobDisguise) super.setWatcher(newWatcher);
     }
 
     public boolean isAdult() {
@@ -136,18 +140,8 @@ public class MobDisguise extends TargetedDisguise {
     }
 
     @Override
-    public MobDisguise setKeepDisguiseOnEntityDespawn(boolean keepDisguise) {
-        return (MobDisguise) super.setKeepDisguiseOnEntityDespawn(keepDisguise);
-    }
-
-    @Override
     public MobDisguise setKeepDisguiseOnPlayerDeath(boolean keepDisguise) {
         return (MobDisguise) super.setKeepDisguiseOnPlayerDeath(keepDisguise);
-    }
-
-    @Override
-    public MobDisguise setKeepDisguiseOnPlayerLogout(boolean keepDisguise) {
-        return (MobDisguise) super.setKeepDisguiseOnPlayerLogout(keepDisguise);
     }
 
     @Override
@@ -168,11 +162,6 @@ public class MobDisguise extends TargetedDisguise {
     @Override
     public MobDisguise setViewSelfDisguise(boolean viewSelfDisguise) {
         return (MobDisguise) super.setViewSelfDisguise(viewSelfDisguise);
-    }
-
-    @Override
-    public MobDisguise setWatcher(FlagWatcher newWatcher) {
-        return (MobDisguise) super.setWatcher(newWatcher);
     }
 
     @Override

@@ -1,9 +1,9 @@
 package me.libraryaddict.disguise.disguisetypes.watchers;
 
-import org.bukkit.Art;
 import me.libraryaddict.disguise.disguisetypes.Disguise;
 import me.libraryaddict.disguise.disguisetypes.FlagWatcher;
 import me.libraryaddict.disguise.utilities.DisguiseUtilities;
+import org.bukkit.Art;
 
 public class PaintingWatcher extends FlagWatcher {
 
@@ -17,6 +17,7 @@ public class PaintingWatcher extends FlagWatcher {
     public PaintingWatcher clone(Disguise disguise) {
         PaintingWatcher watcher = (PaintingWatcher) super.clone(disguise);
         watcher.setArt(getArt());
+
         return watcher;
     }
 
@@ -26,9 +27,9 @@ public class PaintingWatcher extends FlagWatcher {
 
     public void setArt(Art newPainting) {
         this.painting = newPainting;
+
         if (getDisguise().getEntity() != null && getDisguise().getWatcher() == this) {
             DisguiseUtilities.refreshTrackers(getDisguise());
         }
     }
-
 }
