@@ -1,6 +1,5 @@
 package net.firecraftmc.manialib;
 
-import lombok.Getter;
 import net.firecraftmc.manialib.data.DatabaseManager;
 import net.firecraftmc.manialib.data.MysqlDatabase;
 import net.firecraftmc.manialib.data.model.DatabaseHandler;
@@ -10,7 +9,7 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 public class CenturionsLib {
-    @Getter private MysqlDatabase mysqlDatabase;
+    private MysqlDatabase mysqlDatabase;
     private Database database;
     private static CenturionsLib instance;
     private Logger logger;
@@ -23,7 +22,11 @@ public class CenturionsLib {
         this.logger = logger;
         instance = this;
     }
-    
+
+    public MysqlDatabase getMysqlDatabase() {
+        return mysqlDatabase;
+    }
+
     public void addDatabaseHandler(DatabaseHandler databaseHandler) {
         this.databaseManager.addDatabaseHandler(databaseHandler);
     }

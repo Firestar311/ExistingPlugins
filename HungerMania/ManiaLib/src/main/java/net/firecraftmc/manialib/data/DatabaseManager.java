@@ -1,14 +1,13 @@
 package net.firecraftmc.manialib.data;
 
-import lombok.Getter;
 import net.firecraftmc.manialib.data.annotations.ColumnInfo;
 import net.firecraftmc.manialib.data.annotations.TableInfo;
 import net.firecraftmc.manialib.data.exceptions.AlreadyRegisteredException;
 import net.firecraftmc.manialib.data.handlers.*;
 import net.firecraftmc.manialib.data.model.Column;
-import net.firecraftmc.manialib.data.model.Table;
 import net.firecraftmc.manialib.data.model.DatabaseHandler;
 import net.firecraftmc.manialib.data.model.IRecord;
+import net.firecraftmc.manialib.data.model.Table;
 import net.firecraftmc.manialib.util.Utils;
 
 import java.lang.reflect.Field;
@@ -19,7 +18,11 @@ import java.util.Set;
 
 public class DatabaseManager {
 
-    @Getter private final static DatabaseManager instance = new DatabaseManager();
+    private final static DatabaseManager instance = new DatabaseManager();
+
+    public static DatabaseManager getInstance() {
+        return instance;
+    }
 
     private Map<String, MysqlDatabase> databases = new HashMap<>();
     private Set<DataTypeHandler<?>> typeHandlers = new HashSet<>();

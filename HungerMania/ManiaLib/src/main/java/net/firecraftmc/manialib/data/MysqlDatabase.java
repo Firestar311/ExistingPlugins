@@ -1,6 +1,5 @@
 package net.firecraftmc.manialib.data;
 
-import lombok.Getter;
 import net.firecraftmc.manialib.data.annotations.ColumnInfo;
 import net.firecraftmc.manialib.data.annotations.TableInfo;
 import net.firecraftmc.manialib.data.handlers.DataTypeHandler;
@@ -25,8 +24,8 @@ public class MysqlDatabase {
 
     private Set<IRecord> localCache = new HashSet<>();
 
-    @Getter private Map<String, Table> tables = new HashMap<>();
-    @Getter private String databaseName;
+    private Map<String, Table> tables = new HashMap<>();
+    private String databaseName;
 
     public MysqlDatabase(Properties properties, Logger logger, DatabaseManager databaseManager) {
         this.logger = logger;
@@ -39,6 +38,34 @@ public class MysqlDatabase {
         String password = properties.getProperty("mysql-password");
         String url = URL.replace("{hostname}", host).replace("{port}", port + "").replace("{database}", databaseName);
         this.dataSource = new DataSource(url, username, password);
+    }
+
+    public static String getURL() {
+        return URL;
+    }
+
+    public Logger getLogger() {
+        return logger;
+    }
+
+    public DataSource getDataSource() {
+        return dataSource;
+    }
+
+    public DatabaseManager getDatabaseManager() {
+        return databaseManager;
+    }
+
+    public Set<IRecord> getLocalCache() {
+        return localCache;
+    }
+
+    public Map<String, Table> getTables() {
+        return tables;
+    }
+
+    public String getDatabaseName() {
+        return databaseName;
     }
 
     public <T extends IRecord> List<T> getRecords(Class<T> recordType, String columnName, Object value) {
