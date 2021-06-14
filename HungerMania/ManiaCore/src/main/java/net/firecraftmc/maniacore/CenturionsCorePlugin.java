@@ -10,11 +10,26 @@ import net.firecraftmc.maniacore.api.records.SkinRecord;
 import net.firecraftmc.maniacore.api.redis.Redis;
 import net.firecraftmc.maniacore.api.skin.Skin;
 import net.firecraftmc.maniacore.api.user.User;
+import net.firecraftmc.maniacore.memory.MemoryHook;
 import net.firecraftmc.maniacore.plugin.CenturionsPlugin;
 import net.firecraftmc.maniacore.plugin.CenturionsTask;
 import net.firecraftmc.maniacore.spigot.anticheat.SpartanManager;
+import net.firecraftmc.maniacore.spigot.cmd.BroadcastCmd;
+import net.firecraftmc.maniacore.spigot.cmd.FriendsCmd;
+import net.firecraftmc.maniacore.spigot.cmd.IgnoreCmd;
+import net.firecraftmc.maniacore.spigot.cmd.IncognitoCmd;
+import net.firecraftmc.maniacore.spigot.cmd.MemoryCmd;
+import net.firecraftmc.maniacore.spigot.cmd.MsgCmd;
+import net.firecraftmc.maniacore.spigot.cmd.MutationsCmd;
 import net.firecraftmc.maniacore.spigot.cmd.NicknameCmd;
+import net.firecraftmc.maniacore.spigot.cmd.PerkCmd;
+import net.firecraftmc.maniacore.spigot.cmd.RankCmd;
+import net.firecraftmc.maniacore.spigot.cmd.SayCmd;
+import net.firecraftmc.maniacore.spigot.cmd.SetstatCommand;
 import net.firecraftmc.maniacore.spigot.cmd.SpawnCmd;
+import net.firecraftmc.maniacore.spigot.cmd.StatsCmd;
+import net.firecraftmc.maniacore.spigot.cmd.TesterCmd;
+import net.firecraftmc.maniacore.spigot.cmd.ToggleCmd;
 import net.firecraftmc.maniacore.spigot.cmd.UserCmd;
 import net.firecraftmc.maniacore.spigot.communication.SpigotMessageHandler;
 import net.firecraftmc.maniacore.spigot.map.GameMap;
@@ -65,31 +80,31 @@ public final class CenturionsCorePlugin extends JavaPlugin implements Listener, 
         runTask(() -> {
             //This makes sure that there is a user manager registered after the server has finished loading
             if (centurionsCore.getUserManager() == null) {
-                net.firecraftmc.maniacore.spigot.user.SpigotUserManager userManager = new net.firecraftmc.maniacore.spigot.user.SpigotUserManager(this);
+                SpigotUserManager userManager = new SpigotUserManager(this);
                 centurionsCore.setUserManager(userManager);
             }
-            getServer().getPluginManager().registerEvents((net.firecraftmc.maniacore.spigot.user.SpigotUserManager) centurionsCore.getUserManager(), this);
+            getServer().getPluginManager().registerEvents((SpigotUserManager) centurionsCore.getUserManager(), this);
         });
         
         getServer().getPluginManager().registerEvents(new SpartanManager(), this);
         
-        getCommand("incognito").setExecutor(new net.firecraftmc.maniacore.spigot.cmd.IncognitoCmd(this));
-        getCommand("broadcast").setExecutor(new net.firecraftmc.maniacore.spigot.cmd.BroadcastCmd());
-        getCommand("say").setExecutor(new net.firecraftmc.maniacore.spigot.cmd.SayCmd());
-        getCommand("memory").setExecutor(new net.firecraftmc.maniacore.spigot.cmd.MemoryCmd());
-        getCommand("stats").setExecutor(new net.firecraftmc.maniacore.spigot.cmd.StatsCmd());
-        getCommand("toggle").setExecutor(new net.firecraftmc.maniacore.spigot.cmd.ToggleCmd());
-        getCommand("ignore").setExecutor(new net.firecraftmc.maniacore.spigot.cmd.IgnoreCmd());
-        net.firecraftmc.maniacore.spigot.cmd.MsgCmd msgCmd = new net.firecraftmc.maniacore.spigot.cmd.MsgCmd();
+        getCommand("incognito").setExecutor(new IncognitoCmd(this));
+        getCommand("broadcast").setExecutor(new BroadcastCmd());
+        getCommand("say").setExecutor(new SayCmd());
+        getCommand("memory").setExecutor(new MemoryCmd());
+        getCommand("stats").setExecutor(new StatsCmd());
+        getCommand("toggle").setExecutor(new ToggleCmd());
+        getCommand("ignore").setExecutor(new IgnoreCmd());
+        MsgCmd msgCmd = new MsgCmd();
         getCommand("message").setExecutor(msgCmd);
         getCommand("reply").setExecutor(msgCmd);
-        getCommand("rank").setExecutor(new net.firecraftmc.maniacore.spigot.cmd.RankCmd());
-        getCommand("friends").setExecutor(new net.firecraftmc.maniacore.spigot.cmd.FriendsCmd());
-        getCommand("setstat").setExecutor(new net.firecraftmc.maniacore.spigot.cmd.SetstatCommand());
-        getCommand("perks").setExecutor(new net.firecraftmc.maniacore.spigot.cmd.PerkCmd());
-        getCommand("mutations").setExecutor(new net.firecraftmc.maniacore.spigot.cmd.MutationsCmd());
-        getCommand("tester").setExecutor(new net.firecraftmc.maniacore.spigot.cmd.TesterCmd());
-        net.firecraftmc.maniacore.spigot.cmd.NicknameCmd nicknameCmd = new NicknameCmd();
+        getCommand("rank").setExecutor(new RankCmd());
+        getCommand("friends").setExecutor(new FriendsCmd());
+        getCommand("setstat").setExecutor(new SetstatCommand());
+        getCommand("perks").setExecutor(new PerkCmd());
+        getCommand("mutations").setExecutor(new MutationsCmd());
+        getCommand("tester").setExecutor(new TesterCmd());
+        NicknameCmd nicknameCmd = new NicknameCmd();
         getCommand("nick").setExecutor(nicknameCmd);
         getCommand("unnick").setExecutor(nicknameCmd);
         getCommand("realname").setExecutor(nicknameCmd);
@@ -107,16 +122,16 @@ public final class CenturionsCorePlugin extends JavaPlugin implements Listener, 
         centurionsCore.setMessageHandler(new SpigotMessageHandler(this));
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         
-        net.firecraftmc.maniacore.memory.MemoryHook playerUpdate = new net.firecraftmc.maniacore.memory.MemoryHook("Core Player Update");
+        MemoryHook playerUpdate = new MemoryHook("Core Player Update");
         CenturionsCore.getInstance().getMemoryManager().addMemoryHook(playerUpdate);
         new BukkitRunnable() {
             public void run() {
-                net.firecraftmc.maniacore.memory.MemoryHook.Task task = playerUpdate.task().start();
+                MemoryHook.Task task = playerUpdate.task().start();
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     if (player.getScoreboard() != null) {
                         Scoreboard scoreboard = player.getScoreboard();
 
-                        for (net.firecraftmc.maniacore.api.ranks.Rank rank : net.firecraftmc.maniacore.api.ranks.Rank.values()) {
+                        for (Rank rank : Rank.values()) {
                             boolean noTeam = true;
                             for (Team team : scoreboard.getTeams()) {
                                 if (team.getName().equalsIgnoreCase(CODE_CHARS[rank.ordinal()] + "_" + rank.getName())) {
@@ -206,7 +221,7 @@ public final class CenturionsCorePlugin extends JavaPlugin implements Listener, 
     }
 
     public void setupRedisListeners() {
-        net.firecraftmc.maniacore.api.redis.Redis.registerListener(new RankRedisListener());
+        Redis.registerListener(new RankRedisListener());
         Redis.registerListener(new FriendsRedisListener());
     }
 

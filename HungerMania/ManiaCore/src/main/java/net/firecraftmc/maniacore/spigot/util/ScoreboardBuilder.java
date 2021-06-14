@@ -12,7 +12,7 @@ public class ScoreboardBuilder {
     
     private String name, title;
     private DisplaySlot slot;
-    private SortedMap<Integer, net.firecraftmc.maniacore.spigot.util.sb.SBLine> lines = new TreeMap<>();
+    private SortedMap<Integer, SBLine> lines = new TreeMap<>();
     
     public ScoreboardBuilder(String name) {
         this.name = name;
@@ -37,7 +37,7 @@ public class ScoreboardBuilder {
         return this;
     }
     
-    public ScoreboardBuilder addLine(net.firecraftmc.maniacore.spigot.util.sb.SBLine text) {
+    public ScoreboardBuilder addLine(SBLine text) {
         int position;
         if (this.lines.isEmpty()) {
           position = 0;
@@ -48,7 +48,7 @@ public class ScoreboardBuilder {
         return this;
     }
     
-    public ScoreboardBuilder setLine(int line, net.firecraftmc.maniacore.spigot.util.sb.SBLine text) {
+    public ScoreboardBuilder setLine(int line, SBLine text) {
         this.lines.put(line, text);
         return this;
     }
