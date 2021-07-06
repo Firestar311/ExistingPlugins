@@ -1,0 +1,10 @@
+name: TitanVanish
+version: ${project.version}
+main: com.stardevmc.titanvanish.TitanVanish
+api-version: 1.13
+depend: [FireLib, Vault]
+authors: [Firestar311]
+description: A vanish plugin by Star Development
+commands:
+    vanish:
+        aliases: [v]

@@ -1,0 +1,128 @@
+name: FirecraftCore
+main: net.firecraftmc.core.FirecraftCore
+version: 1.16.1-ALPHA
+load: STARTUP
+author: Firestar311
+api-version: 1.13
+commands:
+    chat:
+        description: Base command for everything chat.
+        aliases: [c]
+    gamemode:
+        aliases: [gm]
+    gmc:
+    gms:
+    gmsp:
+    gma:
+    teleport:
+        aliases: [tp]
+    nick:
+    vanish:
+        aliases: [v]
+    unnick:
+        aliases: [resetnick, nickreset]
+    nickrandom:
+    back:
+    tphere:
+    tpall:
+    tpa:
+       aliases: [tpr]
+    tpaccept:
+    tpdeny:
+    setspawn:
+    spawn:
+    dev:
+    signedit:
+    ban:
+    tempban:
+    mute:
+    tempmute:
+    jail:
+    kick:
+    warn:
+    setjail:
+    ipban:
+    setlore:
+    setname:
+    unban:
+    unmute:
+    unjail:
+    mrules:
+    punish:
+    players:
+        aliases: [p]
+    fct:
+        aliases: [firecraftteam]
+    weather:
+    time:
+    day:
+    night:
+    broadcast:
+        aliases: [bc]
+    socketbroadcast:
+        aliases: [sbc]
+    clearinventory:
+        aliases: [ci]
+    enderchest:
+        aliases: [echest, ec]
+    workbench:
+        aliases: [craft, wb]
+    invsee:
+    sethome:
+        aliases: [sh]
+    delhome:
+        aliases: [dh]
+    home:
+        aliases: [h]
+    setwarp:
+    delwarp:
+    warp:
+    report:
+    reportadmin:
+        aliases: [ra]
+    list:
+    message:
+        aliases: [pm, whisper, tell, msg, w]
+    reply:
+        aliases: [r]
+    ignore:
+    unignore:
+    record:
+    stream:
+    stafflist:
+        aliases: [sl]
+    staffmode:
+        aliases: [sm]
+    staff:
+        aliases: [s]
+    global:
+        aliases: [g]
+    firecraftserver:
+        aliases: [fcserver, fcs]
+    clearchat:
+        aliases: [cc]
+    history:
+    bans:
+    mutes:
+    kicks:
+    warns:
+    jails:
+    feed:
+    heal:
+    economy:
+        aliases: [eco, econ]
+    pay:
+    withdraw:
+    balance:
+        aliases: [bal]
+    baltop:
+    mail:
+    globalmute:
+        aliases: [gmute]
+    randomtp:
+    fly:
+    god:
+    help:
+    toggles:
+    afk:
+    incognito:

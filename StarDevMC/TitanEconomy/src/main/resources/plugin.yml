@@ -1,0 +1,7 @@
+name: TitanEconomy
+version: ${project.version}
+main: com.stardevmc.titaneconomy.TitanEconomy
+api-version: 1.13
+depend: [FireLib, Vault]
+authors: [ThomasRW]
+description: Economy Plugin from StarDev

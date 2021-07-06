@@ -1,0 +1,16 @@
+
+
+defaults:
+    vanishsettings:
+        itemPickup: false
+        itemDrop: false
+        entityInteract: false
+        damage: false
+        chat: false
+        collision: false
+        entityTarget: false
+        blockBreak: false
+        blockPlace: false
+        silent: false
+        fly: true
+        nightVision: true

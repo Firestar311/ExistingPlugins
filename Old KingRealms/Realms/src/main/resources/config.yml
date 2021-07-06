@@ -1,0 +1,9 @@
+storage:
+    type: yaml
+    sqllite: sqllite.db
+    mysql:
+        username: server_account
+        password: password
+        database: database
+        port: 3306
+        hostname: localhost

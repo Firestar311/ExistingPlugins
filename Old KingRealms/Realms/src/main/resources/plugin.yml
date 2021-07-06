@@ -1,0 +1,98 @@
+name: Realms
+version: ${project.version}
+main: com.kingrealms.realms.Realms
+api-version: 1.16
+loadbefore: [Essentials]
+depend: [StarLib, Vault, LuckPerms]
+authors: [Firestar311]
+description: Main core for the KingRealms server
+commands:
+    realms:
+        description: Admin command
+    hamlets:
+        aliases: [h, hamlet]
+    spawn:
+    help:
+    home:
+    sethome:
+    delhome:
+    staffhome:
+    kit:
+    teleport:
+        aliases: [tp]
+    tpa:
+    tpahere:
+    tpaccept:
+    tpdeny:
+    tpacancel:
+    tphere:
+    tpall:
+    list:
+    stafflist:
+    playtime:
+    playtimetop:
+    economy:
+        aliases: [eco]
+    balance:
+        aliases: [bal]
+    balancetop:
+        aliases: [baltop]
+    shop:
+    warp:
+        aliases: [w,warps]
+    setwarp:
+        aliases: [sw]
+    delwarp:
+        aliases: [dw]
+    setspawn:
+    global:
+        aliases: [g]
+    staff:
+        aliases: [s]
+    channel:
+        aliases: [chat,c]
+    message:
+        aliases: [msg]
+    reply:
+        aliases: [r]
+    seen:
+    gamemode:
+        aliases: [gm]
+    gmc:
+    gms:
+    gmsp:
+    gma:
+    staffmode:
+        aliases: [sm]
+    limits:
+    createkit:
+    deletekit:
+        aliases: [delkit]
+    pay:
+    guishop:
+    shopitem:
+    quest:
+    questadmin:
+    ally:
+    repair:
+        aliases: [fix]
+    repairall:
+        aliases: [fixall]
+    test:
+    skills:
+    farming:
+    mining:
+    slayer:
+    profile:
+    signshop:
+    craft:
+        aliases: [workbench, wb]
+    mailbox:
+        aliases: [mb]
+    withdraw:
+    clearchat:
+    socialspy:
+    renamehome:
+    invsee:
+    woodcutting:
+    setcolor:

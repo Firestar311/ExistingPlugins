@@ -1,0 +1,2 @@
+# StarLib
+Library Plugin

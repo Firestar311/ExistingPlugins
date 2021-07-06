@@ -1,0 +1,14 @@
+name: StarLib
+version: ${version}
+main: com.starmediadev.lib.StarLib
+api-version: 1.16
+description: The library plugin for all of StarMD's Plugins
+author: Firestar311
+softdepend: [Vault]
+commands:
+    customitem:
+        aliases: [cui]
+    superadmins:
+    user:
+        aliases: [u, users]
+    #testsql:

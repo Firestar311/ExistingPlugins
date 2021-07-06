@@ -1,0 +1,8 @@
+name: Enforcer
+version: ${project.version}
+main: net.hungermania.enforcer.Enforcer
+api-version: 1.16
+depend: [StarLib]
+authors: [Firestar31]
+description: Punishments plugin
+website: hungermania.net

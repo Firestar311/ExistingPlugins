@@ -1,0 +1,76 @@
+name: BrutusCore
+main: net.brutuspvp.core.BrutusCore
+version: 1.8.1
+author: Firestar311
+description: Core plugin for BrutusPvP
+depend: [FireUtilities, Essentials, WorldEdit, WorldGuard]
+commands:
+    playtime:
+    chat: 
+        aliases: [c]
+    vanish:
+        aliases: [incognito]
+    pm:
+        aliases: [msg, message, whisper]
+    reply: 
+        aliases: [r]
+    toggledeathchest: 
+        aliases: [tdc, toggledc]
+    saveplugindata:
+        description: Save all plugin data
+        aliases: [spd]
+    ban: 
+        description: The ban command.
+    tempban:
+        description: The tempban command.
+    unban:
+        description: The unban command.
+    mute: 
+        description: The mute command.
+    tempmute: 
+        description: The tempmute command.
+    unmute:
+        description: The unmute command.
+    kick:
+        description: The kick command.
+    jail:
+        description: The jail command.
+    unjail:
+        description: The unjail command.
+    courts: 
+        description: The courts command.
+        aliases: [court]
+    report: 
+        description: The reports command
+        aliases: [reports]
+    ticket: 
+        description: The tickets command
+        aliases: [tickets]
+    livingspaces: 
+        description: The living spaces main command
+        aliases: [ls, living, spaces]
+    friends: 
+        description: The friends main command
+        aliases: [f]
+    clearerrors: 
+        description: Clears the errors for the plugin.
+        aliases: [ce]
+    money: 
+        description: Economy base command
+        aliases: [m]
+    shops: 
+        description: Controls the shops
+    jobs: 
+        description: Jobs base command
+    gui:
+        description: GUI based commands (Administration only)
+    createnpc: 
+    balance: 
+    balancetop: 
+    account: 
+        aliases: [acc]
+    vote: 
+    getuuid: 
+    sharedaccount: 
+        aliases: [sa, sacc]
+    devvanish: 

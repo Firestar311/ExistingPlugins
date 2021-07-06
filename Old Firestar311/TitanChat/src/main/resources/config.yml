@@ -1,0 +1,10 @@
+chatrooms:
+    default:
+        displayname: "&fGlobal"
+        permission: ""
+        format: "&8[&fG&8] &r{displayname}&8: &f{message}"
+        description: "This is the global channel."
+        material: STONE
+        owner: server
+        global: true
+        autojoin: true

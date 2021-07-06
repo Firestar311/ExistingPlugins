@@ -1,0 +1,22 @@
+name: TitanTerritories
+version: ${project.version}
+main: com.stardevmc.titanterritories.core.TitanTerritories
+api-version: 1.14
+depend: [FireLib, Vault, TitanChat]
+authors: [Firestar311]
+description: A Kingdoms plugin by StarDevMC
+commands:
+    kingdoms:
+        aliases: [kingdom, kd, k]
+    kingdomsadmin:
+        aliases: [kingdomadmin, kda, ka]
+    debug:
+        aliases: [d]
+    town:
+        aliases: [t]
+    colony:
+        aliases: [c]
+    createtestkingdom:
+        aliases: [ctk]
+    testchunks:
+    kingdomlock:

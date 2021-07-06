@@ -1,0 +1,12 @@
+name: TitanShop
+version: ${project.version}
+main: com.stardevmc.shop.TitanShop
+api-version: 1.13
+depend: [FireLib, Vault]
+commands:
+    shop:
+    shopadmin:
+    sell:
+    signshop:
+    shopitem:
+    worth:

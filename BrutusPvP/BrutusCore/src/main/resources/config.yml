@@ -1,0 +1,44 @@
+motd: 
+    normal: 
+        - "Welcome to BrutusPvP"
+        - "Discord: https://discord.gg/Tq7QUHd"
+        - "Website: www.brutuspvp.net"
+    staff: 
+       - TODO
+    imperial: 
+       - TODO
+
+core:
+    errors: 0
+housing: 
+    rentdays: 14
+    saveinterval: 10
+    
+chat: 
+    formatting: 
+        global: '&7&l[&f&lGLOBAL&7&l] %displayname% &7>> %message%'
+        groupformatting: 
+            patriarch: ''
+            hastati: ''
+            legionary: ''
+            centurion: ''
+            senator: ''
+            imperial: ''
+            consul: ''
+messages: 
+    nopermission: "&cYou do not have permission to perform this command."
+    pmsender: "&a%sender% &8> &a %target% &b%message%"
+    pmtarget: "&a%sender% &8> &a %target% &b%message%"
+    pmoffline: "&cIt appears that %target% is offline."
+    chatdisabled: "&cChat is currently &4disabled&c. You may not speak."
+    enablechatactor: "&aYou have &2enabled &athe chat."
+    disablechatactor: "&cYou have &4disabled &cthe chat."
+    enablechatall: "&a%actor% has &2enabled &athe chat."
+    disablechatall: "&c%actor% &chas &4disabled &cthe chat."
+    playeronlycommand: "&cYou must be a player to use that command."
+    vanishnoplaceorbreak: "&cYou cannot place or break blocks while in vanish."
+    vanishchatdisabled: "&cChat is disabled while you are in vanish."
+    punishmessage: "&a%target% has been %action% by %actor%"
+    punishmessagereason: "&a%target% has been %action% by %actor% for %reason%"
+    unpunishmessage: "&c%target% has been %action% by %actor%"
+    unpunishmessagereason: "&a%target% has been %action% by %actor% for %reason%"

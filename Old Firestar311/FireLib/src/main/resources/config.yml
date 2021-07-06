@@ -1,0 +1,14 @@
+superadmins:
+    enabled: true
+    global: true
+
+database:
+    type: mysql
+    mysql:
+        hostname: localhost
+        database: main
+        username: root
+        password:
+        port: 3306
+    sqlite:
+        name: main
