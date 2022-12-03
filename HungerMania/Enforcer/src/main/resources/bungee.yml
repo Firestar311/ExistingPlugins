@@ -1,5 +1,0 @@
-name: ManiaCore
-version: ${project.version}
-main: net.firecraftmc.enforcer.bungee.EnforcerBungee
-description: HungerMania's Punishment
-depends: [ TimoCloud ]

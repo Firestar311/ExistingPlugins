@@ -1,5 +1,0 @@
-name: ManiaCore
-version: 1.0-SNAPSHOT
-main: net.hungermania.enforcer.bungee.EnforcerBungee
-description: HungerMania's Punishment
-depends: [ TimoCloud ]
