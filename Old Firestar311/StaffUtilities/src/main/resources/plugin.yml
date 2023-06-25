@@ -1,4 +1,0 @@
-name: StaffUtilities
-version: ${project.version}
-main: com.firestar311.staffutilities.StaffUtilities
-depend: [FireLib]
