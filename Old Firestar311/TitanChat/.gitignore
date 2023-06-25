@@ -1,9 +1,0 @@
-
-*.class
-src/main/.DS_Store
-src/.DS_Store
-.DS_Store
-target/classes/config.yml
-target/classes/plugin.yml
-target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
-target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
