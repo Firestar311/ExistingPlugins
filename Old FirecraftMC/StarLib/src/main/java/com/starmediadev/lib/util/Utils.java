@@ -110,41 +110,11 @@ public final class Utils {
         return true;
     }
     
-    public static String capitalizeEveryWord(String string) {
-        string = string.toLowerCase();
-        String[] words = string.split("_");
-        StringBuilder name = new StringBuilder();
-        for (int w = 0; w < words.length; w++) {
-            String word = words[w];
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < word.length(); i++) {
-                if (i == 0) {
-                    sb.append(Character.toUpperCase(word.charAt(i)));
-                } else {
-                    sb.append(word.charAt(i));
-                }
-            }
-            name.append(sb.toString());
-            if (w < (words.length - 1)) {
-                name.append(" ");
-            }
-        }
-        
-        return name.toString();
-    }
-    
     public static void sleep(int seconds) {
         try {
             Thread.sleep(seconds * 1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
-    }
-    
-    @SafeVarargs
-    public static void registerConfigClasses(Class<? extends ConfigurationSerializable>... classes) {
-        for (Class<? extends ConfigurationSerializable> serializable : classes) {
-            ConfigurationSerialization.registerClass(serializable);
         }
     }
     
@@ -166,59 +136,6 @@ public final class Utils {
         string += location.getYaw() + ":";
         string += location.getPitch();
         return string;
-    }
-    
-    public static long parseTime(String rawTime) {
-        Entry<Long, String> years = extractRawTime(rawTime, Unit.YEARS);
-        Entry<Long, String> months = extractRawTime(years.getValue(), Unit.MONTHS);
-        Entry<Long, String> weeks = extractRawTime(months.getValue(), Unit.WEEKS);
-        Entry<Long, String> days = extractRawTime(weeks.getValue(), Unit.DAYS);
-        Entry<Long, String> hours = extractRawTime(days.getValue(), Unit.HOURS);
-        Entry<Long, String> minutes = extractRawTime(hours.getValue(), Unit.MINUTES);
-        Entry<Long, String> seconds = extractRawTime(minutes.getValue(), Unit.SECONDS);
-        return years.getKey() + months.getKey() + weeks.getKey() + days.getKey() + hours.getKey() + minutes.getKey() + seconds.getKey();
-    }
-    
-    private static Entry<Long, String> extractRawTime(String rawTime, Unit unit) {
-        rawTime = rawTime.toLowerCase();
-        String[] rawArray;
-        for (String alias : unit.getAliases()) {
-            alias = alias.toLowerCase();
-            if (rawTime.contains(alias)) {
-                rawArray = rawTime.split(alias);
-                String fh = rawArray[0];
-                long rawLength;
-                try {
-                    rawLength = Integer.parseInt(fh);
-                } catch (NumberFormatException e) {
-                    StringBuilder sb = new StringBuilder();
-                    for (int i = fh.length() - 1; i > 0; i--) {
-                        char c = fh.charAt(i);
-                        if (Character.isDigit(c)) {
-                            sb.insert(0, c);
-                        } else {
-                            break;
-                        }
-                    }
-                    rawLength = Integer.parseInt(sb.toString());
-                }
-                rawTime = rawTime.replace(rawLength + alias, "");
-                
-                return new SimpleEntry<>(unit.convertTime(rawLength), rawTime);
-            }
-        }
-        
-        return new SimpleEntry<>(0L, rawTime);
-    }
-    
-    public static void purgeDirectory(File dir) {
-        File[] files = dir.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                if (file.isDirectory()) { purgeDirectory(file); }
-                file.delete();
-            }
-        }
     }
     
     public static String convertUUIDToName(UUID uuid, String nullText) {
@@ -292,28 +209,6 @@ public final class Utils {
         return false;
     }
     
-    public static String formatTime(long time) {
-        Duration remainingTime = Duration.ofMillis(time);
-        long days = remainingTime.toDays();
-        remainingTime = remainingTime.minusDays(days);
-        long hours = remainingTime.toHours();
-        remainingTime = remainingTime.minusHours(hours);
-        long minutes = remainingTime.toMinutes();
-        remainingTime = remainingTime.minusMinutes(minutes);
-        long seconds = remainingTime.getSeconds();
-        
-        StringBuilder sb = new StringBuilder();
-        if (days > 0) { sb.append(days).append("d"); }
-        if (hours > 0) { sb.append(hours).append("h"); }
-        if (minutes > 0) { sb.append(minutes).append("m"); }
-        if (seconds > 0) { sb.append(seconds).append("s"); }
-        
-        if (StringUtils.isEmpty(sb.toString())) {
-            sb.append("0s");
-        }
-        return sb.toString();
-    }
-    
     public static List<String> wrapLore(int maxPerLine, String loreText) {
         if (StringUtils.isEmpty(loreText)) {
             return new ArrayList<>();
@@ -344,15 +239,6 @@ public final class Utils {
             }
         }
         return lore;
-    }
-    
-    public static boolean isInt(String value) {
-        try {
-            Integer.parseInt(value);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
     }
     
     public static String blankLine(int length) {
@@ -391,10 +277,6 @@ public final class Utils {
         return Utils.color(sb);
     }
     
-    public static String color(String uncolored) {
-        return ChatColor.translateAlternateColorCodes('&', uncolored);
-    }
-    
     public static boolean isPlayer(CommandSender sender) {
         return sender instanceof Player;
     }
@@ -406,49 +288,6 @@ public final class Utils {
         }
         
         fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
-    }
-    
-    public static short[] parseDate(CommandSender sender, String rawDate) {
-        String[] rawDateArray = rawDate.split("/");
-        if (!(rawDateArray.length >= 3)) {
-            sender.sendMessage(Utils.color("&cInvalid date format."));
-            return null;
-        }
-        short month = parseTimeArgument(rawDateArray[0], sender, "month"), day = parseTimeArgument(rawDateArray[1], sender, "day"), year = parseTimeArgument(rawDateArray[2], sender, "year");
-        
-        if (month == -2 || day == -2 || year == -2) {
-            return null;
-        }
-        
-        short hour, minute, second;
-        
-        if (rawDateArray.length == 4) {
-            String[] rawTimeArray = rawDateArray[3].split(":");
-            
-            hour = parseTimeArgument(rawTimeArray[0], sender, "hour");
-            minute = parseTimeArgument(rawTimeArray[1], sender, "minute");
-            second = parseTimeArgument(rawTimeArray[2], sender, "second");
-            
-            if (hour == -2 || minute == -2 || second == -2) {
-                return null;
-            }
-        } else {
-            hour = -1;
-            minute = -1;
-            second = -1;
-        }
-        
-        return new short[]{month, day, year, hour, minute, second};
-    }
-    
-    private static short parseTimeArgument(String arg, CommandSender sender, String type) {
-        short value = -2;
-        try {
-            value = Short.parseShort(arg);
-        } catch (NumberFormatException e) {
-            sender.sendMessage(Utils.color("&cInvalid number for the " + type + "  argument."));
-        }
-        return value;
     }
     
     public static Pair<Long, Long> getDayStartEnd(short[] dateValues) {
@@ -643,48 +482,5 @@ public final class Utils {
         List<Field> fields = new ArrayList<>(Arrays.asList(object.getClass().getDeclaredFields()));
         if (searchSuperclasses) { searchSuperClass(object.getClass(), fields); }
         return fields;
-    }
-    
-    public static class Async {
-        public static void getUUIDFromName(String username, Consumer<UUID> success, Consumer<Exception> fail) {
-            String s = "https://api.mojang.com/users/profiles/minecraft/" + username + "?at=" + (System.currentTimeMillis() / 1000);
-            
-            getJsonObject(s, json -> {
-                try {
-                    success.accept(formatUUID(json.get("id").getAsString()));
-                } catch (Exception e) {
-                    if (fail != null) { fail.accept(e); }
-                }
-            }, fail);
-        }
-        
-        public static void getJsonObject(String urlString, Consumer<JsonObject> success, Consumer<Exception> fail) {
-            new Thread(() -> {
-                try {
-                    StringBuilder buffer = getJsonBuffer(urlString);
-                    success.accept((JsonObject) new JsonParser().parse(buffer.toString()));
-                } catch (Exception e) {
-                    if (fail != null) { fail.accept(e); }
-                }
-            });
-        }
-        
-        public static void getNameFromUUID(UUID uuid, Consumer<String> success, Consumer<Exception> fail) {
-            String profileURL = "https://sessionserver.mojang.com/session/minecraft/profile/" + uuid.toString().replace("-", "");
-            getJsonObject(profileURL, json -> success.accept(json.get("name").getAsString()), fail);
-        }
-        
-        public static void getSkin(UUID uuid, Consumer<Skin> success, Consumer<Exception> fail) {
-            String profileURL = profileUrlString.replace("{uuid}", uuid.toString().replace("-", ""));
-            getJsonObject(profileURL, json -> {
-                JsonArray properties = (JsonArray) json.get("properties");
-                
-                JsonObject property = (JsonObject) properties.get(0);
-                String sN = property.get("name").getAsString();
-                String sV = property.get("value").getAsString();
-                String sS = property.get("signature").getAsString();
-                success.accept(new Skin(uuid, sN, sS, sV));
-            }, fail);
-        }
     }
 }
