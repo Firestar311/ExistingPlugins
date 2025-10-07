@@ -3,32 +3,37 @@ package com.kingrealms.realms.entities.type;
 import com.kingrealms.realms.entities.controller.LookController;
 import com.kingrealms.realms.items.CustomItemRegistry;
 import com.kingrealms.realms.loot.*;
-import com.kingrealms.realms.loot.LootTable;
 import com.kingrealms.realms.util.RealmsLoot;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.chat.ComponentSerializer;
-import net.minecraft.server.v1_16_R1.*;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.monster.WitherSkeleton;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 
-public class CustomWitherSkeleton extends EntitySkeletonWither implements ICustomEntity {
+public class CustomWitherSkeleton extends WitherSkeleton implements ICustomEntity {
     private boolean custom = false;
     private boolean portalKeeper = false;
     public static Location location;
     
-    public CustomWitherSkeleton(World world) {
-        super(EntityTypes.WITHER_SKELETON, world);
+    public CustomWitherSkeleton(Level world) {
+        super(net.minecraft.world.entity.EntityType.WITHER_SKELETON, world);
     }
     
     public boolean isPortalKeeper() {
         return portalKeeper;
-    }    
+    }
     
     public void setCustom(boolean value) {
         this.custom = value;
-        this.initPathfinder();
-        this.persistent = value;
+//        this.persistent = value;
         this.collides = !value;
     }
     
@@ -38,76 +43,70 @@ public class CustomWitherSkeleton extends EntitySkeletonWither implements ICusto
             setCustom(true);
             setInvulnerable(true);
             setCustomNameVisible(true);
-            TextComponent name = new TextComponent("Portal Keeper");
-            name.setColor(ChatColor.DARK_RED);
-            name.setBold(true);
-            String serialized = ComponentSerializer.toString(name);
-            setCustomName(IChatBaseComponent.ChatSerializer.a(serialized));
+            setCustomName(Component.literal("Portal Keeper").withStyle(style -> style.withColor(ChatFormatting.DARK_RED).withBold(true)));
             location = getBukkitEntity().getLocation().clone();
-            this.lookController = new LookController(this);
+            this.lookControl = new LookController(this);
         }
     }
     
     @Override
-    protected SoundEffect getSoundAmbient() {
+    protected SoundEvent getAmbientSound() {
         if (isPortalKeeper()) {
             return null;
         } else {
-            return super.getSoundAmbient();
+            return super.getAmbientSound();
         }
     }
     
     @Override
-    protected SoundEffect getSoundHurt(DamageSource damagesource) {
+    protected SoundEvent getHurtSound(DamageSource damagesource) {
         if (isPortalKeeper()) {
             return null;
         } else {
-            return super.getSoundHurt(damagesource);
+            return super.getHurtSound(damagesource);
         }
     }
     
     @Override
-    protected SoundEffect getSoundDeath() {
+    protected SoundEvent getDeathSound() {
         if (isPortalKeeper()) {
             return null;
         } else {
-            return super.getSoundDeath();
+            return super.getDeathSound();
         }
     }
     
     @Override
-    protected SoundEffect getSoundSwim() {
+    protected SoundEvent getSwimSound() {
         if (isPortalKeeper()) {
             return null;
         } else {
-            return super.getSoundSwim();
+            return super.getSwimSound();
         }
     }
     
     @Override
-    protected SoundEffect getSoundSplash() {
+    protected SoundEvent getSwimSplashSound() {
         if (isPortalKeeper()) {
             return null;
         } else {
-            return super.getSoundSplash();
+            return super.getSwimSplashSound();
         }
     }
     
     @Override
-    protected SoundEffect getSoundFall(int var0) {
+    public Fallsounds getFallSounds() {
         if (isPortalKeeper()) {
             return null;
         } else {
-            return super.getSoundFall(var0);
+            return super.getFallSounds();
         }
     }
     
     @Override
-    protected boolean playStepSound() {
-        if (isPortalKeeper()) {
-            return false;
-        } else {
-            return super.playStepSound();
+    protected void playStepSound(BlockPos blockposition, BlockState iblockdata) {
+        if (!isPortalKeeper()) {
+            super.playStepSound(blockposition, iblockdata);
         }
     }
     
@@ -122,11 +121,11 @@ public class CustomWitherSkeleton extends EntitySkeletonWither implements ICusto
     }
     
     @Override
-    public NBTTagCompound save(NBTTagCompound nbt) {
-        nbt.setBoolean("custom", custom);
-        nbt.setBoolean("portalkeeper", portalKeeper);
-        return super.save(nbt);
-    }    
+    public boolean save(ValueOutput valueoutput) {
+        valueoutput.putBoolean("custom", custom);
+        valueoutput.putBoolean("portalkeeper", portalKeeper);
+        return super.save(valueoutput);
+    }
     
     @Override
     public boolean isCustom() {
@@ -134,24 +133,18 @@ public class CustomWitherSkeleton extends EntitySkeletonWither implements ICusto
     }
     
     @Override
-    protected void initPathfinder() {
-        this.goalSelector = new PathfinderGoalSelector(world != null && world.getMethodProfilerSupplier() != null ? world.getMethodProfilerSupplier() : null);
+    protected void registerGoals() {
         if (custom) {
-            this.goalSelector.a(new PathfinderGoalFloat(this));
+            this.goalSelector.addGoal(2, new FloatGoal(this));
         } else {
-            super.initPathfinder();
+            super.registerGoals();
         }
     }
     
     @Override
-    public void loadData(NBTTagCompound nbttagcompound) {
-        super.loadData(nbttagcompound);
-        if (nbttagcompound.hasKey("custom")) {
-            this.custom = nbttagcompound.getBoolean("custom");
-        }
-        
-        if (nbttagcompound.hasKey("portalkeeper")) {
-            setPortalKeeper(nbttagcompound.getBoolean("portalkeeper"));
-        }
+    public void load(ValueInput valueinput) {
+        super.load(valueinput);
+        this.custom = valueinput.getBooleanOr("custom", false);
+        setPortalKeeper(valueinput.getBooleanOr("portalkeeper", false));
     }
 }

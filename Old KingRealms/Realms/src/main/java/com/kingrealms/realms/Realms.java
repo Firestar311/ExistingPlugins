@@ -84,7 +84,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.craftbukkit.v1_16_R1.entity.CraftWitherSkeleton;
+import org.bukkit.craftbukkit.v1_21_R6.entity.CraftWitherSkeleton;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;

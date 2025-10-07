@@ -203,7 +203,7 @@ public class ItemBuilder {
         }
         
         if (glowing && this.enchantments.isEmpty()) {
-            this.enchantments.put(Enchantment.ARROW_DAMAGE, 1);
+            this.enchantments.put(Enchantment.POWER, 1);
         }
         
         if (!this.enchantments.isEmpty()) {

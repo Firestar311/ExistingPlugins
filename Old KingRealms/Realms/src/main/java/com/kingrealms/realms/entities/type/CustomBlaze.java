@@ -1,24 +1,20 @@
 package com.kingrealms.realms.entities.type;
 
-import com.kingrealms.realms.entities.controller.LookController;
 import com.kingrealms.realms.items.CustomItemRegistry;
 import com.kingrealms.realms.loot.*;
-import com.kingrealms.realms.loot.LootTable;
 import com.kingrealms.realms.util.RealmsLoot;
-import net.minecraft.server.v1_16_R1.*;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.monster.Blaze;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.bukkit.entity.EntityType;
 
-public class CustomBlaze extends EntityBlaze implements ICustomEntity {
+public class CustomBlaze extends Blaze implements ICustomEntity {
     private boolean custom = false;
     
-    public CustomBlaze(World world) {
-        super(EntityTypes.BLAZE, world);
-    }
-    
-    public void setCustom(boolean value) {
-        this.custom = value;
-        this.initPathfinder();
-        this.persistent = value;
+    public CustomBlaze(ServerLevel world) {
+        super(net.minecraft.world.entity.EntityType.BLAZE, world);
     }
     
     @Override
@@ -34,29 +30,31 @@ public class CustomBlaze extends EntityBlaze implements ICustomEntity {
         return this.custom;
     }
     
+    public void setCustom(boolean value) {
+        this.custom = value;
+        this.goalSelector.removeAllGoals(p -> true);
+        this.registerGoals();
+    }
+    
     @SuppressWarnings("DuplicatedCode")
     @Override
-    protected void initPathfinder() {
-        this.goalSelector = new PathfinderGoalSelector(world != null && world.getMethodProfilerSupplier() != null ? world.getMethodProfilerSupplier() : null);
+    protected void registerGoals() {
         if (custom) {
-            this.goalSelector.a(new PathfinderGoalFloat(this));
-            this.lookController = new LookController(this);
+            this.goalSelector.addGoal(2, new FloatGoal(this));
         } else {
-            super.initPathfinder();
+            super.registerGoals();
         }
     }
     
     @Override
-    public void loadData(NBTTagCompound nbttagcompound) {
-        super.loadData(nbttagcompound);
-        if (nbttagcompound.hasKey("custom")) {
-            setCustom(nbttagcompound.getBoolean("custom"));
-        }
+    public void load(ValueInput valueinput) {
+        this.custom = valueinput.getBooleanOr("custom", false);
+        super.load(valueinput);
     }
     
     @Override
-    public NBTTagCompound save(NBTTagCompound nbttagcompound) {
-        nbttagcompound.setBoolean("custom", custom);
-        return super.save(nbttagcompound);
+    public boolean save(ValueOutput valueoutput) {
+        valueoutput.putBoolean("custom", custom);
+        return super.save(valueoutput);
     }
 }

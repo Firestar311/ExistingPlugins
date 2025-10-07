@@ -63,7 +63,7 @@ public class UserCommand implements TabExecutor, Listener {
                 Player player = offlinePlayer.getPlayer();
                 sender.sendMessage(Utils.color("&e - Fly Mode: &r" + player.getAllowFlight() + " (isFlying: " + player.isFlying() + ")"));
                 //God
-                sender.sendMessage(Utils.color("&e - Health: &r" + player.getHealth() + "/" + player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()));
+                sender.sendMessage(Utils.color("&e - Health: &r" + player.getHealth() + "/" + player.getAttribute(Attribute.MAX_HEALTH).getValue()));
                 sender.sendMessage(Utils.color("&e - Hunger: &r" + player.getFoodLevel() + "/20.0 (" + player.getSaturation() + " saturation)"));
                 sender.sendMessage(Utils.color("&e - Exp: &r" + player.getExp() + " (Level " + player.getLevel() + ")"));
                 String world = player.getWorld().getName();

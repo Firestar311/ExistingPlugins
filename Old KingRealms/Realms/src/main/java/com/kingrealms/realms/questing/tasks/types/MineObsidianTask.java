@@ -53,7 +53,7 @@ public class MineObsidianTask extends Task {
     
                 IntegerTaskProgress intProgress = (IntegerTaskProgress) progress;
                 
-                if (hand.getItemMeta().hasEnchant(Enchantment.DIG_SPEED)) {
+                if (hand.getItemMeta().hasEnchant(Enchantment.EFFICIENCY)) {
                     intProgress.setValue(0);
                     profile.sendMessage("&c&lPortal Keeper &cOh... You cannot mine obsidian with the Efficiency Enchantment.");
                     profile.sendDelayedMessage("&c&lPortal Keeper &cI have reset your current progress", 10L);

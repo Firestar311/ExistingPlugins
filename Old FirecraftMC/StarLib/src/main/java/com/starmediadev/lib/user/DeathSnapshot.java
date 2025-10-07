@@ -1,6 +1,5 @@
 package com.starmediadev.lib.user;
 
-import com.starmediadev.lib.items.InventoryStore;
 import com.starmediadev.lib.pagination.IElement;
 import com.starmediadev.lib.user.damage.*;
 import com.starmediadev.lib.util.Constants;
@@ -18,16 +17,16 @@ import java.util.*;
 @SerializableAs("DeathSnapshot")
 public class DeathSnapshot implements ConfigurationSerializable, IElement, Comparable<DeathSnapshot> {
     private int id;
-    private final UUID player;
-    private final long time;
-    private final Location location;
+    private UUID player;
+    private long time;
+    private Location location;
     private DamageInfo damageInfo;
-    private final String inventory;
-    private final int level;
-    private final float exp;
+    private String inventory;
+    private int level;
+    private float exp;
     
     public DeathSnapshot(Player player, long time) {
-        this(-1, player.getUniqueId(), time, player.getLocation(), player.getLastDamageCause(), InventoryStore.itemsToString(player.getInventory().getContents()), player.getLevel(), player.getExp());
+        this(-1, player.getUniqueId(), time, player.getLocation(), player.getLastDamageCause(), /*InventoryStore.itemsToString(player.getInventory().getContents())*/ "", player.getLevel(), player.getExp());
     }
     
     public DeathSnapshot(int id, UUID player, long time, Location location, DamageInfo damageInfo, String inventory, int level, float exp) {
@@ -163,7 +162,7 @@ public class DeathSnapshot implements ConfigurationSerializable, IElement, Compa
     }
     
     public ItemStack[] getItems() {
-        return InventoryStore.stringToItems(this.inventory);
+        return /*InventoryStore.stringToItems(this.inventory)*/ new ItemStack[0];
     }
     
     public float getExp() {

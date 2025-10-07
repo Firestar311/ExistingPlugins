@@ -1,0 +1,63 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url = 'https://repo.stardevllc.com/releases' }
+    maven { url = 'https://jitpack.io' }
+    maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+}
+
+publishing {
+    repositories {
+        maven {
+            name="stardev"
+            url="https://repo.stardevllc.com/releases"
+            credentials(PasswordCredentials)
+            authentication {
+                basic(BasicAuthentication)
+            }
+        }
+    }
+    
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+group ='com.stardevllc.legacy'
+version = '0.1.0'
+
+processResources {
+    filesMatching("*.yml") {
+        expand(project.properties)
+    }
+}
+
+jar {
+    //destinationDirectory = file(System.getProperty("user.home") + File.separator + "Documents" + File.separator + "JarOutput")
+}
+
+dependencies {
+    compileOnly 'org.spigotmc:spigot:1.21.9-R0.1-SNAPSHOT:remapped-mojang'
+    compileOnly 'com.github.MilkBowl:VaultAPI:1.7.1'
+    compileOnly 'me.clip:placeholderapi:2.11.6'
+    compileOnly 'net.luckperms:api:5.4'
+    compileOnly 'io.netty:netty-all:4.0.40.Final'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+tasks.compileJava.dependsOn(clean)
+tasks.build.finalizedBy(publishToMavenLocal)
+//tasks.build.finalizedBy(publish)

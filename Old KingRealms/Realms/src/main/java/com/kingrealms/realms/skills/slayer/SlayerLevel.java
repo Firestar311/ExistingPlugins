@@ -13,7 +13,7 @@ public class SlayerLevel extends SkillLevel {
     protected EntityType type;
     
     public SlayerLevel(int level, EntityType type, int xpPerKill, int xpToLevel) {
-        super(level, xpPerKill, xpToLevel, (type == EntityType.MUSHROOM_COW) ? Material.MOOSHROOM_SPAWN_EGG : Material.valueOf(type.name() + "_SPAWN_EGG"));
+        super(level, xpPerKill, xpToLevel, (type == EntityType.MOOSHROOM) ? Material.MOOSHROOM_SPAWN_EGG : Material.valueOf(type.name() + "_SPAWN_EGG"));
         this.type = type;
     }
     
@@ -29,7 +29,7 @@ public class SlayerLevel extends SkillLevel {
     @Override
     public ItemStack getIcon() {
         Material material = switch(type) {
-            case MUSHROOM_COW -> Material.MOOSHROOM_SPAWN_EGG;
+            case MOOSHROOM -> Material.MOOSHROOM_SPAWN_EGG;
             case IRON_GOLEM -> Material.IRON_INGOT;
             default -> Material.valueOf(type.name() + "_SPAWN_EGG");
         };

@@ -12,7 +12,7 @@ import static org.bukkit.potion.PotionType.*;
 @SuppressWarnings("DuplicatedCode")
 public class TippedArrow extends Resource {
     
-    private static final Set<PotionType> ALLOWED_EFFECTS = Set.of(NIGHT_VISION, INVISIBILITY, JUMP, FIRE_RESISTANCE, SPEED, SLOWNESS, WATER_BREATHING, INSTANT_HEAL, INSTANT_DAMAGE, POISON, REGEN, STRENGTH, WEAKNESS, SLOW_FALLING);
+    private static final Set<PotionType> ALLOWED_EFFECTS = Set.of(NIGHT_VISION, INVISIBILITY, LEAPING, FIRE_RESISTANCE, SWIFTNESS, SLOWNESS, WATER_BREATHING, HEALING, HARMING, POISON, REGENERATION, STRENGTH, WEAKNESS, SLOW_FALLING);
     private static final int MAX_AMPLIFIER = 5, MAX_DURATION = 60, MIN_DURATION = 5;
     private int amplifier;
     private PotionEffectType type;
@@ -45,7 +45,7 @@ public class TippedArrow extends Resource {
             int amplifier = new Random().nextInt(MAX_AMPLIFIER - 1) + 1;
             int duration = new Random().nextInt(MAX_DURATION - MIN_DURATION) + MIN_DURATION;
             effectType = potionType.getEffectType();
-            potionMeta.setBasePotionData(new PotionData(potionType));
+            potionMeta.setBasePotionType(potionType);
             potionMeta.addCustomEffect(new PotionEffect(effectType, duration * 20, amplifier), true);
         } else {
             PotionType potionType = null;
@@ -59,7 +59,7 @@ public class TippedArrow extends Resource {
             }
             
             if (potionType == null) potionType = MUNDANE;
-            potionMeta.setBasePotionData(new PotionData(potionType));
+            potionMeta.setBasePotionType(potionType);
             int duration = new Random().nextInt(MAX_DURATION - MIN_DURATION) + MIN_DURATION;
             potionMeta.addCustomEffect(new PotionEffect(this.type, duration * 20, amplifier), true);
             effectType = type;

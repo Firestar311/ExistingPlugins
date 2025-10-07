@@ -1,2 +1,3 @@
-/target/
-/StarLib.iml
+/build/
+.idea/
+.gradle

@@ -161,7 +161,7 @@ public class ServerSignShop extends ServerShop implements ISignShop {
     @Override
     public ItemStack getPlacer() {
         //Temp Item thing
-        ItemBuilder itemBuilder = ItemBuilder.start(Material.OAK_SIGN).withEnchantment(Enchantment.ARROW_DAMAGE, 1).withItemFlags(ItemFlag.HIDE_ENCHANTS);
+        ItemBuilder itemBuilder = ItemBuilder.start(Material.OAK_SIGN).withEnchantment(Enchantment.POWER, 1).withItemFlags(ItemFlag.HIDE_ENCHANTS);
         ItemStack itemStack;
         if (this.uniqueId == null) {
             itemBuilder.withName("&7[Template] &e" + this.name).withLore("&7This is a template item.", "&7Use this to place multiple shops.");

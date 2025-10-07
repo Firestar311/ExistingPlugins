@@ -27,7 +27,7 @@ public final class SlayerSkill extends Skill {
         addLevel(level++, EntityType.SQUID, xpPerKill+=5);
         addLevel(level++, EntityType.DONKEY, xpPerKill+=5);
         addLevel(level++, EntityType.CAT, xpPerKill+=5);
-        addLevel(level++, EntityType.MUSHROOM_COW, xpPerKill+=5);
+        addLevel(level++, EntityType.MOOSHROOM, xpPerKill+=5);
         addLevel(level++, EntityType.SPIDER, xpPerKill+=5);
         addLevel(level++, EntityType.HUSK, xpPerKill+=5);
         addLevel(level++, EntityType.PANDA, xpPerKill+=5);

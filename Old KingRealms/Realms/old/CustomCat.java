@@ -5,10 +5,11 @@ import com.kingrealms.realms.items.CustomItemRegistry;
 import com.kingrealms.realms.loot.*;
 import com.kingrealms.realms.loot.LootTable;
 import com.kingrealms.realms.util.RealmsLoot;
-import net.minecraft.server.v1_16_R1.*;
+import net.minecraft.world.entity.animal.Cat;
+import org.bukkit.World;
 import org.bukkit.entity.EntityType;
 
-public class CustomCat extends EntityCat implements ICustomEntity {
+public class CustomCat extends Cat implements ICustomEntity {
     private boolean custom = false;
     
     public CustomCat(World world) {

@@ -188,7 +188,7 @@ public class SpawnerManager implements Listener {
             if (profile.getTotalExperience() < mobLevel.getTotalXpNeeded() && Realms.getInstance().getServerMode() != ServerMode.DEVELOPMENT) {
                 profile.sendMessage("&cYou need to be Slayer level " + mobLevel.getLevel() + " to kill that type of mob from a spawner.");
             } else {
-                int sharpnessLevel = profile.getBukkitPlayer().getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.DAMAGE_ALL);
+                int sharpnessLevel = profile.getBukkitPlayer().getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.SHARPNESS);
                 int decrementAmount = 1;
                 if (sharpnessLevel > 0) {
                     decrementAmount = 2 * sharpnessLevel;

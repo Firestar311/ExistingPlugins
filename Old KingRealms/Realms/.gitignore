@@ -1,2 +1,3 @@
-/target/
-/Realms.iml
+/build/
+.idea/
+.gradle

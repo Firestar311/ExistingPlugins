@@ -168,7 +168,7 @@ public final class CustomItemRegistry {
     public static final Resource RED_MUSHROOM = new Resource(Material.RED_MUSHROOM);
     public static final Resource SADDLE = new Resource(Material.SADDLE);
     public static final Resource SAND = new Resource(Material.SAND);
-    public static final Resource SCUTE = new Resource(Material.SCUTE);
+    public static final Resource TURTLE_SCUTE = new Resource(Material.TURTLE_SCUTE);
     public static final Resource SEAGRASS = new Resource(Material.SEAGRASS);
     public static final Resource SHULKER_SHELL = new Resource(Material.SHULKER_SHELL);
     public static final Resource SKELETON_HEAD = new Resource(Material.SKELETON_SKULL);

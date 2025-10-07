@@ -37,7 +37,7 @@ public class Potion extends Resource {
         }
     
         if (potionType == null) potionType = MUNDANE;
-        potionMeta.setBasePotionData(new PotionData(potionType));
+        potionMeta.setBasePotionType(potionType);
         potionMeta.addCustomEffect(new PotionEffect(this.type, duration, amplifier), true);
         potionMeta.setDisplayName("&ePotion of " + type.getName());
         itemStack.setItemMeta(potionMeta);

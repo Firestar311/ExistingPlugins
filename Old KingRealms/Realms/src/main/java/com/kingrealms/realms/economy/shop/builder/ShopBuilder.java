@@ -113,7 +113,7 @@ public class ShopBuilder {
     @SuppressWarnings("DuplicatedCode")
     public ItemStack createTemplate() {
         //Temp Item thing
-        ItemStack itemStack = ItemBuilder.start(Material.OAK_SIGN).withName("&e&l[Template] Shop Placer: &f&l" + this.name).withEnchantment(Enchantment.ARROW_DAMAGE, 1).withItemFlags(ItemFlag.HIDE_ENCHANTS).withLore("&7This is a template item.", "&7Use this to place multiple shops.").buildItem();
+        ItemStack itemStack = ItemBuilder.start(Material.OAK_SIGN).withName("&e&l[Template] Shop Placer: &f&l" + this.name).withEnchantment(Enchantment.POWER, 1).withItemFlags(ItemFlag.HIDE_ENCHANTS).withLore("&7This is a template item.", "&7Use this to place multiple shops.").buildItem();
         try {
             itemStack = NBTWrapper.addNBTString(itemStack, "shopitem", InventoryStore.serializeItemStack(this.item.getItemStack()));
             itemStack = NBTWrapper.addNBTString(itemStack, "shopbuy", this.item.getBuyPrice() + "");

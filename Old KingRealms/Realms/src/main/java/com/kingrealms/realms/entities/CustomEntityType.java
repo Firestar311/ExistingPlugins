@@ -1,39 +1,42 @@
 package com.kingrealms.realms.entities;
 
 import com.starmediadev.lib.reflection.FieldHelper;
-import net.minecraft.server.v1_16_R1.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.*;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_16_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_21_R6.CraftWorld;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
-public class CustomEntityType<T extends EntityLiving> {
+public class CustomEntityType<T extends Entity> {
     
     private final Class<T> clazz;
-    private EntityTypes<? super T> type;
+    private EntityType<?> type;
     
-    public CustomEntityType(Class<T> customEntityClass, EntityTypes<? super T> type) {
+    public CustomEntityType(Class<T> customEntityClass, EntityType<?> type) {
         this.clazz = customEntityClass;
         this.type = type;
     }
     
     public org.bukkit.entity.Entity spawn(Location loc) {
-        Entity entity = type.spawnCreature(((CraftWorld) loc.getWorld()).getHandle(), null, null, null, new BlockPosition(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()), EnumMobSpawn.SPAWNER, true, false);
+        Entity entity = type.spawn(((CraftWorld) loc.getWorld()).getHandle(), null, null, new BlockPos(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()), EntitySpawnReason.SPAWNER, true, false, SpawnReason.SPAWNER);
         return entity == null ? null : entity.getBukkitEntity();
     }
     
     public void register() {
         try {
-            Field field = this.type.getClass().getDeclaredField("be");
+            Field field = this.type.getClass().getDeclaredField("factory");
             field.setAccessible(true);
             if ((field.getModifiers() & Modifier.FINAL) == Modifier.FINAL) {
                 FieldHelper.makeNonFinal(field);
             }
             
-            field.set(this.type, (EntityTypes.b<?>) (type, world) -> {
+            field.set(this.type, (EntityType.EntityFactory<?>) (type, world) -> {
                 try {
-                    return this.clazz.getConstructor(net.minecraft.server.v1_16_R1.World.class).newInstance(world);
+                    return this.clazz.getConstructor(ServerLevel.class).newInstance((ServerLevel) world);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
